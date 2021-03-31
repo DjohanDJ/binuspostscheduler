@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">BinusPostScheduler</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="email_hint">example@example.com</string>
+    <string name="password_hint">your password here</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="don_t_have_account_yet">Don\'t have account yet?</string>
+    <string name="register_here">Register here!</string>
+    <string name="emailFilled">Email must be filled</string>
+    <string name="emailFormat">Email must be in email format</string>
+    <string name="passFilled">Password must be filled</string>
+    <string name="loading">Loading...</string>
+    <string name="invalidCredential">Invalid Credential</string>
+    <string name="login_here">Login here</string>
+    <string name="already_have_account">Already have account?</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="your_full_name">your full name</string>
+    <string name="type_your_password_again">type your password again</string>
+
+    <string name="username_failed">Name must less than 18 characters</string>
+    <string name="username_filled">Name must be filled</string>
+    <string name="password_failed">Password must at least 6 characters</string>
+    <string name="re_pass_failed">Confirm password must be same with password</string>
+    <string name="sign_up_error">Register Error</string>
+
+</resources>

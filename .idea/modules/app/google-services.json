@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "181794285641",
+    "project_id": "binuspostscheduler-c5431",
+    "storage_bucket": "binuspostscheduler-c5431.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181794285641:android:7e0224902b0946f650b798",
+        "android_client_info": {
+          "package_name": "com.example.binuspostscheduler"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181794285641-s5qbpkknaij33lijdrkcpc69f0m19khk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5XsxnRUOyKZGZZUg2qXPKhosIz2cs9BA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181794285641-s5qbpkknaij33lijdrkcpc69f0m19khk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
