@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.CreatePostFragment">
+
+   <RelativeLayout
+
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <TextView
+           android:fontFamily="@font/poppins_medium"
+           android:id="@+id/post_content_text"
+           android:textSize="@dimen/text_subtitle"
+           android:textColor="@color/colorBlack"
+           android:text="Post Content"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"/>
+
+       <EditText
+           android:padding="5dp"
+           android:gravity="start"
+           android:id="@+id/post_content"
+           android:maxLength="240"
+           android:layout_below="@id/post_content_text"
+           android:layout_width="match_parent"
+           android:background="@drawable/bg_border"
+           android:layout_height="200dp"/>
+
+       <Button
+           android:id="@+id/insert_img_btn"
+           android:layout_height="wrap_content"
+           android:layout_width="match_parent"
+           android:layout_marginTop="20dp"
+           android:layout_below="@id/post_content"
+           android:text="Insert Image"
+           android:background="@drawable/primary_button_shape"
+           />
+       <RelativeLayout
+           android:id="@+id/img_preview_container"
+           android:layout_marginTop="10dp"
+           android:layout_below="@id/insert_img_btn"
+           android:layout_width="match_parent"
+           android:gravity="center"
+           android:layout_height="wrap_content">
+           <ImageView
+               android:visibility="gone"
+               android:id="@+id/img_preview"
+               android:layout_width="350dp"
+               android:layout_height="350dp"/>
+       </RelativeLayout>
+       <TextView
+           android:id="@+id/post_schedule_text"
+           android:layout_below="@id/img_preview_container"
+           android:textSize="@dimen/text_subtitle"
+           android:textColor="@color/colorBlack"
+           android:fontFamily="@font/poppins_medium"
+           android:text="Post Schedule"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"/>
+
+       <RadioGroup
+           android:id="@+id/post_schedule_radio_group"
+           android:layout_below="@id/post_schedule_text"
+           android:orientation="horizontal"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <RadioButton
+               android:id="@+id/post_schedule_now"
+               android:text="Now"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+           <RadioButton
+               android:id="@+id/post_schedule_later"
+               android:text="Later"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
+       </RadioGroup>
+        <Button
+            android:id="@+id/schedule_post_btn"
+            android:layout_marginTop="50dp"
+            android:layout_below="@id/post_schedule_radio_group"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="Schedule Post"
+            android:background="@drawable/primary_button_shape"
+             />
+
+   </RelativeLayout>
+
+</FrameLayout>

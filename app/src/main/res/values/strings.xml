@@ -32,4 +32,7 @@
     <string name="re_pass_failed">Confirm password must be same with password</string>
     <string name="sign_up_error">Register Error</string>
 
+    <string name="schedule_post">Schedule a Post</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
