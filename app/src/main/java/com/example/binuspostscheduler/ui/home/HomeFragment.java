@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +47,7 @@ public class HomeFragment extends Fragment {
 
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy ");
         Date date = new Date();
-        currDate.setText(formatter.format(date));
+        currDate.setText("Today, "+formatter.format(date));
 
         setAdapter(root.getContext());
 
@@ -61,6 +62,7 @@ public class HomeFragment extends Fragment {
 
     public void setAdapter(final Context ctx){
         final ArrayList<PostedSchedule> postedList = new ArrayList<>();
+        final ArrayList<PostedSchedule> todayPostedList = new ArrayList<>();
 
         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users")
                 .document(UserSession.getCurrentUser().getId()).collection("schedule")
@@ -69,32 +71,42 @@ public class HomeFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     postedList.clear();
+                    todayPostedList.clear();
                     for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
                         PostedSchedule postedSchedule = documentSnapshot.toObject(PostedSchedule.class);
                         postedList.add(postedSchedule);
                     }
 
-                    Toast.makeText(ctx, postedList.get(0).getTime(), Toast.LENGTH_SHORT).show();
+                    SimpleDateFormat dFormat = new SimpleDateFormat("dd MMMM yyyy");
+                    Date date = new Date();
+                    String today = dFormat.format(date);
+                    String postDate;
 
-                    TodayScheduleAdapter comAdapter = new TodayScheduleAdapter(ctx, postedList);
+                    for(PostedSchedule post : postedList){
+                        Date pDate = null;
+                        try {
+                            pDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(post.getTime());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        postDate = dFormat.format(pDate);
+
+                        if(today.equalsIgnoreCase(postDate)){
+                            todayPostedList.add(post);
+                        }
+                    }
+
+//                    Toast.makeText(ctx, postedList.get(0).getTime(), Toast.LENGTH_SHORT).show();
+
+                    TodayScheduleAdapter comAdapter = new TodayScheduleAdapter(ctx, todayPostedList);
                     tsList.setAdapter(comAdapter);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(ctx);
                     layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     tsList.setLayoutManager(layoutManager);
                 }
-
-
             }
         });
 
-//        ArrayList<String> hash = new ArrayList<>();
-//        hash.add("Posting");
-//        hash.add("Testing");
-//        hash.add("Hello");
-//
-//        list.add(new PostedSchedule("19-02-2021 22:00:00", "Hello there, testing 123", "-","-",hash));
-//        list.add(new PostedSchedule("28-04-2021 23:00:00", "Hello there, testing 123", "-","-",hash));
-//        list.add(new PostedSchedule("29-04-2021 22:00:00", "Hello there, testing 123", "-","-",hash));
 
 
     }
