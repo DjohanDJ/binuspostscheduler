@@ -1,14 +1,14 @@
-package com.example.binuspostscheduler.ui.gallery;
+package com.example.binuspostscheduler.ui.schedules;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class GalleryViewModel extends ViewModel {
+public class SchedulesViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public GalleryViewModel() {
+    public SchedulesViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is gallery fragment");
     }
