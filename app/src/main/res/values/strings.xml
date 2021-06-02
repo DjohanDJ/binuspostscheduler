@@ -10,6 +10,7 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_account">Account</string>
     <string name="email_hint">example@example.com</string>
     <string name="password_hint">your password here</string>
     <string name="sign_in">SIGN IN</string>
@@ -33,7 +34,9 @@
     <string name="sign_up_error">Register Error</string>
 
     <string name="schedule_post">Schedule a Post</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="connected_account">Connected Account</string>
+
+    <string name="twitter.CONSUMER_KEY">t0zwc1GRA4mjoHsa3HwM1Q8fJ</string>
+    <string name="twitter.CONSUMER_SECRET">pXwXPViI3q2eIwTPZmoNhDHBvGqSl6gPFuCI8WjxYLKLWb6kPJ</string>
     <string name="schedules">Schedules</string>
 </resources>

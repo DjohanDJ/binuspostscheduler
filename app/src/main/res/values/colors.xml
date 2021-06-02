@@ -6,4 +6,6 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
     <color name="colorSecondary">#4DB8FF</color>
+    <color name="twitterColor">#5BAAF4</color>
+
 </resources>
