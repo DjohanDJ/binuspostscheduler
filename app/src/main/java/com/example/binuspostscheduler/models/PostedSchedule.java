@@ -3,7 +3,7 @@ package com.example.binuspostscheduler.models;
 import java.util.ArrayList;
 
 public class PostedSchedule {
-    private String time;
+    private String time, id;
     private String description, image, video;
     private ArrayList<String> hashtags, selected_id;
 
@@ -11,13 +11,22 @@ public class PostedSchedule {
 
     }
 
-    public PostedSchedule(String time, String description, String imageLink, String videoLink, ArrayList<String> hashtags, ArrayList<String> selectedId) {
+    public PostedSchedule(String id, String time, String description, String imageLink, String videoLink, ArrayList<String> hashtags, ArrayList<String> selectedId) {
+        this.id = id;
         this.time = time;
         this.description = description;
         this.image = imageLink;
         this.video = videoLink;
         this.hashtags = hashtags;
         this.selected_id = selectedId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTime() {

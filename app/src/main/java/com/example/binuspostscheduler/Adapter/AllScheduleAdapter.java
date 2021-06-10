@@ -56,6 +56,7 @@ public class AllScheduleAdapter extends RecyclerView.Adapter<AllScheduleAdapter.
             public void onClick(View view) {
                 Intent myIntent = new Intent(ctx, ScheduleDetailActivity.class);
                 PostedSchedule post = list.get(position);
+                myIntent.putExtra("id", post.getId());
                 myIntent.putExtra("description", post.getDescription());
                 myIntent.putExtra("image", post.getImage());
                 myIntent.putExtra("hashtags", post.getHashtags());
