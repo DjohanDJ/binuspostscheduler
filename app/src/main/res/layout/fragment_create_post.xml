@@ -45,11 +45,11 @@
            android:layout_width="match_parent"
            android:gravity="center"
            android:layout_height="wrap_content">
-           <ImageView
+           <androidx.recyclerview.widget.RecyclerView
                android:visibility="gone"
-               android:id="@+id/img_preview"
-               android:layout_width="350dp"
-               android:layout_height="350dp"/>
+               android:id="@+id/add_media_rv"
+               android:layout_width="wrap_content"
+               android:layout_height="200dp"/>
        </RelativeLayout>
        <TextView
            android:id="@+id/post_schedule_text"

@@ -4,8 +4,6 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.*
-import android.media.ImageReader
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,29 +11,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RadioButton
-import androidx.core.graphics.PathUtils
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.binuspostscheduler.Adapter.AddMediaAdapter
 import com.example.binuspostscheduler.R
 import com.example.binuspostscheduler.helpers.RealPathHelper
-import com.example.binuspostscheduler.twitter.TwitterAPI
-import com.example.binuspostscheduler.twitter.TwitterModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_create_post.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import twitter4j.StatusUpdate
 import twitter4j.Twitter
 import twitter4j.TwitterFactory
-import twitter4j.UploadedMedia
 import twitter4j.auth.AccessToken
-import java.io.Console
 import java.io.File
-import java.net.URI
 import java.util.*
-import kotlin.collections.HashMap
+import kotlin.collections.ArrayList
 
 
 class CreatePostFragment : Fragment() {
@@ -44,7 +37,9 @@ class CreatePostFragment : Fragment() {
     private lateinit var scheduled_time : RadioButton
     private lateinit var db:FirebaseFirestore
     private lateinit var uid:String
-    private lateinit var img: File
+    private lateinit var medias: ArrayList<File>
+    private lateinit var rv:RecyclerView
+    private lateinit var addMediaAdapter: AddMediaAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -58,8 +53,9 @@ class CreatePostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        medias = ArrayList<File>();
         db = FirebaseFirestore.getInstance()
-        previewImg = img_preview
+        rv = add_media_rv
         uid =  view.context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("user_userId","")!!
         insert_img_btn.setOnClickListener(View.OnClickListener {
             var i = Intent(Intent.ACTION_GET_CONTENT)
@@ -120,8 +116,14 @@ class CreatePostFragment : Fragment() {
                                 val accessToken = AccessToken(access_token,access_secret)
                                 twitter.setOAuthAccessToken(accessToken)
                                 val statusUpdate = StatusUpdate(post_content.text.toString())
-                                statusUpdate.setMedia(img)
-                                Log.d("image",img.path)
+                                val mediaIds = LongArray(medias.size)
+                                for(idx in 0..medias.size-1){
+                                    val upload = twitter.uploadMedia(medias[idx])
+                                    mediaIds[idx] = upload.mediaId
+                                }
+
+                                statusUpdate.setMediaIds(*mediaIds)
+//                                Log.d("image",img.path)
                                 twitter.updateStatus(statusUpdate)
 
                             }
@@ -144,11 +146,34 @@ class CreatePostFragment : Fragment() {
             val path = RealPathHelper.getRealPath(this.context!!,data.data!!)
 //            Log.d("Data","= "+data.data)
 //            Log.d("Path","= "+)
-            img = File(path)
-            if (!img.isFile)Log.d("ISFILE","NOPE "+img.absolutePath)
-            Picasso.get().load(data.data!!).into(previewImg)
-            previewImg.visibility = View.VISIBLE
+            Log.d("PATH",data.data!!.toString())
+            val img = File(path)
+            if (!img.isFile){
+                Log.d("ISFILE","NOPE "+img.absolutePath)
+            }
+            else{
+                medias.add(img)
+                val adapter = AddMediaAdapter(context,medias,this)
+
+                rv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
+                rv.adapter = adapter
+                adapter.notifyDataSetChanged()
+                if(medias.size == 4) // max for twitter
+                {
+                    insert_img_btn.isEnabled = false
+                }
+                checkMediaStatus()
+            }
         }
     }
 
+    fun checkMediaStatus(){
+        if (medias.isEmpty())rv.visibility = View.GONE
+        else rv.visibility = View.VISIBLE
+    }
+
+    fun removeMedia(idx: Int){
+        medias.removeAt(idx)
+        checkMediaStatus()
+    }
 }
