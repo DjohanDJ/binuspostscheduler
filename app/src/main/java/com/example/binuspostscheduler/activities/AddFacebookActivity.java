@@ -42,7 +42,7 @@ public class AddFacebookActivity extends AppCompatActivity {
         loginButton = (LoginButton) findViewById(R.id.login_button_facebook);
         textView = findViewById(R.id.FB_name);
 
-        loginButton.setPermissions(Arrays.asList("user_gender, user_friends"));
+        loginButton.setPermissions(Arrays.asList("email"));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
