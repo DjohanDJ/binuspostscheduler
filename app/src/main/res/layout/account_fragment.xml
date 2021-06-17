@@ -34,6 +34,8 @@
                 android:background="@color/tw__blue_default"
                 />
 
+
+
             <LinearLayout
                 android:visibility="gone"
                 android:id="@+id/twitter_connected_container"
@@ -60,6 +62,27 @@
                     android:layout_height="match_parent"/>
             </LinearLayout>
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/facebook_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/twitter_container"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/add_facebook_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tw__blue_default"
+                android:text="Add Facebook Account"
+                android:textSize="@dimen/text_content" />
+
+
+        </RelativeLayout>
+
+
+
 
     </RelativeLayout>
 

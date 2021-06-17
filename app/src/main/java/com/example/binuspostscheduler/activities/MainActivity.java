@@ -29,6 +29,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -75,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = (TextView) headerView.findViewById(R.id.navUsername);
-        navUsername.setText(UserSession.getCurrentUser().getUsername());
-        TextView navEmail = (TextView) headerView.findViewById(R.id.navEmail);
-        navEmail.setText(UserSession.getCurrentUser().getEmail());
+//        navUsername.setText(UserSession.getCurrentUser().getUsername());
+//        TextView navEmail = (TextView) headerView.findViewById(R.id.navEmail);
+//        navEmail.setText(UserSession.getCurrentUser().getEmail());
     }
 
     @Override

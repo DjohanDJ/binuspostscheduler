@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.example.binuspostscheduler.R
+import com.example.binuspostscheduler.activities.AddFacebookActivity
 import com.example.binuspostscheduler.activities.AddTwitterActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.twitter.sdk.android.core.*
@@ -56,6 +57,11 @@ class AccountFragment : Fragment() {
 //        }
         add_twitter_btn.setOnClickListener({
             val intent = Intent(this.context,AddTwitterActivity::class.java)
+            startActivity(intent)
+        })
+
+        add_facebook_btn.setOnClickListener(View.OnClickListener {
+            val intent = Intent(this.context,AddFacebookActivity::class.java)
             startActivity(intent)
         })
 
