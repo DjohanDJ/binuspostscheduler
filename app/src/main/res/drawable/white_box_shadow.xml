@@ -6,7 +6,7 @@
         android:color="@color/colorWhite" >
     </stroke>
 
-    <corners android:radius="60px">
+    <corners android:radius="20px">
 
     </corners>
 

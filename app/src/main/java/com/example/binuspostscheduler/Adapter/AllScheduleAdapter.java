@@ -34,7 +34,7 @@ public class AllScheduleAdapter extends RecyclerView.Adapter<AllScheduleAdapter.
     @Override
     public AllScheduleAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(ctx);
-        View view = inflater.inflate(R.layout.today_schedule_list_adapter, parent, false);
+        View view = inflater.inflate(R.layout.all_schedule_list, parent, false);
 
         return new AllScheduleAdapter.MyViewHolder(view);
     }
@@ -50,6 +50,12 @@ public class AllScheduleAdapter extends RecyclerView.Adapter<AllScheduleAdapter.
         String time = new SimpleDateFormat("EEE, d MMM yyyy HH:mm").format(pDate);
 
         holder.time.setText(time);
+
+        String desc = list.get(position).getDescription();
+        if(desc.length() > 50){
+            desc = list.get(position).getDescription().substring(0,50) + "...";
+        }
+        holder.desc.setText(desc);
 
         holder.detail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,13 +80,14 @@ public class AllScheduleAdapter extends RecyclerView.Adapter<AllScheduleAdapter.
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView time;
+        TextView time, desc;
         Button detail;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            time = itemView.findViewById(R.id.todayHour);
-            detail = itemView.findViewById(R.id.todayDetailButton);
+            time = itemView.findViewById(R.id.allScheduleTime);
+            detail = itemView.findViewById(R.id.allScheduleDetailButton);
+            desc = itemView.findViewById(R.id.textView5);
         }
     }
 }

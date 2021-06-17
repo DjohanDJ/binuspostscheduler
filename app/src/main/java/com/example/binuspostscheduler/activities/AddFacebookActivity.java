@@ -37,12 +37,19 @@ public class AddFacebookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_facebook);
 
+        facebookSetting();
+
+
+
+    }
+
+    private void facebookSetting(){
         callbackManager = CallbackManager.Factory.create();
 
         loginButton = (LoginButton) findViewById(R.id.login_button_facebook);
         textView = findViewById(R.id.FB_name);
 
-        loginButton.setPermissions(Arrays.asList("email"));
+        loginButton.setPermissions(Arrays.asList("email, public_profile"));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -62,6 +69,7 @@ public class AddFacebookActivity extends AppCompatActivity {
             }
         });
 
+        checkLogin();
     }
 
 
