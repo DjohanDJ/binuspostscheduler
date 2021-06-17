@@ -30,7 +30,7 @@ import java.util.Date;
 public class ScheduleDetailActivity extends AppCompatActivity {
 
     private TextView date,desc,hashtags,image,video;
-    private Button back, deleteBtn;
+    private Button back, deleteBtn, updateBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +44,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         video = findViewById(R.id.detailVideo);
         back = findViewById(R.id.detailBackBtn);
         deleteBtn = findViewById(R.id.detailDeleteBtn);
+        updateBtn = findViewById(R.id.detailUpdateBtn);
 
         Intent intent = getIntent();
         final PostedSchedule obj = new PostedSchedule();
@@ -90,8 +91,30 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ScheduleDetailActivity.this, obj.getId(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(ScheduleDetailActivity.this, obj.getId(), Toast.LENGTH_SHORT).show();
                 deleteSchedule(obj.getId());
+            }
+        });
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentUpdate = new Intent(ScheduleDetailActivity.this, UpdateScheduleActivity.class);
+                intentUpdate.putExtra("id", intent.getStringExtra("id"));
+                intentUpdate.putExtra("description", intent.getStringExtra("description"));
+                intentUpdate.putExtra("video", intent.getStringExtra("video"));
+                intentUpdate.putExtra("image", intent.getStringExtra("image"));
+                intentUpdate.putExtra("time", intent.getStringExtra("time"));
+                intentUpdate.putExtra("hashtags", intent.getStringArrayListExtra("hashtags"));
+                intentUpdate.putExtra("selected_id", intent.getStringArrayListExtra("selected_id"));
+                startActivity(intentUpdate);
+//                obj.setId(intent.getStringExtra("id"));
+//                obj.setDescription(intent.getStringExtra("description"));
+//                obj.setVideo(intent.getStringExtra("video"));
+//                obj.setImage(intent.getStringExtra("image"));
+//                obj.setTime(intent.getStringExtra("time"));
+//                obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
+//                obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
             }
         });
 

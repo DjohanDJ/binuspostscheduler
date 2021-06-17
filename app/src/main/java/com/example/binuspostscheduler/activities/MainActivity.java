@@ -76,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = (TextView) headerView.findViewById(R.id.navUsername);
-//        navUsername.setText(UserSession.getCurrentUser().getUsername());
-//        TextView navEmail = (TextView) headerView.findViewById(R.id.navEmail);
-//        navEmail.setText(UserSession.getCurrentUser().getEmail());
+        navUsername.setText(UserSession.getCurrentUser().getUsername());
+        TextView navEmail = (TextView) headerView.findViewById(R.id.navEmail);
+        navEmail.setText(UserSession.getCurrentUser().getEmail());
     }
 
     @Override

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ScheduleDetailActivity"
-    android:orientation="vertical">
-    
+    android:background="@drawable/primary_button_shape"
+    tools:context=".activities.UpdateScheduleActivity">
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -23,7 +23,7 @@
                 android:gravity="center"
                 android:text="Post Detail"
                 android:textStyle="bold|normal"
-                android:textColor="@color/colorBlack"
+                android:textColor="@color/colorGrey"
                 android:textSize="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -49,150 +49,120 @@
                     android:text="Date and Time"
                     android:textColor="@color/colorBlack"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/detailDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="dd MMM yyyy 00:00"
                     android:padding="10dp"
-                    />
+                    android:text="dd MMM yyyy 00:00" />
+
+                <Button
+                    android:id="@+id/changeDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/primary_button_shape"
+                    android:text="Change Date"
+                    android:textColor="@color/colorWhite" />
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
                     android:gravity="center"
                     android:text="Description"
-                    android:layout_marginTop="25dp"
                     android:textColor="@color/colorBlack"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                   />
+                    android:textStyle="bold" />
 
-                <TextView
+                <EditText
                     android:id="@+id/detailDescription"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Description testing testing 123 hello"
+                    android:layout_height="200dp"
+                    android:background="@drawable/bg_border"
+                    android:gravity="start"
+                    android:maxLength="240"
                     android:padding="10dp"
-                    />
+                    android:text="Description testing testing 123 hello" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginTop="25dp"
+                    android:gravity="center"
                     android:text="Hashtags"
                     android:textColor="@color/colorBlack"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                   />
+                    android:textStyle="bold" />
 
-                <TextView
+                <EditText
                     android:id="@+id/detailHashtags"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Hashtags hashtags"
                     android:padding="10dp"
-                    />
+                    android:text="Hashtags hashtags" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginTop="25dp"
+                    android:gravity="center"
                     android:text="Image"
                     android:textColor="@color/colorBlack"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/detailImage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="image link"
                     android:padding="10dp"
-                    />
+                    android:text="image link" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_marginTop="25dp"
+                    android:gravity="center"
                     android:text="Video"
                     android:textColor="@color/colorBlack"
                     android:textSize="18dp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/detailVideo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="video link"
                     android:padding="10dp"
-                    />
+                    android:text="video link" />
 
 
             </LinearLayout>
 
             <Button
-                android:id="@+id/detailBackBtn"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/primary_button_shape"
-                android:text="Back"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView6"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <Button
-                android:id="@+id/detailDeleteBtn"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/delete_button"
-                android:text="Delete"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.26"
-                app:layout_constraintStart_toEndOf="@+id/detailBackBtn"
-                app:layout_constraintTop_toBottomOf="@+id/imageView6"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <Button
                 android:id="@+id/detailUpdateBtn"
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/delete_button"
-                android:layout_marginTop="15dp"
+                android:layout_marginLeft="43dp"
+                android:layout_marginRight="43dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/update_button"
                 android:text="Update"
                 android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailDeleteBtn" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView6"
+                app:layout_constraintVertical_bias="0.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        
+
     </ScrollView>
-
-
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
