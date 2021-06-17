@@ -1,7 +1,12 @@
 package com.example.binuspostscheduler.activities;
 
+import android.app.AlarmManager;
 import android.app.Fragment;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.authentications.UserSession;
+import com.example.binuspostscheduler.notification.NotificationBroadcast;
 import com.example.binuspostscheduler.ui.account.AccountFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,6 +36,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         doInitiateVariables();
+
+        createNotifChannel();
+        process();
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -102,6 +112,36 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = getFragmentManager().findFragmentById(R.id.nav_account);
         if (fragment != null) {
             fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    void process(){
+        Intent intent =  new Intent(MainActivity.this, NotificationBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(calendar.YEAR), calendar.get(calendar.MONTH), calendar.get(calendar.DATE),calendar.get(calendar.HOUR),  calendar.get(calendar.MINUTE), 0);
+
+        Calendar now = Calendar.getInstance();
+
+        calendar.add(Calendar.MINUTE, 1);
+
+        int triggerEvery = 60 * 1000;
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - now.getTimeInMillis(), triggerEvery, pendingIntent);
+    }
+
+    void createNotifChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            CharSequence name = "BinusReminderChannel";
+            String desc =  "It's time to post";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel =  new NotificationChannel("notifChannel", name, importance);
+            channel.setDescription(desc);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 }
