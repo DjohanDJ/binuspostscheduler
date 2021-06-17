@@ -16,8 +16,11 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
             android:text="@string/connected_account"
+            android:gravity="center"
             android:textSize="@dimen/text_subtitle"
             android:textColor="@color/colorBlack"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             />
 
         <RelativeLayout
@@ -31,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:text="Add Twitter Account"
                 android:textSize="@dimen/text_content"
-                android:background="@color/tw__blue_default"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button2"
                 />
 
 
@@ -74,8 +78,9 @@
                 android:id="@+id/add_facebook_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/tw__blue_default"
+                android:background="@drawable/button2"
                 android:text="Add Facebook Account"
+                android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_content" />
 
 
