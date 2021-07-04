@@ -1,6 +1,9 @@
 package com.example.binuspostscheduler.Adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +27,12 @@ public class AddMediaAdapter extends RecyclerView.Adapter<AddMediaAdapter.ViewHo
     private Context ctx;
     private ArrayList<File> imgs;
     private CreatePostFragment fragment;
-
-    public AddMediaAdapter(Context ctx, ArrayList<File> imgs, CreatePostFragment fragment) {
+    private boolean isVideo;
+    public AddMediaAdapter(Context ctx, ArrayList<File> imgs, CreatePostFragment fragment, boolean isVideo) {
         this.ctx = ctx;
         this.imgs = imgs;
         this.fragment = fragment;
+        this.isVideo = isVideo;
     }
 
 
@@ -44,7 +48,14 @@ public class AddMediaAdapter extends RecyclerView.Adapter<AddMediaAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull AddMediaAdapter.ViewHolder holder, int position) {
-        Picasso.get().load(imgs.get(position)).into(holder.imgPreview);
+        if(this.isVideo){
+            String url = imgs.get(position).getAbsolutePath();
+            Bitmap bMap = ThumbnailUtils.createVideoThumbnail(url , MediaStore.Video.Thumbnails.MICRO_KIND);
+//            bMap.setHeight(200);
+//            bMap.setWidth(200);
+            holder.imgPreview.setImageBitmap(bMap);
+        }
+        else Picasso.get().load(imgs.get(position)).resize(200,200).into(holder.imgPreview);
         holder.removeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

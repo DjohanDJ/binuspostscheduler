@@ -1,6 +1,7 @@
 package com.example.binuspostscheduler.fragments
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.*
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
@@ -18,7 +20,6 @@ import com.example.binuspostscheduler.Adapter.AddMediaAdapter
 import com.example.binuspostscheduler.R
 import com.example.binuspostscheduler.helpers.RealPathHelper
 import com.google.firebase.firestore.FirebaseFirestore
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_create_post.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -40,6 +41,9 @@ class CreatePostFragment : Fragment() {
     private lateinit var medias: ArrayList<File>
     private lateinit var rv:RecyclerView
     private lateinit var addMediaAdapter: AddMediaAdapter
+    private var isVideo = false
+    private lateinit var ctx : Context
+    private lateinit var videoPath :String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -53,13 +57,17 @@ class CreatePostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ctx = view.context
         medias = ArrayList<File>();
         db = FirebaseFirestore.getInstance()
         rv = add_media_rv
         uid =  view.context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("user_userId","")!!
         insert_img_btn.setOnClickListener(View.OnClickListener {
             var i = Intent(Intent.ACTION_GET_CONTENT)
-            i.setType("image/*")
+            i.setType("*/*")
+            val mimetypes = arrayOf("image/*", "video/*")
+            i.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
+//            i.setType(
             startActivityForResult(Intent.createChooser(i, "Choose Image"), 999)
         })
         val calendar = Calendar.getInstance()
@@ -117,12 +125,18 @@ class CreatePostFragment : Fragment() {
                                 twitter.setOAuthAccessToken(accessToken)
                                 val statusUpdate = StatusUpdate(post_content.text.toString())
                                 val mediaIds = LongArray(medias.size)
-                                for(idx in 0..medias.size-1){
-                                    val upload = twitter.uploadMedia(medias[idx])
-                                    mediaIds[idx] = upload.mediaId
+
+                                if(!isVideo){
+                                    for(idx in 0..medias.size-1){
+                                        val upload = twitter.uploadMedia(medias[idx])
+                                        mediaIds[idx] = upload.mediaId
+                                    }
+                                    statusUpdate.setMediaIds(*mediaIds)
+                                }else{
+                                    val mediaChunked = twitter.uploadMediaChunked(videoPath,File(videoPath).inputStream())
+                                    statusUpdate.setMediaIds(mediaChunked.mediaId)
                                 }
 
-                                statusUpdate.setMediaIds(*mediaIds)
 //                                Log.d("image",img.path)
                                 twitter.updateStatus(statusUpdate)
 
@@ -146,23 +160,95 @@ class CreatePostFragment : Fragment() {
             val path = RealPathHelper.getRealPath(this.context!!,data.data!!)
 //            Log.d("Data","= "+data.data)
 //            Log.d("Path","= "+)
-            Log.d("PATH",data.data!!.toString())
-            val img = File(path)
-            if (!img.isFile){
-                Log.d("ISFILE","NOPE "+img.absolutePath)
+            Log.d("PATH",path!!)
+            val file = File(path)
+            if (!file.isFile){
+                Log.d("ISFILE","NOPE "+file.absolutePath)
             }
             else{
-                medias.add(img)
-                val adapter = AddMediaAdapter(context,medias,this)
+                val fileExt = path.substring(path.lastIndexOf(".")+1)
+                var cancel = false
 
-                rv.layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-                rv.adapter = adapter
-                adapter.notifyDataSetChanged()
-                if(medias.size == 4) // max for twitter
+                if(fileExt.equals("mp4"))
                 {
-                    insert_img_btn.isEnabled = false
+                    Log.d("Fileext","Video")
+
+                    val alertDialogBuilder = AlertDialog.Builder(ctx)
+                    alertDialogBuilder.setTitle("Uploading Video")
+                    alertDialogBuilder.setMessage("You can only upload up to 4 images or a video. This will remove all existing images, do you understand?")
+                    alertDialogBuilder.setPositiveButton("Yes"){
+                        dialog, which ->
+                        run {
+                            isVideo = true;
+                            medias.clear()
+                            medias.add(file)
+                            val adapter = AddMediaAdapter(context, medias, this, isVideo)
+
+                            rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                            rv.adapter = adapter
+                            adapter.notifyDataSetChanged()
+                            if (medias.size == 4) // max for twitter
+                            {
+                                insert_img_btn.isEnabled = false
+                            }
+                            checkMediaStatus()
+                            videoPath = path
+                        }
+                    }
+                    alertDialogBuilder.setNegativeButton("No"){
+                        dialog, which -> cancel = true
+                    }
+                    alertDialogBuilder.show()
                 }
-                checkMediaStatus()
+                else{
+                    if(isVideo){
+                        val alertDialogBuilder = AlertDialog.Builder(ctx)
+                        alertDialogBuilder.setTitle("Uploading Video")
+                        alertDialogBuilder.setMessage("You can only upload up to 4 images or a video. This will remove existing video, do you understand?")
+                        alertDialogBuilder.setPositiveButton("Yes"){
+                            dialog, which ->
+                            run {
+                                isVideo = false;
+                                medias.clear()
+                                medias.clear()
+                                medias.add(file)
+                                val adapter = AddMediaAdapter(context, medias, this, isVideo)
+
+                                rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                                rv.adapter = adapter
+                                adapter.notifyDataSetChanged()
+                                if (medias.size == 4) // max for twitter
+                                {
+                                    insert_img_btn.isEnabled = false
+                                }
+                                checkMediaStatus()
+
+                            }
+                        }
+                        alertDialogBuilder.setNegativeButton("No"){
+                            dialog, which -> cancel = true
+                        }
+                        alertDialogBuilder.show()
+                    }
+                    else{
+
+                        medias.add(file)
+                        val adapter = AddMediaAdapter(context, medias, this, isVideo)
+
+                        rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                        rv.adapter = adapter
+                        adapter.notifyDataSetChanged()
+                        if (medias.size == 4) // max for twitter
+                        {
+                            insert_img_btn.isEnabled = false
+                        }
+                        checkMediaStatus()
+                    }
+
+                }
+
+
+
             }
         }
     }
