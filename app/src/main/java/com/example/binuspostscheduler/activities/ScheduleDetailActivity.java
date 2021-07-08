@@ -40,10 +40,10 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         date = findViewById(R.id.detailDate);
         desc = findViewById(R.id.detailDescription);
         hashtags = findViewById(R.id.detailHashtags);
-        image = findViewById(R.id.detailImage);
-        video = findViewById(R.id.detailVideo);
-        back = findViewById(R.id.detailBackBtn);
-        deleteBtn = findViewById(R.id.detailDeleteBtn);
+//        image = findViewById(R.id.detailImage);
+//        video = findViewById(R.id.detailVideo);
+//        back = findViewById(R.id.detailBackBtn);
+//        deleteBtn = findViewById(R.id.detailDeleteBtn);
         updateBtn = findViewById(R.id.detailUpdateBtn);
 
         Intent intent = getIntent();
@@ -76,25 +76,25 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         date.setText(dFormat.format(pDate));
         desc.setText(obj.getDescription());
-        image.setText(obj.getImage());
-        video.setText(obj.getVideo());
+//        image.setText(obj.getImage());
+//        video.setText(obj.getVideo());
         hashtags.setText(allTags);
 
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Toast.makeText(ScheduleDetailActivity.this, obj.getId(), Toast.LENGTH_SHORT).show();
-                deleteSchedule(obj.getId());
-            }
-        });
+//        back.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                finish();
+//            }
+//        });
+//
+//        deleteBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                Toast.makeText(ScheduleDetailActivity.this, obj.getId(), Toast.LENGTH_SHORT).show();
+//                deleteSchedule(obj.getId());
+//            }
+//        });
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override

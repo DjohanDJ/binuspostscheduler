@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_bold"
-            android:text="@string/connected_account"
+            android:text="Manage Accounts"
             android:gravity="center"
             android:textSize="@dimen/text_subtitle"
             android:textColor="@color/colorBlack"
@@ -32,7 +32,7 @@
                 android:id="@+id/add_twitter_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Twitter Account"
+                android:text="Twitter Account"
                 android:textSize="@dimen/text_content"
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/button2"
@@ -79,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button2"
-                android:text="Add Facebook Account"
+                android:text="Facebook Account"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/text_content" />
 
