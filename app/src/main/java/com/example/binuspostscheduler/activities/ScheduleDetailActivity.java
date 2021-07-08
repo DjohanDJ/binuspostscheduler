@@ -6,12 +6,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.example.binuspostscheduler.Adapter.PostDetailImageAdapter;
 import com.example.binuspostscheduler.Adapter.TodayScheduleAdapter;
@@ -36,10 +43,13 @@ import java.util.Date;
 
 public class ScheduleDetailActivity extends AppCompatActivity {
 
-    private TextView date,desc,hashtags,video;
+    private TextView date,desc,hashtags;
     private Button deleteBtn, updateBtn;
     private ImageView back;
     private RecyclerView imageRec;
+    private ScrollView sc;
+
+    private VideoView video;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +60,14 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         desc = findViewById(R.id.detailDescription);
         hashtags = findViewById(R.id.detailHashtags);
 
-//        video = findViewById(R.id.detailVideo);
+        video = findViewById(R.id.post_detail_video);
         back = findViewById(R.id.post_detail_back_arrow);
 //        deleteBtn = findViewById(R.id.detailDeleteBtn);
         updateBtn = findViewById(R.id.detailUpdateBtn);
         imageRec = findViewById(R.id.post_detail_image_recycler);
+        sc = findViewById(R.id.scrollView2);
+
+
 
         Intent intent = getIntent();
         final PostedSchedule obj = new PostedSchedule();
@@ -105,11 +118,26 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 //            }
 //        });
 
+//        String url = obj.getVideo();
+//        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(url , MediaStore.Video.Thumbnails.MICRO_KIND);
+        if(obj.getVideo().equals("-")){
+            video.setVisibility(View.GONE);
+        }else{
+            Uri uri = Uri.parse(obj.getVideo());
+            video.setVideoURI(uri);
+            MediaController mediaController = new MediaController(this);
+            video.setMediaController(mediaController);
+            mediaController.setAnchorView(video);
+        }
+
         ArrayList<String> imgList = new ArrayList<>();
+        imgList.add(obj.getImage());
         imgList.add(obj.getImage());
 
 
-
+        if(imgList.get(0).equals("-")){
+            imageRec.setVisibility(View.GONE);
+        }
 
         PostDetailImageAdapter comAdapter = new PostDetailImageAdapter(this, imgList);
         imageRec.setAdapter(comAdapter);
@@ -138,7 +166,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 //                obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
             }
         });
-
     }
 
     private void deleteSchedule(final String id) {
