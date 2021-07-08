@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.binuspostscheduler.R;
+import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
+import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.models.PostedSchedule;
 
 import java.text.ParseException;
@@ -92,6 +94,19 @@ public class UpdateScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                PostedSchedule updatedSchedule = new PostedSchedule();
+                updatedSchedule.setId(getIntent().getStringExtra("id"));
+                updatedSchedule.setDescription(detailDescription.getText().toString());
+                updatedSchedule.setVideo(getIntent().getStringExtra("video"));
+                updatedSchedule.setImage(getIntent().getStringExtra("image"));
+                updatedSchedule.setTime(getIntent().getStringExtra("time"));
+                updatedSchedule.setHashtags(getIntent().getStringArrayListExtra("hashtags"));
+                updatedSchedule.setSelected_id(getIntent().getStringArrayListExtra("selected_id"));
+
+                SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users" )
+                        .document(UserSession.getCurrentUser().getId())
+                        .collection("schedule")
+                        .document(getIntent().getStringExtra("id")).set(updatedSchedule);
             }
         });
 
@@ -99,8 +114,15 @@ public class UpdateScheduleActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month += 1;
-                String date = day + "/" + month + "/" + year;
-                detailDate.setText(date);
+                String date = day + "-" + month + "-" + year + " 00:00:00";
+                Date pDate = null;
+                SimpleDateFormat dFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                try {
+                    pDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                detailDate.setText(dFormat.format(pDate));
             }
         };
 
