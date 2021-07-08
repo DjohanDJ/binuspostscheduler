@@ -2,14 +2,19 @@ package com.example.binuspostscheduler.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.binuspostscheduler.Adapter.PostDetailImageAdapter;
+import com.example.binuspostscheduler.Adapter.TodayScheduleAdapter;
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
@@ -22,15 +27,19 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ScheduleDetailActivity extends AppCompatActivity {
 
-    private TextView date,desc,hashtags,image,video;
-    private Button back, deleteBtn, updateBtn;
+    private TextView date,desc,hashtags,video;
+    private Button deleteBtn, updateBtn;
+    private ImageView back;
+    private RecyclerView imageRec;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,11 +49,12 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         date = findViewById(R.id.detailDate);
         desc = findViewById(R.id.detailDescription);
         hashtags = findViewById(R.id.detailHashtags);
-//        image = findViewById(R.id.detailImage);
+
 //        video = findViewById(R.id.detailVideo);
-//        back = findViewById(R.id.detailBackBtn);
+        back = findViewById(R.id.post_detail_back_arrow);
 //        deleteBtn = findViewById(R.id.detailDeleteBtn);
         updateBtn = findViewById(R.id.detailUpdateBtn);
+        imageRec = findViewById(R.id.post_detail_image_recycler);
 
         Intent intent = getIntent();
         final PostedSchedule obj = new PostedSchedule();
@@ -76,18 +86,17 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         date.setText(dFormat.format(pDate));
         desc.setText(obj.getDescription());
-//        image.setText(obj.getImage());
 //        video.setText(obj.getVideo());
         hashtags.setText(allTags);
 
 
-//        back.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                finish();
-//            }
-//        });
-//
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
 //        deleteBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -95,6 +104,18 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 //                deleteSchedule(obj.getId());
 //            }
 //        });
+
+        ArrayList<String> imgList = new ArrayList<>();
+        imgList.add(obj.getImage());
+
+
+
+
+        PostDetailImageAdapter comAdapter = new PostDetailImageAdapter(this, imgList);
+        imageRec.setAdapter(comAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        imageRec.setLayoutManager(layoutManager);
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override

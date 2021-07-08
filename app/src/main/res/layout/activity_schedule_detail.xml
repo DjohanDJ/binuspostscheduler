@@ -33,13 +33,25 @@
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:text="Post detail"
+                android:layout_marginStart="30dp"
+                android:text="Post Detail"
                 android:textColor="@color/colorWhite"
-                android:textSize="30dp"
+                android:textStyle="bold"
+                android:textSize="24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view2"
+                app:layout_constraintStart_toEndOf="@+id/post_detail_back_arrow"
+                app:layout_constraintTop_toTopOf="@+id/view2"
+                app:layout_constraintVertical_bias="0.526" />
+
+            <ImageView
+                android:id="@+id/post_detail_back_arrow"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_arrow_back"
                 app:layout_constraintBottom_toBottomOf="@+id/view2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/view2" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/detailDescription"
@@ -78,14 +90,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/detailHashtags" />
 
 
-<!--            <ImageView-->
-<!--                android:id="@+id/imageView9"-->
-<!--                android:layout_width="20dp"-->
-<!--                android:layout_height="20dp"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:src="@drawable/ic_desc_icon"-->
-<!--                app:layout_constraintStart_toStartOf="@+id/textView9"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/detailHashtags" />-->
 
             <TextView
                 android:id="@+id/textView8"
@@ -110,42 +114,18 @@
                 app:layout_constraintStart_toEndOf="@+id/textView8"
                 app:layout_constraintTop_toTopOf="@+id/textView8" />
 
-            <!--            <TextView-->
-<!--                android:id="@+id/textView9"-->
-<!--                android:layout_width="40dp"-->
-<!--                android:layout_height="40dp"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:gravity="center"-->
-<!--                android:src="@drawable/ic_calendar"-->
-<!--                android:text="#"-->
-<!--                android:textSize="30dp"-->
-<!--                app:layout_constraintEnd_toEndOf="@+id/imageView8"-->
-<!--                app:layout_constraintStart_toStartOf="@+id/imageView8"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/detailDate" />-->
 
-<!--            <TextView-->
-<!--                android:id="@+id/textView10"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="10dp"-->
-<!--                android:text="Hashtag"-->
-<!--                android:textColor="@color/colorBlack"-->
-<!--                android:textSize="20dp"-->
-<!--                app:layout_constraintBottom_toBottomOf="@+id/textView9"-->
-<!--                app:layout_constraintStart_toEndOf="@+id/textView9"-->
-<!--                app:layout_constraintTop_toTopOf="@+id/textView9" />-->
-
-
-
-<!--                android:textSize="18dp"-->
-<!--                app:layout_constraintStart_toStartOf="@+id/textView9"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/textView9" />-->
-
-
-
-
-
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/post_detail_image_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="25dp"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView8" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -155,203 +135,18 @@
     <Button
         android:id="@+id/detailUpdateBtn"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_marginStart="35dp"
         android:layout_marginEnd="35dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button3"
         android:text="Edit"
-        android:textSize="15dp"
-        android:background="@drawable/button2"
         android:textColor="@color/colorWhite"
-        android:layout_marginBottom="15dp"
+        android:textSize="15dp"
         app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-
-    <!--    <ScrollView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
-<!--        -->
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/textView"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Post Detail"-->
-<!--                android:textStyle="bold|normal"-->
-<!--                android:textColor="@color/colorBlack"-->
-<!--                android:textSize="30dp"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--            <LinearLayout-->
-<!--                android:orientation="vertical"-->
-<!--                android:id="@+id/imageView6"-->
-<!--                android:layout_width="320dp"-->
-<!--                android:padding="100px"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:background="@drawable/white_box_shadow"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/textView">-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-
-<!--                    android:text="Date and Time"-->
-<!--                    android:textColor="@color/colorBlack"-->
-<!--                    android:textSize="18dp"-->
-<!--                    android:textStyle="bold"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/detailDate"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="dd MMM yyyy 00:00"-->
-<!--                    android:padding="10dp"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/textView3"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="Description"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:textColor="@color/colorBlack"-->
-<!--                    android:textSize="18dp"-->
-<!--                    android:textStyle="bold"-->
-<!--                   />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/detailDescription"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="Description testing testing 123 hello"-->
-<!--                    android:padding="10dp"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:text="Hashtags"-->
-<!--                    android:textColor="@color/colorBlack"-->
-<!--                    android:textSize="18dp"-->
-<!--                    android:textStyle="bold"-->
-<!--                   />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/detailHashtags"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="Hashtags hashtags"-->
-<!--                    android:padding="10dp"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:text="Image"-->
-<!--                    android:textColor="@color/colorBlack"-->
-<!--                    android:textSize="18dp"-->
-<!--                    android:textStyle="bold"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/detailImage"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="image link"-->
-<!--                    android:padding="10dp"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:text="Video"-->
-<!--                    android:textColor="@color/colorBlack"-->
-<!--                    android:textSize="18dp"-->
-<!--                    android:textStyle="bold"-->
-<!--                    />-->
-
-<!--                <TextView-->
-<!--                    android:id="@+id/detailVideo"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="video link"-->
-<!--                    android:padding="10dp"-->
-<!--                    />-->
-
-
-<!--            </LinearLayout>-->
-
-<!--            <Button-->
-<!--                android:id="@+id/detailBackBtn"-->
-<!--                android:layout_width="100dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:layout_marginStart="92dp"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:layout_marginBottom="20dp"-->
-<!--                android:background="@drawable/primary_button_shape"-->
-<!--                android:text="Back"-->
-<!--                android:textColor="@color/colorWhite"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/imageView6"-->
-<!--                app:layout_constraintVertical_bias="0.0" />-->
-
-<!--            <Button-->
-<!--                android:id="@+id/detailDeleteBtn"-->
-<!--                android:layout_width="100dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:layout_marginBottom="20dp"-->
-<!--                android:background="@drawable/delete_button"-->
-<!--                android:text="Delete"-->
-<!--                android:textColor="@color/colorWhite"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.26"-->
-<!--                app:layout_constraintStart_toEndOf="@+id/detailBackBtn"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/imageView6"-->
-<!--                app:layout_constraintVertical_bias="0.0" />-->
-
-<!--            <Button-->
-<!--                android:id="@+id/detailUpdateBtn"-->
-<!--                android:layout_width="100dp"-->
-<!--                android:layout_height="50dp"-->
-<!--                android:background="@drawable/delete_button"-->
-<!--                android:layout_marginTop="15dp"-->
-<!--                android:text="Update"-->
-<!--                android:textColor="@color/colorWhite"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/detailDeleteBtn" />-->
-
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--        -->
-<!--    </ScrollView>-->
 
 
 
