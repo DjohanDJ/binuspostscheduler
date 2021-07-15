@@ -33,6 +33,16 @@
         app:layout_constraintVertical_bias="0.526" />
 
 
+    <ImageView
+        android:id="@+id/postListButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/ic_publish"
+        app:layout_constraintBottom_toBottomOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="@+id/view2"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <ImageView
         android:id="@+id/post_detail_back_arrow"
@@ -163,6 +173,7 @@
 
     </ScrollView>
 
+
     <View
         android:id="@+id/view3"
         android:layout_width="match_parent"
@@ -172,21 +183,122 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/detailUpdateBtn"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginEnd="35dp"
-        android:background="@drawable/button3"
-        android:text="Edit"
-        android:textColor="@color/colorWhite"
-        android:textSize="15dp"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/view3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/view3" />
+        app:layout_constraintTop_toTopOf="@+id/view3">
 
+        <Button
+            android:id="@+id/detailUpdateBtn"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
+            android:background="@drawable/button3"
+            android:text="Edit"
+            android:textColor="@color/colorWhite"
+            android:textSize="15dp" />
+
+    </RelativeLayout>
+
+
+
+    <View
+        android:visibility="gone"
+        android:id="@+id/back_50alpha_black"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBlack"
+        app:layout_constraintBottom_toBottomOf="@+id/view3"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:alpha="0.5"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="@+id/view2"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        android:id="@+id/postListConstraint"
+        android:layout_width="330dp"
+        android:layout_height="200dp"
+        android:background="@drawable/white_box_shadow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view2">
+
+        <ImageView
+            android:id="@+id/closePostList"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Post On"
+            android:textColor="@color/colorBlack"
+            android:textSize="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.facebook.share.widget.ShareButton
+            android:id="@+id/FacebookShareButton"
+            android:layout_width="220dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:text="FACEBOOK"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+        <Button
+            android:id="@+id/TwitterShareButton"
+            android:layout_width="220dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button2"
+            android:text="Twitter"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/FacebookShareButton" />
+
+        <Button
+            android:id="@+id/InstagramShareButton"
+            android:layout_width="220dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button2"
+            android:text="Instagram"
+            android:textColor="@color/colorWhite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/TwitterShareButton" />
+
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/gettingBitmap"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 
