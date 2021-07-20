@@ -41,5 +41,6 @@
     <string name="schedules">Schedules</string>
 
     <string name="facebook_app_id">216327573669340</string> <string name="fb_login_protocol_scheme">fb216327573669340</string>
+    <string name="meeting_updated">Schedule updated</string>
 
 </resources>

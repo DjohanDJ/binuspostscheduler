@@ -12,11 +12,13 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.models.PostedSchedule;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +29,7 @@ public class UpdateScheduleActivity extends AppCompatActivity {
 
     private TextView detailDate;
     private Button changeDate, updateButton;
-    private EditText detailDescription, detailHashTags;
+    private EditText detailDescription, detailHashTags, timeHour;
     DatePickerDialog.OnDateSetListener setListener;
 
     @Override
@@ -99,14 +101,22 @@ public class UpdateScheduleActivity extends AppCompatActivity {
                 updatedSchedule.setDescription(detailDescription.getText().toString());
                 updatedSchedule.setVideo(getIntent().getStringExtra("video"));
                 updatedSchedule.setImage(getIntent().getStringExtra("image"));
-                updatedSchedule.setTime(getIntent().getStringExtra("time"));
+                updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString());
                 updatedSchedule.setHashtags(getIntent().getStringArrayListExtra("hashtags"));
                 updatedSchedule.setSelected_id(getIntent().getStringArrayListExtra("selected_id"));
+
 
                 SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users" )
                         .document(UserSession.getCurrentUser().getId())
                         .collection("schedule")
-                        .document(getIntent().getStringExtra("id")).set(updatedSchedule);
+                        .document(getIntent().getStringExtra("id")).set(updatedSchedule)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(UpdateScheduleActivity.this, getResources().getString(R.string.meeting_updated), Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        });;
             }
         });
 
@@ -114,11 +124,12 @@ public class UpdateScheduleActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 month += 1;
-                String date = day + "-" + month + "-" + year + " 00:00:00";
+                // ini day of month
+                String date = dayOfMonth + "-" + month + "-" + year;
                 Date pDate = null;
-                SimpleDateFormat dFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
+                SimpleDateFormat dFormat = new SimpleDateFormat("dd-mm-yyyy");
                 try {
-                    pDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(date);
+                    pDate = new SimpleDateFormat("dd-mm-yyyy").parse(date);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -129,10 +140,10 @@ public class UpdateScheduleActivity extends AppCompatActivity {
     }
 
     private void fetchData(PostedSchedule obj) {
-        SimpleDateFormat dFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
+        SimpleDateFormat dFormat = new SimpleDateFormat("dd-mm-yyyy");
         Date pDate = null;
         try {
-            pDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(obj.getTime());
+            pDate = new SimpleDateFormat("dd-mm-yyyy").parse(obj.getTime());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -147,11 +158,14 @@ public class UpdateScheduleActivity extends AppCompatActivity {
             }
         }
 
-        detailDate.setText(dFormat.format(pDate));
+//        detailDate.setText(dFormat.format(pDate));
         detailDescription.setText(obj.getDescription());
 //        image.setText(obj.getImage());
 //        video.setText(obj.getVideo());
         detailHashTags.setText(allTags);
+        String[] arrSplit = obj.getTime().split(" ");
+        detailDate.setText(arrSplit[0]);
+        timeHour.setText(arrSplit[1]);
     }
 
     private void initializeItems() {
@@ -161,5 +175,6 @@ public class UpdateScheduleActivity extends AppCompatActivity {
         this.detailHashTags = findViewById(R.id.detailHashtags);
         this.changeDate = findViewById(R.id.changeDate);
         this.updateButton = findViewById(R.id.detailUpdateBtn);
+        this.timeHour = findViewById(R.id.timeHour);
     }
 }

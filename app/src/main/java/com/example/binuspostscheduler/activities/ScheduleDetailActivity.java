@@ -233,6 +233,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 intentUpdate.putExtra("hashtags", intent.getStringArrayListExtra("hashtags"));
                 intentUpdate.putExtra("selected_id", intent.getStringArrayListExtra("selected_id"));
                 startActivity(intentUpdate);
+                finish();
 //                obj.setId(intent.getStringExtra("id"));
 //                obj.setDescription(intent.getStringExtra("description"));
 //                obj.setVideo(intent.getStringExtra("video"));

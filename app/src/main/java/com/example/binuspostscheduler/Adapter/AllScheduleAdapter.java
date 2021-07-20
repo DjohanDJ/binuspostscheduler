@@ -1,5 +1,6 @@
 package com.example.binuspostscheduler.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -70,6 +71,7 @@ public class AllScheduleAdapter extends RecyclerView.Adapter<AllScheduleAdapter.
                 myIntent.putExtra("time", post.getTime());
                 myIntent.putExtra("selected_id", post.getSelected_id());
                 ctx.startActivity(myIntent);
+//                ((Activity)view.getContext()).finish();
             }
         });
     }
