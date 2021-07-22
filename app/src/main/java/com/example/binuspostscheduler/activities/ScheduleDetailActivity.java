@@ -19,6 +19,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -69,6 +71,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ScheduleDetailActivity extends AppCompatActivity {
 
@@ -111,8 +115,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         shareFB = findViewById(R.id.FacebookShareButton);
         igShare = findViewById(R.id.InstagramShareButton);
 
-        getBitmap = findViewById(R.id.gettingBitmap);
-        getBitmap.setImageResource(R.drawable.image1);
+
 
         Intent intent = getIntent();
         final PostedSchedule obj = new PostedSchedule();
@@ -123,6 +126,8 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         obj.setTime(intent.getStringExtra("time"));
         obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
         obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
+
+
 
         SimpleDateFormat dFormat = new SimpleDateFormat("dd MMM yyyy HH:mm");
         Date pDate = null;
@@ -354,73 +359,85 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         this.sendBroadcast(mediaScanIntent);
     }
 
-    private void setShareFacebook(ArrayList<String> imgList,PostedSchedule obj, Context ctx){
+    private void setShareFacebook(ArrayList<String> imgList,PostedSchedule obj, Context ctx) {
 
         ArrayList<SharePhoto> sharePhotos = new ArrayList<>();
 
         //set video masih belum
-        //set image juga masih belum benar
+        //set image udah benar tinggal ganti atribut jadi array list di firestore
 
-        BitmapDrawable bm = (BitmapDrawable) getBitmap.getDrawable();
-        Bitmap myBitmap = bm.getBitmap();
+
 
         for(String urlImg : imgList){
-            SharePhoto sharePhoto = new SharePhoto.Builder()
-                    .setBitmap(myBitmap)
-                    .build();
+            Bitmap pcBitmap = null;
 
-            sharePhotos.add(sharePhoto);
-        }
+            Picasso.get().load(urlImg).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    SharePhoto sharePhoto = new SharePhoto.Builder()
+                            .setBitmap(bitmap)
+                            .build();
 
-        ShareContent shareContent = null;
+                    sharePhotos.add(sharePhoto);
 
-        if(sharePhotos.size() == 1){
-             shareContent = new ShareMediaContent.Builder()
-                    .addMedium(sharePhotos.get(0))
-                    .build();
-        }else if(sharePhotos.size() == 2){
-             shareContent = new ShareMediaContent.Builder()
-                    .addMedium(sharePhotos.get(0))
-                    .addMedium(sharePhotos.get(1))
-                    .build();
-        }else if(sharePhotos.size() == 3){
-             shareContent = new ShareMediaContent.Builder()
-                    .addMedium(sharePhotos.get(0))
-                    .addMedium(sharePhotos.get(1))
-                    .addMedium(sharePhotos.get(2))
-                    .build();
-        }else if(sharePhotos.size() == 4){
-             shareContent = new ShareMediaContent.Builder()
-                    .addMedium(sharePhotos.get(0))
-                    .addMedium(sharePhotos.get(1))
-                    .addMedium(sharePhotos.get(2))
-                    .addMedium(sharePhotos.get(3))
-                    .build();
-        }
+                    if(sharePhotos.size() == imgList.size()){
+                        ShareContent shareContent = null;
 
-        shareFB.setShareContent(shareContent);
+                        if(sharePhotos.size() == 1){
+                            shareContent = new ShareMediaContent.Builder()
+                                    .addMedium(sharePhotos.get(0))
+                                    .build();
+                        }else if(sharePhotos.size() == 2){
+                            shareContent = new ShareMediaContent.Builder()
+                                    .addMedium(sharePhotos.get(0))
+                                    .addMedium(sharePhotos.get(1))
+                                    .build();
+                        }else if(sharePhotos.size() == 3){
+                            shareContent = new ShareMediaContent.Builder()
+                                    .addMedium(sharePhotos.get(0))
+                                    .addMedium(sharePhotos.get(1))
+                                    .addMedium(sharePhotos.get(2))
+                                    .build();
+                        }else if(sharePhotos.size() == 4){
+                            shareContent = new ShareMediaContent.Builder()
+                                    .addMedium(sharePhotos.get(0))
+                                    .addMedium(sharePhotos.get(1))
+                                    .addMedium(sharePhotos.get(2))
+                                    .addMedium(sharePhotos.get(3))
+                                    .build();
+                        }
 
-        shareFB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String desc = obj.getDescription() + "\n\n";
+                        shareFB.setShareContent(shareContent);
 
-                for(String hash: obj.getHashtags()){
-                    desc += hash + " ";
+                        shareFB.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String desc = obj.getDescription() + "\n\n";
+
+                                for(String hash: obj.getHashtags()){
+                                    desc += hash + " ";
+                                }
+
+                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                ClipData clip = ClipData.newPlainText("", desc);
+                                clipboard.setPrimaryClip(clip);
+                                Toast.makeText(ctx, "Description copied to clipboard", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
 
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("", desc);
-                clipboard.setPrimaryClip(clip);
-                Toast.makeText(ctx, "Description copied to clipboard", Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                    Toast.makeText(ctx, "fail", Toast.LENGTH_SHORT).show();
+                }
 
-//        ShareLinkContent slc = new ShareLinkContent.Builder()
-//                .setContentUrl(Uri.parse(obj.getVideo()))
-//                .setContentTitle("")
-//                .build();
-//        shareFB.setShareContent(slc);
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
+        }
 
     }
 
