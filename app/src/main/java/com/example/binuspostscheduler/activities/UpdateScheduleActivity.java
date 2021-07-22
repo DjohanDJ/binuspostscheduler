@@ -164,8 +164,9 @@ public class UpdateScheduleActivity extends AppCompatActivity {
 //        video.setText(obj.getVideo());
         detailHashTags.setText(allTags);
         String[] arrSplit = obj.getTime().split(" ");
+        String[] timeSplit = arrSplit[1].split(":");
         detailDate.setText(arrSplit[0]);
-        timeHour.setText(arrSplit[1]);
+        timeHour.setText(timeSplit[0] + ":" + timeSplit[1]);
     }
 
     private void initializeItems() {
