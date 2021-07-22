@@ -366,8 +366,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         //set video masih belum
         //set image udah benar tinggal ganti atribut jadi array list di firestore
 
-
-
         for(String urlImg : imgList){
             Bitmap pcBitmap = null;
 
