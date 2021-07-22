@@ -36,7 +36,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -122,14 +125,25 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(calendar.get(calendar.YEAR), calendar.get(calendar.MONTH), calendar.get(calendar.DATE),calendar.get(calendar.HOUR),  calendar.get(calendar.MINUTE), 0);
-
-        Calendar now = Calendar.getInstance();
+        calendar.set(calendar.get(calendar.YEAR), calendar.get(calendar.MONTH), calendar.get(calendar.DATE),calendar.get(calendar.HOUR_OF_DAY),  calendar.get(calendar.MINUTE), 0);
 
         calendar.add(Calendar.MINUTE, 1);
 
-        int triggerEvery = 60 * 1000;
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - now.getTimeInMillis(), triggerEvery, pendingIntent);
+        String now = "" + calendar.get(calendar.DATE) + "-" +  (calendar.get(calendar.MONTH) + 1)+"-"+calendar.get(calendar.YEAR) + " "
+                + calendar.get(calendar.HOUR_OF_DAY) + ":" + calendar.get(calendar.MINUTE)  + ":00";
+
+
+        Date date = null;
+
+        try {
+            date = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(now);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        int repeatEvery = 1000 * 60 * 1; //1 menit
+
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,  date.getTime(), repeatEvery, pendingIntent);
     }
 
     void createNotifChannel(){

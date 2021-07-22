@@ -29,21 +29,20 @@ import java.util.Objects;
 
 public class NotificationBroadcast extends BroadcastReceiver {
     final ArrayList<PostedSchedule> postedList = new ArrayList<>();
-    final ArrayList<PostedSchedule> todayPostedList = new ArrayList<>();
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        sendNotif(context);
+        checkSchdule(context);
+    }
 
+    void checkSchdule(Context context){
         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users")
                 .document(UserSession.getCurrentUser().getId()).collection("schedule")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-
                     postedList.clear();
-                    todayPostedList.clear();
                     for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
                         PostedSchedule postedSchedule = documentSnapshot.toObject(PostedSchedule.class);
                         postedList.add(postedSchedule);
@@ -63,15 +62,17 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         }
                         postDate = dFormat.format(pDate);
 
+//                        Toast.makeText(context, today + "--" +postDate, Toast.LENGTH_SHORT).show();
+
                         if(today.equalsIgnoreCase(postDate)){
                             sendNotif(context);
-                            Toast.makeText(context, "asd", Toast.LENGTH_SHORT).show();
                             break;
                         }
                     }
                 }
             }
         });
+
     }
 
 
@@ -79,7 +80,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notifChannel").setSmallIcon(R.drawable.messenger_bubble_large_blue)
                 .setContentTitle("Posting Reminder")
                 .setContentText("Time to post the content")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_MAX);
 
         NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);
 
