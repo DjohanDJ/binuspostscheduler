@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
@@ -22,6 +23,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -65,6 +67,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
@@ -86,6 +89,12 @@ public class ScheduleDetailActivity extends AppCompatActivity {
     private View b50ab;
     private ShareButton shareFB;
 
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
     private static  int REQUEST_CODE = 100;
     OutputStream outputStream;
 
@@ -93,6 +102,8 @@ public class ScheduleDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_detail);
+
+        verifyStoragePermissions(this);
 
         Context ctx = this;
 
@@ -122,7 +133,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         obj.setId(intent.getStringExtra("id"));
         obj.setDescription(intent.getStringExtra("description"));
         obj.setVideo(intent.getStringExtra("video"));
-        obj.setImage(intent.getStringExtra("image"));
+        obj.setImage(intent.getStringArrayListExtra("image"));
         obj.setTime(intent.getStringExtra("time"));
         obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
         obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
@@ -205,12 +216,9 @@ public class ScheduleDetailActivity extends AppCompatActivity {
             mediaController.setAnchorView(video);
         }
 
-        ArrayList<String> imgList = new ArrayList<>();
-        imgList.add(obj.getImage());
-        imgList.add(obj.getImage());
+        ArrayList<String> imgList = obj.getImage();
 
         setShareFacebook(imgList, obj, this);
-
 
         if(imgList.get(0).equals("-")){
             imageRec.setVisibility(View.GONE);
@@ -221,9 +229,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         imageRec.setLayoutManager(layoutManager);
-
-
-
 
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
@@ -261,23 +266,26 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("", desc);
                 clipboard.setPrimaryClip(clip);
-                Toast.makeText(ctx, "Description copied to clipboard", Toast.LENGTH_SHORT).show();
 
 
-                //ga jalan
-                galleryAddPic(obj.getImage());
+                ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
-
-
-//                if(ContextCompat.checkSelfPermission(ScheduleDetailActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
-//                    saveImage();
-//
-//
-//                }else{
-//
-//                    askPermission();
-//
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+//                            PackageManager.PERMISSION_DENIED) {
+//                        String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+//                        requestPermissions(permission, 1);
+//                    } else {
+//                        saveImage(obj.getImage());
+//                    }
 //                }
+
+
+
+                saveImage(obj.getImage());
+
+//                Toast.makeText(ctx, "Description copied and image saved", Toast.LENGTH_SHORT).show();
 
                 Uri uri = Uri.parse("http://instagram.com/");
                 Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
@@ -290,73 +298,75 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                     startActivity(new Intent(Intent.ACTION_VIEW,
                             Uri.parse("http://instagram.com")));
                 }
-
-
-
             }
         });
     }
 
-    private void askPermission(){
-        ActivityCompat.requestPermissions(ScheduleDetailActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
+    private void saveImage(ArrayList<String> imgList) {
+        for(String urlImg : imgList){
+            Picasso.get().load(urlImg).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                    FileOutputStream outputStream = null;
+                    File file = Environment.getExternalStorageDirectory();
+                    File dir = new File(file + "/DCIM");
+                    dir.mkdirs();
+
+                    File file1 = new File(dir, System.currentTimeMillis() + ".PNG");
+                    try {
+                        outputStream = new FileOutputStream(file1);
+                        bitmap.compress(Bitmap.CompressFormat.PNG,100, outputStream);
+                        outputStream.flush();
+                        outputStream.close();
+                        Toast.makeText(ScheduleDetailActivity.this, "Image succes", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(ScheduleDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
+        }
+
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if(requestCode == REQUEST_CODE){
-            if(grantResults.length  > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                saveImage();
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                } else {
+                    Toast.makeText(this, "Permission enable", Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void saveImage(){
-//        File dir = new File(Environment.getDataDirectory(), "SavedImage");
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        File dir = new File(Environment.getExternalStorageDirectory() + "/DCIM");
-
-        if(!dir.exists()){
-            dir.mkdir();
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
         }
-
-        BitmapDrawable bm = (BitmapDrawable) getBitmap.getDrawable();
-        Bitmap myBitmap = bm.getBitmap();
-
-        File file = new File(dir, System.currentTimeMillis()+".jpg");
-        try {
-            outputStream = new FileOutputStream(file);
-            //eror pas ini jalan
-            myBitmap.compress(Bitmap.CompressFormat.JPEG,100, outputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-        try {
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    private void galleryAddPic(String path) {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(path);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
     }
 
     private void setShareFacebook(ArrayList<String> imgList,PostedSchedule obj, Context ctx) {

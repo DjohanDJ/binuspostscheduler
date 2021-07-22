@@ -44,7 +44,7 @@ public class UpdateScheduleActivity extends AppCompatActivity {
         obj.setId(intent.getStringExtra("id"));
         obj.setDescription(intent.getStringExtra("description"));
         obj.setVideo(intent.getStringExtra("video"));
-        obj.setImage(intent.getStringExtra("image"));
+        obj.setImage(intent.getStringArrayListExtra("image"));
         obj.setTime(intent.getStringExtra("time"));
         obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
         obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
@@ -100,7 +100,7 @@ public class UpdateScheduleActivity extends AppCompatActivity {
                 updatedSchedule.setId(getIntent().getStringExtra("id"));
                 updatedSchedule.setDescription(detailDescription.getText().toString());
                 updatedSchedule.setVideo(getIntent().getStringExtra("video"));
-                updatedSchedule.setImage(getIntent().getStringExtra("image"));
+                updatedSchedule.setImage(getIntent().getStringArrayListExtra("image"));
                 updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString());
                 updatedSchedule.setHashtags(getIntent().getStringArrayListExtra("hashtags"));
                 updatedSchedule.setSelected_id(getIntent().getStringArrayListExtra("selected_id"));
