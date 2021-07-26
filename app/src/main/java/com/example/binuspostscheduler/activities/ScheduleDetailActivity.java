@@ -451,9 +451,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
     private void deleteSchedule(final String id) {
 //        Toast.makeText(this, UserSession.getCurrentUser().getId(), Toast.LENGTH_SHORT).show();
-        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users" )
-                .document(UserSession.getCurrentUser().getId())
-                .collection("schedule")
+        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
                 .document(id)
 //                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //                    @Override

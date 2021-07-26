@@ -101,14 +101,12 @@ public class UpdateScheduleActivity extends AppCompatActivity {
                 updatedSchedule.setDescription(detailDescription.getText().toString());
                 updatedSchedule.setVideo(getIntent().getStringExtra("video"));
                 updatedSchedule.setImage(getIntent().getStringArrayListExtra("image"));
+                updatedSchedule.setUser_id(UserSession.getCurrentUser().getId());
                 updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString());
                 updatedSchedule.setHashtags(getIntent().getStringArrayListExtra("hashtags"));
                 updatedSchedule.setSelected_id(getIntent().getStringArrayListExtra("selected_id"));
 
-
-                SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users" )
-                        .document(UserSession.getCurrentUser().getId())
-                        .collection("schedule")
+                SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
                         .document(getIntent().getStringExtra("id")).set(updatedSchedule)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
@@ -117,6 +115,18 @@ public class UpdateScheduleActivity extends AppCompatActivity {
                                 finish();
                             }
                         });;
+
+//                SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users" )
+//                        .document(UserSession.getCurrentUser().getId())
+//                        .collection("schedule")
+//                        .document(getIntent().getStringExtra("id")).set(updatedSchedule)
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                Toast.makeText(UpdateScheduleActivity.this, getResources().getString(R.string.meeting_updated), Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+//                        });;
             }
         });
 
