@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/tw__blue_default"
+    android:layout_height="200px">
+
+    <ImageView
+        android:id="@+id/account_type_icon"
+        android:src="@drawable/tw__ic_logo_default"
+        android:background="@color/tw__blue_default"
+        android:layout_width="150px"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/account_username"
+        android:textColor="@color/tw__solid_white"
+        android:paddingHorizontal="20dp"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:text="Username"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/account_checked_icon"
+            android:src="@drawable/ic_baseline_check_circle_outline_24_alt"
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

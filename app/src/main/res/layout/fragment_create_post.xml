@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingHorizontal="10sp"
     tools:context=".fragments.CreatePostFragment">
 
-   <RelativeLayout
-
+   <LinearLayout
+       android:orientation="vertical"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
@@ -24,36 +25,64 @@
            android:gravity="start"
            android:id="@+id/post_content"
            android:maxLength="240"
-           android:layout_below="@id/post_content_text"
+
            android:layout_width="match_parent"
            android:background="@drawable/bg_border"
            android:layout_height="200dp"/>
+       <TextView
+           android:textSize="20sp"
+           android:textColor="@color/colorBlack"
+           android:text="Tags (For Facebook Only)"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"/>
+
+       <LinearLayout
+           android:orientation="vertical"
+           android:id="@+id/added_tags_container"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+
+       </LinearLayout>
+       <LinearLayout
+           android:id="@+id/add_tags_placeholder_container"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+
+           <EditText
+               android:textColor="@color/tw__blue_default"
+               android:id="@+id/add_tags_placeholder"
+               android:layout_width="150dp"
+               android:layout_height="match_parent"
+               android:background="@drawable/bg_border"
+               android:paddingHorizontal="2dp" />
+
+           <ImageView
+               android:id="@+id/add_tags_icon"
+               android:src="@drawable/ic_plus_foreground"
+               android:layout_width="50dp"
+               android:layout_height="50dp"/>
+       </LinearLayout>
 
        <Button
            android:id="@+id/insert_img_btn"
            android:layout_height="wrap_content"
            android:layout_width="match_parent"
            android:layout_marginTop="20dp"
-           android:layout_below="@id/post_content"
+
            android:text="Insert Image"
            android:background="@drawable/primary_button_shape"
            />
-       <RelativeLayout
-           android:id="@+id/img_preview_container"
-           android:layout_marginTop="10dp"
-           android:layout_below="@id/insert_img_btn"
-           android:layout_width="match_parent"
-           android:gravity="center"
-           android:layout_height="wrap_content">
-           <androidx.recyclerview.widget.RecyclerView
+
+       <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="10dp"
                android:visibility="gone"
                android:id="@+id/add_media_rv"
                android:layout_width="wrap_content"
                android:layout_height="200dp"/>
-       </RelativeLayout>
+
        <TextView
            android:id="@+id/post_schedule_text"
-           android:layout_below="@id/img_preview_container"
+
            android:textSize="@dimen/text_subtitle"
            android:textColor="@color/colorBlack"
            android:fontFamily="@font/poppins_medium"
@@ -79,16 +108,47 @@
                android:layout_height="wrap_content"/>
 
        </RadioGroup>
+       <androidx.appcompat.widget.LinearLayoutCompat
+           android:id="@+id/schedule_later_container"
+           android:layout_below="@id/post_schedule_radio_group"
+           android:orientation="vertical"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <TextView
+
+               android:text="DD MM YYYY HH:MM:SS"
+               android:textColor="@color/colorBlack"
+
+               android:id="@+id/schedule_later_description"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"/>
+           <LinearLayout
+               android:id="@+id/schedule_later_detail_container"
+               android:layout_below="@id/schedule_later_description"
+               android:layout_width="match_parent"
+               android:orientation="horizontal"
+               android:layout_height="wrap_content">
+               <Spinner
+                   android:id="@+id/schedule_later_spinner_daily"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"/>
+               <Spinner
+                   android:visibility="gone"
+                   android:id="@+id/schedule_later_spinner_times"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"/>
+           </LinearLayout>
+       </androidx.appcompat.widget.LinearLayoutCompat>
         <Button
             android:id="@+id/schedule_post_btn"
             android:layout_marginTop="50dp"
-            android:layout_below="@id/post_schedule_radio_group"
+            android:layout_below="@id/schedule_later_container"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="Schedule Post"
             android:background="@drawable/primary_button_shape"
              />
 
-   </RelativeLayout>
+   </LinearLayout>
 
 </FrameLayout>

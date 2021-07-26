@@ -15,6 +15,7 @@
             android:layout_height="500dp"/>
 
         <Button
+            android:id="@+id/select_account_btn"
             android:textColor="@color/colorBlack"
             android:fontFamily="@font/poppins_medium"
             android:text="Select Account"
