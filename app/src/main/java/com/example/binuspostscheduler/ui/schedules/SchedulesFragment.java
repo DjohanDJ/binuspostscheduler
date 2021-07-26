@@ -61,18 +61,25 @@ public class SchedulesFragment extends Fragment {
     }
 
     public void setAdapter(final Context ctx){
+        final ArrayList<PostedSchedule> postedListRaw = new ArrayList<>();
         final ArrayList<PostedSchedule> postedList = new ArrayList<>();
 
-        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users")
-                .document(UserSession.getCurrentUser().getId()).collection("schedule")
+        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+                    postedListRaw.clear();
                     postedList.clear();
                     for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
                         PostedSchedule postedSchedule = documentSnapshot.toObject(PostedSchedule.class);
-                        postedList.add(postedSchedule);
+                        postedListRaw.add(postedSchedule);
+                    }
+
+                    for(PostedSchedule post : postedListRaw){
+                        if(post.getUser_id().equalsIgnoreCase(UserSession.getCurrentUser().getId())){
+                            postedList.add(post);
+                        }
                     }
 
                     Collections.sort(postedList, new Comparator<PostedSchedule>() {

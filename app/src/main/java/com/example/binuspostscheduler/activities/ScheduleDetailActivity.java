@@ -271,21 +271,21 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-//                            PackageManager.PERMISSION_DENIED) {
-//                        String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-//                        requestPermissions(permission, 1);
-//                    } else {
-//                        saveImage(obj.getImage());
-//                    }
-//                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                            PackageManager.PERMISSION_DENIED) {
+                        String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                        requestPermissions(permission, 1);
+                    } else {
+                        saveImage(obj.getImage());
+                    }
+                }
 
 
 
-                saveImage(obj.getImage());
+//                saveImage(obj.getImage());
 
-//                Toast.makeText(ctx, "Description copied and image saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ctx, "Description copied and image saved", Toast.LENGTH_SHORT).show();
 
                 Uri uri = Uri.parse("http://instagram.com/");
                 Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
@@ -319,7 +319,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                         bitmap.compress(Bitmap.CompressFormat.PNG,100, outputStream);
                         outputStream.flush();
                         outputStream.close();
-                        Toast.makeText(ScheduleDetailActivity.this, "Image succes", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScheduleDetailActivity.this, "Image success", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         Toast.makeText(ScheduleDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -348,7 +348,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 } else {
-                    Toast.makeText(this, "Permission enable", Toast.LENGTH_SHORT).show();
+
                 }
             }
         }
