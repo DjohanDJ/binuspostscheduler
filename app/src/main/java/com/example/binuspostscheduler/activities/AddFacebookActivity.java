@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import com.example.binuspostscheduler.models.FacebookAccount;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -38,9 +40,6 @@ public class AddFacebookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_facebook);
 
         facebookSetting();
-
-
-
     }
 
     private void facebookSetting(){
@@ -55,7 +54,8 @@ public class AddFacebookActivity extends AppCompatActivity {
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                // App code
+                String accToken = loginResult.getAccessToken().toString();
+                FacebookAccount facebookAccount = new FacebookAccount(accToken);
             }
 
             @Override

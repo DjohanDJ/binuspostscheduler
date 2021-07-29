@@ -30,9 +30,11 @@ import java.util.Objects;
 public class NotificationBroadcast extends BroadcastReceiver {
     final ArrayList<PostedSchedule> postedListRaw = new ArrayList<>();
     final ArrayList<PostedSchedule> postedList = new ArrayList<>();
+    String user_id = null;
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        user_id = intent.getStringExtra("user_id");
         checkSchdule(context);
     }
 
@@ -49,8 +51,10 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         postedListRaw.add(postedSchedule);
                     }
 
+
+
                     for(PostedSchedule post : postedListRaw){
-                        if(post.getUser_id().equalsIgnoreCase(UserSession.getCurrentUser().getId())){
+                        if(post.getUser_id().equalsIgnoreCase(user_id)){
                             postedList.add(post);
                         }
                     }
