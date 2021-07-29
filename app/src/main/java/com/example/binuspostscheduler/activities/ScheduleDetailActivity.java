@@ -238,7 +238,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 intentUpdate.putExtra("id", intent.getStringExtra("id"));
                 intentUpdate.putExtra("description", intent.getStringExtra("description"));
                 intentUpdate.putExtra("video", intent.getStringExtra("video"));
-                intentUpdate.putExtra("image", intent.getStringExtra("image"));
+                intentUpdate.putExtra("image", intent.getStringArrayListExtra("image"));
                 intentUpdate.putExtra("time", intent.getStringExtra("time"));
                 intentUpdate.putExtra("hashtags", intent.getStringArrayListExtra("hashtags"));
                 intentUpdate.putExtra("selected_id", intent.getStringArrayListExtra("selected_id"));

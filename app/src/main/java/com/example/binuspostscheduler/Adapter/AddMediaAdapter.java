@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.fragments.CreatePostFragment;
+import com.example.binuspostscheduler.interfaces.AddMediaInterface;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +27,9 @@ import java.util.ArrayList;
 public class AddMediaAdapter extends RecyclerView.Adapter<AddMediaAdapter.ViewHolder> {
     private Context ctx;
     private ArrayList<File> imgs;
-    private CreatePostFragment fragment;
+    private AddMediaInterface fragment;
     private boolean isVideo;
-    public AddMediaAdapter(Context ctx, ArrayList<File> imgs, CreatePostFragment fragment, boolean isVideo) {
+    public AddMediaAdapter(Context ctx, ArrayList<File> imgs, AddMediaInterface fragment, boolean isVideo) {
         this.ctx = ctx;
         this.imgs = imgs;
         this.fragment = fragment;

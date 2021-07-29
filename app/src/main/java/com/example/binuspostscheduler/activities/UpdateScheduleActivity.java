@@ -1,36 +1,61 @@
 package com.example.binuspostscheduler.activities;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.binuspostscheduler.Adapter.AddMediaAdapter;
 import com.example.binuspostscheduler.R;
+import com.example.binuspostscheduler.animations.LoadingAnimation;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
+import com.example.binuspostscheduler.helpers.RealPathHelper;
+import com.example.binuspostscheduler.interfaces.AddMediaInterface;
 import com.example.binuspostscheduler.models.PostedSchedule;
+import com.example.binuspostscheduler.ui.home.HomeFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class UpdateScheduleActivity extends AppCompatActivity {
+public class UpdateScheduleActivity extends AppCompatActivity implements AddMediaInterface {
 
     private TextView detailDate;
-    private Button changeDate, updateButton;
+    private RecyclerView rvImages;
+    private Button changeDate, updateButton, chooseImage, uploadImage;
     private EditText detailDescription, detailHashTags, timeHour;
+    private ImageView edit_post_back_arrow;
     DatePickerDialog.OnDateSetListener setListener;
+
+    ArrayList<String> imagePaths = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +107,14 @@ public class UpdateScheduleActivity extends AppCompatActivity {
 //        }
 //        }, year, month, day)
 
+
+        edit_post_back_arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         changeDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,25 +129,19 @@ public class UpdateScheduleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                PostedSchedule updatedSchedule = new PostedSchedule();
-                updatedSchedule.setId(getIntent().getStringExtra("id"));
-                updatedSchedule.setDescription(detailDescription.getText().toString());
-                updatedSchedule.setVideo(getIntent().getStringExtra("video"));
-                updatedSchedule.setImage(getIntent().getStringArrayListExtra("image"));
-                updatedSchedule.setUser_id(UserSession.getCurrentUser().getId());
-                updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString());
-                updatedSchedule.setHashtags(getIntent().getStringArrayListExtra("hashtags"));
-                updatedSchedule.setSelected_id(getIntent().getStringArrayListExtra("selected_id"));
+                if (mediaPaths.isEmpty()) {
+                    updateData();
+                } else {
+                    for(Uri media : mediaPaths){
 
-                SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
-                        .document(getIntent().getStringExtra("id")).set(updatedSchedule)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(UpdateScheduleActivity.this, getResources().getString(R.string.meeting_updated), Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        });;
+                        String randomString = RandomStringUtils.randomAlphanumeric(24);
+                        StorageReference ref = SingletonFirebaseTool.getInstance().getMyStorageReference().getReference().child("images/" + randomString);
+                        uploadImage(ref, media);
+                    }
+                }
+
+                LoadingAnimation.startLoading(UpdateScheduleActivity.this);
+                startActivity(new Intent(UpdateScheduleActivity.this, MainActivity.class));
 
 //                SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users" )
 //                        .document(UserSession.getCurrentUser().getId())
@@ -147,6 +174,141 @@ public class UpdateScheduleActivity extends AppCompatActivity {
             }
         };
 
+        chooseImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.setType("*/*");
+                String[] mimetypes = new String[]{"image/*", "video/*"};
+                i.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+                startActivityForResult(Intent.createChooser(i, "Choose Image"), 999);
+            }
+        });
+
+//        uploadImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+////                ArrayList<String> imagePaths = new ArrayList<>();
+//
+//
+////                imagePaths.clear();
+////
+////                for(Uri media : mediaPaths){
+////
+////                    String randomString = RandomStringUtils.randomAlphanumeric(24);
+////                    StorageReference ref = SingletonFirebaseTool.getInstance().getMyStorageReference().getReference().child("images/" + randomString);
+//////                    StorageTask downloadUrl = uploadImage(ref, media);
+//////                    imagePaths.add(downloadUrl)
+//////                    await(uploadImage(ref, media));
+////                    uploadImage(ref, media);
+////                }
+////
+////                LoadingAnimation.startLoading(UpdateScheduleActivity.this);
+////
+//////                while (true) if (imagePaths.size() == mediaPaths.size()) break;
+////
+////                Log.d("ERRR", " " + imagePaths.size());
+////
+////            }
+//
+//
+//        });
+
+    }
+
+    private void updateData() {
+        PostedSchedule updatedSchedule = new PostedSchedule();
+        updatedSchedule.setId(getIntent().getStringExtra("id"));
+        updatedSchedule.setDescription(detailDescription.getText().toString());
+        updatedSchedule.setVideo(getIntent().getStringExtra("video"));
+        updatedSchedule.setImage(imagePaths);
+        updatedSchedule.setUser_id(UserSession.getCurrentUser().getId());
+        updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString() + ":00");
+        String allTags = detailHashTags.getText().toString();
+        ArrayList<String> arrStringTags = new ArrayList<>();
+        String[] arrTags = allTags.split(" ");
+        for (String tag : arrTags) {
+            arrStringTags.add(tag);
+        }
+        updatedSchedule.setHashtags(arrStringTags);
+        updatedSchedule.setSelected_id(getIntent().getStringArrayListExtra("selected_id"));
+
+        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
+                .document(updatedSchedule.getId()).set(updatedSchedule)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(UpdateScheduleActivity.this, getResources().getString(R.string.meeting_updated), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });;
+    }
+
+    public synchronized void uploadImage(StorageReference ref, Uri media) {
+
+        ref.putFile(media).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()) {
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.d("DDD", uri.toString());
+                            imagePaths.add(uri.toString());
+                            if (imagePaths.size() == mediaPaths.size()) {
+                                updateData();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    ArrayList<Uri> mediaPaths = new ArrayList<>();
+    ArrayList<File> medias = new ArrayList<>();
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 999 && resultCode == Activity.RESULT_OK && data != null){
+//            img = File(data.data!!.toString())
+            RealPathHelper objRPH = RealPathHelper.INSTANCE;
+            String path = objRPH.getRealPath(this, data.getData());
+//            Log.d("Data","= "+data.data)
+//            Log.d("Path","= "+)
+//            Log.d("PATH",path!!)
+            File file = new File(path);
+            if (!file.isFile()){
+//                Log.d("ISFILE","NOPE "+file.absolutePath)
+                Toast.makeText(this, "Its not a file", Toast.LENGTH_SHORT).show();
+            }
+            else{
+                mediaPaths.add(data.getData());
+                String fileExt = path.substring(path.lastIndexOf(".")+1);
+
+                medias.add(file);
+                AddMediaAdapter adapter = new AddMediaAdapter(this, medias, this, false);
+
+                rvImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+                rvImages.setAdapter(adapter);
+
+                adapter.notifyDataSetChanged();
+
+                checkMediaStatus();
+            }
+        }
+    }
+
+    private void checkMediaStatus(){
+        if (medias.isEmpty()) rvImages.setVisibility(View.GONE);
+        else rvImages.setVisibility(View.VISIBLE);
+
+        chooseImage.setEnabled(medias.size() != 4);
     }
 
     private void fetchData(PostedSchedule obj) {
@@ -187,5 +349,16 @@ public class UpdateScheduleActivity extends AppCompatActivity {
         this.changeDate = findViewById(R.id.changeDate);
         this.updateButton = findViewById(R.id.detailUpdateBtn);
         this.timeHour = findViewById(R.id.timeHour);
+//        this.uploadImage = findViewById(R.id.uploadImage);
+        this.chooseImage = findViewById(R.id.chooseImage);
+        this.rvImages = findViewById(R.id.recyclerViewImages);
+        this.edit_post_back_arrow = findViewById(R.id.edit_post_back_arrow);
+    }
+
+    @Override
+    public void removeMedia(int index) {
+        medias.remove(index);
+        mediaPaths.remove(index);
+        checkMediaStatus();
     }
 }

@@ -57,12 +57,16 @@
         android:id="@+id/scrollView4"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="28dp"
         app:layout_constraintBottom_toBottomOf="@+id/detailUpdateBtn"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="60dp">
 
 
             <Button
@@ -85,10 +89,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="20dp"
-                android:textSize="18dp"
                 android:layout_marginEnd="25dp"
                 android:gravity="center"
                 android:text="Hashtags hashtags"
+                android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detailDescription" />
@@ -100,9 +104,9 @@
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="80dp"
                 android:layout_marginEnd="25dp"
-                android:textSize="18dp"
                 android:gravity="start"
                 android:text="Description testing testing 123 hello"
+                android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -117,7 +121,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/changeDate"
                 app:layout_constraintStart_toEndOf="@+id/textView"
                 app:layout_constraintTop_toTopOf="@+id/changeDate" />
-
 
 
             <TextView
@@ -167,17 +170,55 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/timeHour" />
 
+            <Button
+                android:id="@+id/chooseImage"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/button2"
 
-            <TextView
-                android:id="@+id/detailVideo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="video link"
+                android:text="Choose Image"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detailImage" />
+
+            <!--            <Button-->
+            <!--                android:id="@+id/uploadImage"-->
+            <!--                android:layout_width="100dp"-->
+            <!--                android:layout_height="30dp"-->
+            <!--                android:layout_marginTop="12dp"-->
+            <!--                android:background="@drawable/button2"-->
+
+            <!--                android:text="Upload Image"-->
+            <!--                android:textColor="@color/colorWhite"-->
+            <!--                android:textSize="12dp"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintHorizontal_bias="0.778"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/detailImage" />-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewImages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chooseImage" />
+
+
+            <!--            <TextView-->
+            <!--                android:id="@+id/detailVideo"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:gravity="center"-->
+            <!--                android:padding="10dp"-->
+            <!--                android:text="video link"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                tools:layout_editor_absoluteY="373dp" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

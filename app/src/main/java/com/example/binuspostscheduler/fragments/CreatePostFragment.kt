@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.binuspostscheduler.Adapter.AddMediaAdapter
 import com.example.binuspostscheduler.R
 import com.example.binuspostscheduler.helpers.RealPathHelper
+import com.example.binuspostscheduler.interfaces.AddMediaInterface
 import com.example.binuspostscheduler.models.Account
 import com.example.binuspostscheduler.models.NewSchedule
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,7 +44,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class CreatePostFragment : BaseFragment(),CreatePostInterface  {
+class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface  {
 
     private lateinit var previewImg: ImageView
     private lateinit var scheduled_time : RadioButton
@@ -343,10 +344,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface  {
                         rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                         rv.adapter = adapter
                         adapter.notifyDataSetChanged()
-                        if (medias.size == 4) // max for twitter
-                        {
-                            insert_img_btn.isEnabled = false
-                        }
+
                         checkMediaStatus()
                     }
 
@@ -361,9 +359,11 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface  {
     fun checkMediaStatus(){
         if (medias.isEmpty())rv.visibility = View.GONE
         else rv.visibility = View.VISIBLE
+
+        insert_img_btn.isEnabled = medias.size != 4
     }
 
-    fun removeMedia(idx: Int){
+    override fun removeMedia(idx: Int){
         medias.removeAt(idx)
         checkMediaStatus()
     }
