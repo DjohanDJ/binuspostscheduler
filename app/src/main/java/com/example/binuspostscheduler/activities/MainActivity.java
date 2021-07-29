@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     void process(){
         Intent intent =  new Intent(MainActivity.this, NotificationBroadcast.class);
+        intent.putExtra("user_id", UserSession.getCurrentUser().getId());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
