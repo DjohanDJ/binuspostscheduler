@@ -4,19 +4,20 @@ import java.util.ArrayList;
 
 public class PostedSchedule {
     private String time, id;
-    private String description, video, user_id;
+    private String description, video, user_id, type;
     private ArrayList<String> hashtags, selected_id,image;
 
     public PostedSchedule(){
 
     }
 
-    public PostedSchedule(String time, String id, String description, String video, String user_id, ArrayList<String> hashtags, ArrayList<String> selected_id, ArrayList<String> image) {
+    public PostedSchedule(String time, String id, String description, String video, String user_id, String type, ArrayList<String> hashtags, ArrayList<String> selected_id, ArrayList<String> image) {
         this.time = time;
         this.id = id;
         this.description = description;
         this.video = video;
         this.user_id = user_id;
+        this.type = type;
         this.hashtags = hashtags;
         this.selected_id = selected_id;
         this.image = image;
@@ -60,6 +61,14 @@ public class PostedSchedule {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public ArrayList<String> getHashtags() {

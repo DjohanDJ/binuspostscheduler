@@ -160,7 +160,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         date.setText(dFormat.format(pDate));
         desc.setText(obj.getDescription());
-//        video.setText(obj.getVideo());
         hashtags.setText(allTags);
 
 
@@ -206,15 +205,19 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
 //        String url = obj.getVideo();
 //        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(url , MediaStore.Video.Thumbnails.MICRO_KIND);
-        if(obj.getVideo().equals("-")){
-            video.setVisibility(View.GONE);
-        }else{
-            Uri uri = Uri.parse(obj.getVideo());
-            video.setVideoURI(uri);
-            MediaController mediaController = new MediaController(this);
-            video.setMediaController(mediaController);
-            mediaController.setAnchorView(video);
-        }
+
+        video.setVisibility(View.GONE);
+
+        // set video
+//        if(obj.getVideo().equals("-")){
+//            video.setVisibility(View.GONE);
+//        }else{
+//            Uri uri = Uri.parse(obj.getVideo());
+//            video.setVideoURI(uri);
+//            MediaController mediaController = new MediaController(this);
+//            video.setMediaController(mediaController);
+//            mediaController.setAnchorView(video);
+//        }
 
         ArrayList<String> imgList = obj.getImage();
 
@@ -244,13 +247,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 intentUpdate.putExtra("selected_id", intent.getStringArrayListExtra("selected_id"));
                 startActivity(intentUpdate);
                 finish();
-//                obj.setId(intent.getStringExtra("id"));
-//                obj.setDescription(intent.getStringExtra("description"));
-//                obj.setVideo(intent.getStringExtra("video"));
-//                obj.setImage(intent.getStringExtra("image"));
-//                obj.setTime(intent.getStringExtra("time"));
-//                obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
-//                obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
             }
         });
 
@@ -281,9 +277,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                     }
                 }
 
-
-
-//                saveImage(obj.getImage());
 
                 Toast.makeText(ctx, "Description copied and image saved", Toast.LENGTH_SHORT).show();
 

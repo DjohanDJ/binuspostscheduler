@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
         String now = "" + calendar.get(calendar.DATE) + "-" +  (calendar.get(calendar.MONTH) + 1)+"-"+calendar.get(calendar.YEAR) + " "
                 + calendar.get(calendar.HOUR_OF_DAY) + ":" + calendar.get(calendar.MINUTE)  + ":00";
 
-
         Date date = null;
 
         try {

@@ -1,5 +1,6 @@
 package com.example.binuspostscheduler.notification;
 
+import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.binuspostscheduler.Adapter.TodayScheduleAdapter;
 import com.example.binuspostscheduler.R;
+import com.example.binuspostscheduler.activities.UpdateScheduleActivity;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.models.PostedSchedule;
 import com.example.binuspostscheduler.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,6 +37,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+//        sendNotif(context);
         user_id = intent.getStringExtra("user_id");
         checkSchdule(context);
     }
@@ -71,18 +75,105 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-                        postDate = dFormat.format(pDate);
 
-//                        Toast.makeText(context, today + "--" +postDate, Toast.LENGTH_SHORT).show();
+                        pDate.setTime(pDate.getTime() - (1000 *60));
+                        postDate = dFormat.format(pDate);
 
                         if(today.equalsIgnoreCase(postDate)){
                             sendNotif(context);
+                            if (post.getType().equalsIgnoreCase("daily")){
+                                setDaily(post, context);
+                            }else if(post.getType().equalsIgnoreCase("weekly")){
+                                setWeekly(post, context);
+                            }else if(post.getType().equalsIgnoreCase("monthly")){
+                                setMonthly(post, context);
+                            }
                             break;
                         }
                     }
                 }
             }
         });
+
+    }
+
+    void setDaily(PostedSchedule post , Context context){
+
+        SimpleDateFormat dFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+
+        long oneDay = 1000 * 60 * 60 * 24;
+
+        Date newDate = null;
+        try {
+            newDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(post.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        newDate.setTime(newDate.getTime() + oneDay);
+
+        String newestDate = dFormat.format(newDate);
+
+        post.setTime(newestDate);
+
+        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
+                .document(post.getId()).set(post)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                    }
+                });;
+
+    }
+
+    void setWeekly(PostedSchedule post, Context context){
+        SimpleDateFormat dFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        long sevenDay = 1000 * 60 * 60 * 24 * 7;
+
+        Date newDate = null;
+        try {
+            newDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(post.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        newDate.setTime(newDate.getTime() + sevenDay);
+
+        String newestDate = dFormat.format(newDate);
+        post.setTime(newestDate);
+        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
+                .document(post.getId()).set(post)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                    }
+                });;
+    }
+
+    void setMonthly(PostedSchedule post, Context context){
+        String splitDateTime[] = post.getTime().split(" ");
+        String splitDate[] = splitDateTime[0].split("-");
+
+        if(splitDate[1].equalsIgnoreCase("12")){
+            splitDate[1] = "1";
+            int year = Integer.parseInt(splitDate[2]) + 1;
+            splitDate[2] = String.valueOf(year);
+        }else{
+            int month = Integer.parseInt(splitDate[1]) + 1;
+            splitDate[1] = String.valueOf(month);
+        }
+
+        String newDate = splitDate[0] + "-"+ splitDate[1] + "-" + splitDate[2] + " " + splitDateTime[1];
+        post.setTime(newDate);
+        SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
+                .document(post.getId()).set(post)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+                    }
+                });;
 
     }
 
