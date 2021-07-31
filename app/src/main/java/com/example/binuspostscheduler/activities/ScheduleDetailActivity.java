@@ -113,7 +113,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         video = findViewById(R.id.post_detail_video);
         back = findViewById(R.id.post_detail_back_arrow);
-//        deleteBtn = findViewById(R.id.detailDeleteBtn);
+        deleteBtn = findViewById(R.id.deleteButton);
         updateBtn = findViewById(R.id.detailUpdateBtn);
         imageRec = findViewById(R.id.post_detail_image_recycler);
         sc = findViewById(R.id.scrollView2);
@@ -195,13 +195,13 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         });
 
 
-//        deleteBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Toast.makeText(ScheduleDetailActivity.this, obj.getId(), Toast.LENGTH_SHORT).show();
-//                deleteSchedule(obj.getId());
-//            }
-//        });
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(ScheduleDetailActivity.this, obj.getId(), Toast.LENGTH_SHORT).show();
+                deleteSchedule(obj.getId());
+            }
+        });
 
 //        String url = obj.getVideo();
 //        Bitmap bMap = ThumbnailUtils.createVideoThumbnail(url , MediaStore.Video.Thumbnails.MICRO_KIND);
@@ -463,7 +463,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(ScheduleDetailActivity.this, "Delete success", Toast.LENGTH_SHORT).show();
-                            finish();
+                            startActivity(new Intent(ScheduleDetailActivity.this, MainActivity.class));
                         }
                     }
                 });
