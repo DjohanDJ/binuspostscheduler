@@ -1,6 +1,7 @@
 package com.example.binuspostscheduler.notification;
 
 import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.binuspostscheduler.Adapter.TodayScheduleAdapter;
 import com.example.binuspostscheduler.R;
+import com.example.binuspostscheduler.activities.MainActivity;
+import com.example.binuspostscheduler.activities.ScheduleDetailActivity;
 import com.example.binuspostscheduler.activities.UpdateScheduleActivity;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
@@ -37,7 +40,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-//        sendNotif(context);
         user_id = intent.getStringExtra("user_id");
         checkSchdule(context);
     }
@@ -80,7 +82,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         postDate = dFormat.format(pDate);
 
                         if(today.equalsIgnoreCase(postDate)){
-                            sendNotif(context);
+                            sendNotif(context, post);
                             if (post.getType().equalsIgnoreCase("daily")){
                                 setDaily(post, context);
                             }else if(post.getType().equalsIgnoreCase("weekly")){
@@ -178,10 +180,26 @@ public class NotificationBroadcast extends BroadcastReceiver {
     }
 
 
-    void sendNotif(Context context){
+    void sendNotif(Context context, PostedSchedule post){
+        Intent myIntent = new Intent(context, ScheduleDetailActivity.class);
+
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        myIntent.putExtra("id", post.getId());
+        myIntent.putExtra("description", post.getDescription());
+        myIntent.putExtra("image", post.getImage());
+        myIntent.putExtra("hashtags", post.getHashtags());
+        myIntent.putExtra("video", post.getVideo());
+        myIntent.putExtra("time", post.getTime());
+        myIntent.putExtra("selected_id", post.getSelected_id());
+        myIntent.putExtra("type", post.getType());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notifChannel").setSmallIcon(R.drawable.messenger_bubble_large_blue)
                 .setContentTitle("Posting Reminder")
                 .setContentText("Time to post the content")
+                .addAction(R.drawable.ic_launcher_foreground, "Open",pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
         NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);

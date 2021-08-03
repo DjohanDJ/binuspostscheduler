@@ -65,6 +65,7 @@ public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdap
                 myIntent.putExtra("video", post.getVideo());
                 myIntent.putExtra("time", post.getTime());
                 myIntent.putExtra("selected_id", post.getSelected_id());
+                myIntent.putExtra("type", post.getType());
                 ctx.startActivity(myIntent);
             }
         });

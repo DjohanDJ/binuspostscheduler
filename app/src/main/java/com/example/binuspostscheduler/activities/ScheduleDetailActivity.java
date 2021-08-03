@@ -79,7 +79,7 @@ import java.util.TimerTask;
 
 public class ScheduleDetailActivity extends AppCompatActivity {
 
-    private TextView date,desc,hashtags;
+    private TextView date,desc,hashtags, type;
     private Button deleteBtn, updateBtn, igShare;
     private ImageView back, plb, cpl, getBitmap;
     private RecyclerView imageRec;
@@ -110,6 +110,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         date = findViewById(R.id.detailDate);
         desc = findViewById(R.id.detailDescription);
         hashtags = findViewById(R.id.detailHashtags);
+        type = findViewById(R.id.detailType);
 
         video = findViewById(R.id.post_detail_video);
         back = findViewById(R.id.post_detail_back_arrow);
@@ -135,6 +136,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         obj.setVideo(intent.getStringExtra("video"));
         obj.setImage(intent.getStringArrayListExtra("image"));
         obj.setTime(intent.getStringExtra("time"));
+        obj.setType(intent.getStringExtra("type"));
         obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
         obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
 
@@ -161,6 +163,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         date.setText(dFormat.format(pDate));
         desc.setText(obj.getDescription());
         hashtags.setText(allTags);
+        type.setText(obj.getType());
 
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -245,6 +248,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 intentUpdate.putExtra("time", intent.getStringExtra("time"));
                 intentUpdate.putExtra("hashtags", intent.getStringArrayListExtra("hashtags"));
                 intentUpdate.putExtra("selected_id", intent.getStringArrayListExtra("selected_id"));
+                intentUpdate.putExtra("type", intent.getStringArrayListExtra("type"));
                 startActivity(intentUpdate);
                 finish();
             }
