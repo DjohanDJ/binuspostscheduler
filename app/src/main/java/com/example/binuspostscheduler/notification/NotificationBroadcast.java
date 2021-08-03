@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.binuspostscheduler.Adapter.TodayScheduleAdapter;
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.activities.MainActivity;
+import com.example.binuspostscheduler.activities.RegisterActivity;
 import com.example.binuspostscheduler.activities.ScheduleDetailActivity;
 import com.example.binuspostscheduler.activities.UpdateScheduleActivity;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
@@ -173,7 +174,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "", Toast.LENGTH_SHORT).show();
+
                     }
                 });;
 
@@ -182,9 +183,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
     void sendNotif(Context context, PostedSchedule post){
         Intent myIntent = new Intent(context, ScheduleDetailActivity.class);
-
-        myIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         myIntent.putExtra("id", post.getId());
         myIntent.putExtra("description", post.getDescription());
         myIntent.putExtra("image", post.getImage());
@@ -193,13 +191,17 @@ public class NotificationBroadcast extends BroadcastReceiver {
         myIntent.putExtra("time", post.getTime());
         myIntent.putExtra("selected_id", post.getSelected_id());
         myIntent.putExtra("type", post.getType());
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        //buka paksa
+        context.startActivity(myIntent);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notifChannel").setSmallIcon(R.drawable.messenger_bubble_large_blue)
                 .setContentTitle("Posting Reminder")
                 .setContentText("Time to post the content")
-                .addAction(R.drawable.ic_launcher_foreground, "Open",pendingIntent)
+                .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
         NotificationManagerCompat notifManager = NotificationManagerCompat.from(context);
