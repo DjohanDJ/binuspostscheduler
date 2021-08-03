@@ -15,10 +15,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,9 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
     private EditText detailDescription, detailHashTags, timeHour;
     private ImageView edit_post_back_arrow;
     DatePickerDialog.OnDateSetListener setListener;
+    private Spinner dropdownType;
+
+    private String role = "Once";
 
     ArrayList<String> imagePaths = new ArrayList<>();
 
@@ -73,6 +78,8 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         obj.setTime(intent.getStringExtra("time"));
         obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
         obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
+        obj.setType(intent.getStringExtra("type"));
+//        Toast.makeText(this, intent.getStringExtra("type"), Toast.LENGTH_SHORT).show();
         fetchData(obj);
 
         buttonListener();
@@ -128,6 +135,8 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                role = dropdownType.getItemAtPosition((int) dropdownType.getSelectedItemId()).toString();
 
                 if (mediaPaths.isEmpty()) {
                     updateData();
@@ -225,6 +234,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         updatedSchedule.setImage(imagePaths);
         updatedSchedule.setUser_id(UserSession.getCurrentUser().getId());
         updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString() + ":00");
+        updatedSchedule.setType(role);
         String allTags = detailHashTags.getText().toString();
         ArrayList<String> arrStringTags = new ArrayList<>();
         String[] arrTags = allTags.split(" ");
@@ -334,6 +344,30 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         detailDescription.setText(obj.getDescription());
 //        image.setText(obj.getImage());
 //        video.setText(obj.getVideo());
+
+//        String compareValue = obj.getType();
+//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.role, android.R.layout.simple_spinner_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dropdownType.setAdapter(adapter);
+//        if (compareValue != null) {
+//            int spinnerPosition = adapter.getPosition(compareValue);
+//            dropdownType.setSelection(spinnerPosition);
+//        }
+
+//        Toast.makeText(this, obj.getType(), Toast.LENGTH_SHORT).show();
+        int pos = -1;
+
+        if (obj.getType().equals("Once")) {
+            pos = 0;
+        } else if (obj.getType().equals("Daily")) {
+            pos = 1;
+        } else if (obj.getType().equals("Weekly")) {
+            pos = 2;
+        } else if (obj.getType().equals("Monthly")) {
+            pos = 3;
+        }
+        dropdownType.setSelection(pos);
+
         detailHashTags.setText(allTags);
         String[] arrSplit = obj.getTime().split(" ");
         String[] timeSplit = arrSplit[1].split(":");
@@ -353,6 +387,10 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         this.chooseImage = findViewById(R.id.chooseImage);
         this.rvImages = findViewById(R.id.recyclerViewImages);
         this.edit_post_back_arrow = findViewById(R.id.edit_post_back_arrow);
+
+        this.dropdownType = findViewById(R.id.dropdownType);
+        this.dropdownType.setAdapter(new ArrayAdapter<>(UpdateScheduleActivity.this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.role)));
+
     }
 
     @Override
