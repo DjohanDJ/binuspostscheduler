@@ -152,7 +152,8 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
         }
 
         schedule_post_btn.setOnClickListener(View.OnClickListener {
-            if(accounts.isEmpty() || scheduled_time == null){
+//            if(accounts.isEmpty() || scheduled_time == null){
+                if( scheduled_time == null){
                 Toast.makeText(ctx,"Please Choose when to post first",Toast.LENGTH_SHORT).show()
 //                return;
             }

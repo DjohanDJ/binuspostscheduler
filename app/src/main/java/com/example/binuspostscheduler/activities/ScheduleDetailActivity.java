@@ -10,11 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -26,7 +28,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,6 +46,8 @@ import com.example.binuspostscheduler.Adapter.TodayScheduleAdapter;
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
+import com.example.binuspostscheduler.fragments.CreatePostFragment;
+import com.example.binuspostscheduler.models.Account;
 import com.example.binuspostscheduler.models.PostedSchedule;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareLinkContent;
@@ -52,7 +59,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -61,6 +70,7 @@ import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -77,10 +87,19 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import twitter4j.Status;
+import twitter4j.StatusUpdate;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.UploadedMedia;
+import twitter4j.auth.AccessToken;
+import twitter4j.conf.ConfigurationBuilder;
+
 public class ScheduleDetailActivity extends AppCompatActivity {
 
     private TextView date,desc,hashtags, type;
-    private Button deleteBtn, updateBtn, igShare;
+    private Button deleteBtn, updateBtn, igShare,twitterShareBtn;
     private ImageView back, plb, cpl, getBitmap;
     private RecyclerView imageRec;
     private ScrollView sc;
@@ -88,12 +107,14 @@ public class ScheduleDetailActivity extends AppCompatActivity {
     private VideoView video;
     private View b50ab;
     private ShareButton shareFB;
-
+    private FirebaseFirestore db;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
+    private final Context ctx = this;
+    private final PostedSchedule obj = new PostedSchedule();
 
     private static  int REQUEST_CODE = 100;
     OutputStream outputStream;
@@ -105,7 +126,9 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         verifyStoragePermissions(this);
 
-        Context ctx = this;
+
+
+        db = SingletonFirebaseTool.getInstance().getMyFireStoreReference();
 
         date = findViewById(R.id.detailDate);
         desc = findViewById(R.id.detailDescription);
@@ -126,11 +149,11 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         shareFB = findViewById(R.id.FacebookShareButton);
         igShare = findViewById(R.id.InstagramShareButton);
-
+        twitterShareBtn = findViewById(R.id.TwitterShareButton);
 
 
         Intent intent = getIntent();
-        final PostedSchedule obj = new PostedSchedule();
+
         obj.setId(intent.getStringExtra("id"));
         obj.setDescription(intent.getStringExtra("description"));
         obj.setVideo(intent.getStringExtra("video"));
@@ -197,7 +220,23 @@ public class ScheduleDetailActivity extends AppCompatActivity {
             }
         });
 
-
+        twitterShareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts").document("twitter").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Account account = task.getResult().toObject(Account.class);
+                            postTwitter(account);
+                        }
+                        else{
+                            Toast.makeText(ctx, "Twitter not connected", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -473,6 +512,118 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void postTwitter( Account account) {
+
+                String access_token = account.getAccess_token();
+                String access_secret = account.getAccess_secret();
+                ConfigurationBuilder cb = new twitter4j.conf.ConfigurationBuilder();
+                cb.setDebugEnabled(true);
+                cb.setOAuthConsumerKey(getString(R.string.twitter_CONSUMER_KEY));
+                cb.setOAuthConsumerSecret(getString(R.string.twitter_CONSUMER_SECRET));
+                AccessToken twToken = new AccessToken(access_token, access_secret);
+                TwitterFactory twitterFactory = new TwitterFactory(cb.build());
+                Twitter twitter = twitterFactory.getInstance();
+                twitter.setOAuthAccessToken(twToken);
+                Long mediaIds[] = new Long[5];
+                StatusUpdate statusUpdate = new StatusUpdate(obj.getDescription());
+                File files[] = new File[5];
+                for (int i = 0; i < obj.getImage().size(); i++) {
+                    String path = obj.getImage().get(i);
+                    int finalI = i;
+                    Picasso.get().load(path).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                            File file = new File(ctx.getCacheDir(), "temp.jpg");
+                            try {
+                                OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+
+                                if(file.exists())Log.d("File","EXISTS");
+                                else Log.d("File","NOT EXISTS");
+                                files[finalI] = file;
+
+//                                os.close();
+                                if (finalI == obj.getImage().size() - 1) {
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                        }
+
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                        }
+                    });
+                }
+
+
+
+        Thread thread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            Status status = null;
+            try {
+                for(int i=0;i<obj.getImage().size();i++){
+                    Log.d("I","i ke "+i);
+                    File file = files[i];
+                    UploadedMedia upload = twitter.uploadMedia(file);
+                    mediaIds[i] = upload.getMediaId();
+                    statusUpdate.setMediaIds(upload.getMediaId());
+                    Log.d("I","i ke "+i+ " End");
+                }
+                status = twitter.updateStatus(statusUpdate);
+                Log.d("twitter","Uploaded");
+                String statusUrl = "https://twitter.com/" + status.getUser().getScreenName()
+                        .toString() + "/status/" + status.getId();
+
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
+                alertDialogBuilder.setTitle("Upload Successful");
+                alertDialogBuilder.setMessage("Upload Succesful");
+                alertDialogBuilder.setPositiveButton("View Tweets", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(statusUrl));
+                        startActivity(intent);
+                    }
+                });
+                alertDialogBuilder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+//                Looper.prepare();
+                Handler mHandler = new Handler(Looper.getMainLooper());
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        alertDialogBuilder.show();
+                    }
+                });
+            } catch (TwitterException e) {
+                e.printStackTrace();
+            }
+
+
+
+        }
+        });
+        thread.start();
+
+
     }
 
 }
