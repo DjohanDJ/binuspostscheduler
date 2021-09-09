@@ -17,11 +17,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.binuspostscheduler.Adapter.AddMediaAdapter
 import com.example.binuspostscheduler.R
+import com.example.binuspostscheduler.activities.CreatePostActivity
+import com.example.binuspostscheduler.activities.MainActivity
 import com.example.binuspostscheduler.helpers.RealPathHelper
 import com.example.binuspostscheduler.interfaces.AddMediaInterface
 import com.example.binuspostscheduler.models.Account
@@ -174,7 +175,8 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                     }
                 }
 
-            } else {
+            } else if(!mediaPaths.isEmpty()) {
+
 //                // Post Later
                 val img_paths = ArrayList<String>()
                 GlobalScope.launch{
@@ -205,6 +207,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                         run {
                             if (task.isSuccessful) {
                                 Toast.makeText(ctx,"Post Scheduled!", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(super.getContext()!!.applicationContext, MainActivity::class.java))
                             } else {
                                 Toast.makeText(ctx,"Post Failed to schedule", Toast.LENGTH_SHORT).show()
                             }
@@ -216,6 +219,9 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 //
 //                db.collection("schedules").add(scheduled_post)
             }
+                else{
+                    Toast.makeText(ctx,"Minimum 1 image is required to schedule a post with facebook",Toast.LENGTH_SHORT).show()
+                }
             }
         })
 

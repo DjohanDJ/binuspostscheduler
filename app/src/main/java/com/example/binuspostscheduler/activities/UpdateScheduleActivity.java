@@ -135,7 +135,10 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(imagePaths.isEmpty()){
+                    Toast.makeText(UpdateScheduleActivity.this, "Minimum of 1 image is required", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 role = dropdownType.getItemAtPosition((int) dropdownType.getSelectedItemId()).toString();
 
                 if (mediaPaths.isEmpty()) {

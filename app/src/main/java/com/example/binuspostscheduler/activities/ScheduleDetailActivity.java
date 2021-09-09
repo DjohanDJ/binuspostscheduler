@@ -226,6 +226,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         setShareFacebook(imgList, obj, this);
 
+
         if(imgList.get(0).equals("-")){
             imageRec.setVisibility(View.GONE);
         }
@@ -240,6 +241,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intentUpdate = new Intent(ScheduleDetailActivity.this, UpdateScheduleActivity.class);
                 intentUpdate.putExtra("id", intent.getStringExtra("id"));
                 intentUpdate.putExtra("description", intent.getStringExtra("description"));

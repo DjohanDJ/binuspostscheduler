@@ -38,7 +38,7 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        select_account_btn.isEnabled = false
+//        select_account_btn.isEnabled = false
         accounts = ArrayList()
         uid =  view.context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("user_userId","")!!
         ctx = view.context

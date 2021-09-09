@@ -5,22 +5,22 @@ import java.util.ArrayList;
 public class NewSchedule {
     private String description,time,user_id,video,type;
     private ArrayList<String> hashtags,image;
-    private ArrayList<Account> selected_id;
+//    private ArrayList<Account> selected_id;
     private String id;
-    private ArrayList<String> selected_ids;
-    public NewSchedule(String description, String time, String user_id, String video, String type, ArrayList<String> hashtags, ArrayList<String> image, ArrayList<Account> selected_id, String id) {
-        this.description = description;
-        this.time = time;
-        this.user_id = user_id;
-        this.video = video;
-        this.type = type;
-        this.hashtags = hashtags;
-        this.id = id;
-        this.image = image;
-        this.selected_id = selected_id;
-    }
+    private ArrayList<String> selected_id;
+//    public NewSchedule(String description, String time, String user_id, String video, String type, ArrayList<String> hashtags, ArrayList<String> image, ArrayList<Account> selected_id, String id) {
+//        this.description = description;
+//        this.time = time;
+//        this.user_id = user_id;
+//        this.video = video;
+//        this.type = type;
+//        this.hashtags = hashtags;
+//        this.id = id;
+//        this.image = image;
+//        this.selected_id = selected_id;
+//    }
 
-    public NewSchedule(String description, String time, String user_id, String video, String type, ArrayList<String> hashtags, ArrayList<String> image, String id, ArrayList<String> selected_ids) {
+    public NewSchedule(String description, String time, String user_id, String video, String type, ArrayList<String> hashtags, ArrayList<String> image, String id, ArrayList<String> selected_id) {
         this.description = description;
         this.time = time;
         this.user_id = user_id;
@@ -29,7 +29,7 @@ public class NewSchedule {
         this.hashtags = hashtags;
         this.image = image;
         this.id = id;
-        this.selected_ids = selected_ids;
+        this.selected_id = selected_id;
     }
 
     public String getDescription() {
@@ -90,13 +90,13 @@ public class NewSchedule {
         this.image = image;
     }
 
-    public ArrayList<Account> getSelected_id() {
-        return selected_id;
-    }
-
-    public void setSelected_id(ArrayList<Account> selected_id) {
-        this.selected_id = selected_id;
-    }
+//    public ArrayList<Account> getSelected_id() {
+//        return selected_id;
+//    }
+//
+//    public void setSelected_id(ArrayList<Account> selected_id) {
+//        this.selected_id = selected_id;
+//    }
 
     public String getId() {
         return id;
@@ -106,11 +106,11 @@ public class NewSchedule {
         this.id = id;
     }
 
-    public ArrayList<String> getSelected_ids() {
-        return selected_ids;
+    public ArrayList<String> getSelected_id() {
+        return selected_id;
     }
 
-    public void setSelected_ids(ArrayList<String> selected_ids) {
-        this.selected_ids = selected_ids;
+    public void setSelected_id(ArrayList<String> selected_id) {
+        this.selected_id = selected_id;
     }
 }
