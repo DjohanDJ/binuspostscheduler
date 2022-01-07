@@ -101,9 +101,9 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
         schedule_later_container.visibility= View.GONE
         insert_img_btn.setOnClickListener(View.OnClickListener {
             var i = Intent(Intent.ACTION_GET_CONTENT)
-            i.setType("*/*")
-            val mimetypes = arrayOf("image/*", "video/*")
-            i.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
+            i.setType("image/*")
+//            val mimetypes = arrayOf("image/*", "video/*")
+//            i.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
 //            i.setType(
             startActivityForResult(Intent.createChooser(i, "Choose Image"), 999)
         })
@@ -267,27 +267,36 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        Log.d("Inserting Image","Inserting..")
+        if(data == null)Log.d("Inserting Image","Null Image")
+
         if(requestCode == 999 && resultCode == Activity.RESULT_OK && data != null){
 //            img = File(data.data!!.toString())
-            val path = RealPathHelper.getRealPath(this.context!!,data.data!!)
+            var path = RealPathHelper.getRealPath(this.context!!,data.data!!)
 //            Log.d("Data","= "+data.data)
 //            Log.d("Path","= "+)
-            Log.d("PATH",path!!)
+
+            Log.d("data",Uri.parse(data.data!!.toString()).toString())
+//            Log.d("PATH",path!!)
+//            path = data.data!!.toString()
             val file = File(path)
             if (!file.isFile){
                 Log.d("ISFILE","NOPE "+file.absolutePath)
             }
             else{
+                Log.d("Inserting Image","0")
                 mediaPaths.add(data.data!!)
-                val fileExt = path.substring(path.lastIndexOf(".")+1)
+                val fileExt = path?.substring(path.lastIndexOf(".")+1)
                 var cancel = false
 
                 if(fileExt.equals("mp4"))
                 {
+                    Log.d("Inserting Image","3")
                     Log.d("Fileext","Video")
 
                     val alertDialogBuilder = AlertDialog.Builder(ctx)
                     alertDialogBuilder.setTitle("Uploading Video")
+
                     alertDialogBuilder.setMessage("You can only upload up to 4 images or a video. This will remove all existing images, do you understand?")
                     alertDialogBuilder.setPositiveButton("Yes"){
                         dialog, which ->
@@ -305,7 +314,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                                 insert_img_btn.isEnabled = false
                             }
                             checkMediaStatus()
-                            videoPath = path
+                            videoPath = path!!
                         }
                     }
                     alertDialogBuilder.setNegativeButton("No"){
@@ -315,6 +324,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                 }
                 else{
                     if(isVideo){
+                        Log.d("Inserting Image","2")
                         val alertDialogBuilder = AlertDialog.Builder(ctx)
                         alertDialogBuilder.setTitle("Uploading Image")
                         alertDialogBuilder.setMessage("You can only upload up to 4 images or a video. This will remove existing video, do you understand?")
@@ -353,6 +363,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                         adapter.notifyDataSetChanged()
 
                         checkMediaStatus()
+                        Log.d("Inserting Image","1")
                     }
 
                 }
