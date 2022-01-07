@@ -255,7 +255,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                 if(position == 0){
                     schedule_later_spinner_times.visibility = View.GONE
                 }else{
-                    schedule_later_spinner_times.visibility = View.VISIBLE
+//                    schedule_later_spinner_times.visibility = View.VISIBLE
                 }
                 schedule_type = schedule_later_spinner_daily.selectedItem as String
             }
