@@ -73,14 +73,8 @@
                         android:layout_height="match_parent"/>
 
                 </LinearLayout>
-
             </ScrollView>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </ScrollView>
-
-
 
 </LinearLayout>

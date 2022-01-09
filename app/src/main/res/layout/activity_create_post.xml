@@ -9,8 +9,6 @@
     android:scrollbars="vertical"
     android:fillViewport="true"
     tools:context=".activities.CreatePostActivity">
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:orientation="vertical"
@@ -23,21 +21,9 @@
                     android:text="@string/schedule_post"
                     android:textColor="@color/colorBlack"
                     />
-
-<!--                <androidx.viewpager.widget.ViewPager-->
-<!--                    android:layout_below="@id/create_post_title"-->
-<!--                    android:id="@+id/create_post_view_pager"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"/>-->
-
                 <FrameLayout
-
                     android:id="@+id/create_post_frame_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
-
         </LinearLayout>
-
-
-
 </ScrollView>
