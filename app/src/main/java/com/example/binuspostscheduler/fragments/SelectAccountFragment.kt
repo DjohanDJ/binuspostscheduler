@@ -46,14 +46,17 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
 
         db.collection("users").document(uid).collection("accounts").get().addOnSuccessListener {
             documents -> for(document in documents){
+
+            if (document.id.equals("twitter")){
                 val acc = Account()
                 acc.access_secret = document.get("access_secret") as String
                 acc.username = document.get("username") as String
                 acc.access_token = document.get("access_token") as String
                 acc.uid = document.get("uid") as String
                 acc.type = document.id
-            Log.d("Done","Done")
+                Log.d("Done", "Done")
                 accounts.add(acc)
+            }
 
         }
             adapter = SelectAccountAdapter(accounts,ctx,this)
