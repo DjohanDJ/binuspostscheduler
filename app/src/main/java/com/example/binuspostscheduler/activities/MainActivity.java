@@ -6,9 +6,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_account,R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_account,R.id.nav_gallery, R.id.nav_dashboard)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -169,4 +171,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.toString().equals("Logout")){
+            Intent intent = new Intent(this,LoginActivity.class);
+            SharedPreferences.Editor editor = getSharedPreferences("user",MODE_PRIVATE).edit();
+            editor.remove("user_userId");
+            editor.apply();
+            startActivity(intent);
+            finish();
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
