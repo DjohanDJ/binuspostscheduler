@@ -17,7 +17,7 @@ class CreatePostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_post)
 
-        fragments.add(SelectAccountFragment())
+//        fragments.add(SelectAccountFragment())
         fragments.add(CreatePostFragment())
         val adapter = CreatePostAdapter(supportFragmentManager)
         adapter.fragments = fragments

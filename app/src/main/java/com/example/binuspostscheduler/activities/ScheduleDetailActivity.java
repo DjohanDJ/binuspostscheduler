@@ -426,6 +426,11 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
                     sharePhotos.add(sharePhoto);
 
+//                    Log.d("DJOHAN", String.valueOf(sharePhotos.size()));
+//                    Log.d("DJOHANE", String.valueOf(imgList.size()));
+
+
+
                     if(sharePhotos.size() == imgList.size()){
                         ShareContent shareContent = null;
 

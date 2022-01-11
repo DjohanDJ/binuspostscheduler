@@ -174,6 +174,7 @@ public class AddFacebookActivity extends AppCompatActivity {
                                         .document("facebook").collection("pages").document(b)
                                         .set(map);
                             }
+                            getInstagramBusinessAccount();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -186,6 +187,10 @@ public class AddFacebookActivity extends AppCompatActivity {
         graphRequest.setParameters(bundle);
         graphRequest.executeAsync();
 
+    }
+
+    public void getInstagramBusinessAccount() {
+        // for each smua dptin id ig
     }
 
     AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {

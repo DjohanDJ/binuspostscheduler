@@ -233,7 +233,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     }
 
     private void getDataPublish(PostedSchedule post){
-        Log.d("HAIHAI", UserSession.getCurrentUser().getId().toString());
+//        Log.d("HAIHAI", UserSession.getCurrentUser().getId().toString());
         db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
           .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -253,7 +253,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     }
 
     private void publish(PostedSchedule post){
-        AccessToken acc = new AccessToken(pages.get(0).getAccess_token(), "216327573669340", pages.get(0).getUid(),
+        AccessToken acc = new AccessToken(pages.get(0).getAccess_token(), "472685857272246", pages.get(0).getUid(),
                 null, null, null,null, null, null, null, null);
 
         String desc = post.getDescription() + "\n\n";
