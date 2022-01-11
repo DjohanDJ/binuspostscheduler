@@ -43,8 +43,9 @@
     <string name="twitter.CONSUMER_SECRET">pXwXPViI3q2eIwTPZmoNhDHBvGqSl6gPFuCI8WjxYLKLWb6kPJ</string>
     <string name="schedules">Schedules</string>
 
-    <string name="facebook_app_id">216327573669340</string>
-    <string name="fb_login_protocol_scheme">fb216327573669340</string>
+    <string name="facebook_app_id">472685857272246</string>
+    <string name="fb_login_protocol_scheme">fb472685857272246</string>
+
     <string name="meeting_updated">Schedule updated</string>
 
     <string-array name="role">
