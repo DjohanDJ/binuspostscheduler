@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.models.FacebookAccount;
@@ -24,12 +25,16 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -191,6 +196,54 @@ public class AddFacebookActivity extends AppCompatActivity {
 
     public void getInstagramBusinessAccount() {
         // for each smua dptin id ig
+        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+                .document("facebook").collection("pages").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                ArrayList<DocumentSnapshot> pagesList = (ArrayList<DocumentSnapshot>) queryDocumentSnapshots.getDocuments();
+                for(DocumentSnapshot page : pagesList) {
+//                    Toast.makeText(AddFacebookActivity.this, page.get("id").toString(), Toast.LENGTH_SHORT).show();
+                    String pageId = Objects.requireNonNull(page.get("id")).toString();
+                    String pageAccTokenString = page.get("access_token").toString();
+                    AccessToken pageAccToken = new AccessToken(pageAccTokenString, "472685857272246", page.get("uid").toString(),
+                            null, null, null,null, null, null, null, null);
+
+                    GraphRequest request = GraphRequest.newGraphPathRequest(
+                            pageAccToken,
+                            "/" + pageId,
+                            new GraphRequest.Callback() {
+                                @Override
+                                public void onCompleted(GraphResponse response) {
+//                                    Toast.makeText(AddFacebookActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
+                                    JSONObject jsonObject = response.getJSONObject();
+                                    try {
+//                                        Log.d("Djohan", jsonObject.get("instagram_business_account").toString());
+                                        JSONObject instagramBAObj = new JSONObject(jsonObject.get("instagram_business_account").toString());
+//                                        Log.d("djohan2", instagramBAObj.getString("id"));
+                                        String instagramId = instagramBAObj.getString("id");
+
+                                        // insert to db
+                                        Map<String, Object> map = new HashMap<>();
+                                        map.put("id", instagramId);
+
+                                        db.collection("users").document(UserSession.getCurrentUser().getId())
+                                                .collection("accounts")
+                                                .document("instagram").
+                                                set(map);
+
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "instagram_business_account");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+
+                }
+            }
+        });
     }
 
     AccessTokenTracker accessTokenTracker = new AccessTokenTracker() {

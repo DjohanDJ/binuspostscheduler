@@ -32,6 +32,7 @@ import com.facebook.HttpMethod;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -53,6 +54,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     final ArrayList<FacebookPages> pages = new ArrayList<>();
     String user_id = null;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    String instagramBId = "";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -250,6 +252,64 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     publish(post);
             }
         });
+
+        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts").document("instagram")
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                instagramBId = documentSnapshot.get("id").toString();
+                publishInstagram(post);
+            }
+        });
+    }
+
+    private void publishInstagram(PostedSchedule post) {
+        AccessToken accessToken = new AccessToken(pages.get(0).getAccess_token(), "472685857272246", pages.get(0).getUid(),
+                null, null, null,null, null, null, null, null);
+
+        String desc = post.getDescription() + "\n\n.\n.\n.\n.\n";
+
+        for(String hash : post.getHashtags()){
+            desc += hash + " ";
+        }
+
+        Bundle params = new Bundle();
+        params.putString("image_url", post.getImage().get(0));
+        params.putString("caption", desc);
+
+        Bundle paramPost = new Bundle();
+
+
+
+        new GraphRequest(
+                accessToken,
+                "/"+ instagramBId +"/media",
+                params,
+                HttpMethod.POST,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        JSONObject postObj = response.getJSONObject();
+                        try {
+                            String postId = postObj.getString("id");
+                            paramPost.putString("creation_id", postId);
+                            new GraphRequest(
+                                    accessToken,
+                                    "/"+ instagramBId +"/media_publish",
+                                    paramPost,
+                                    HttpMethod.POST,
+                                    new GraphRequest.Callback() {
+                                        public void onCompleted(GraphResponse response) {
+
+                                        }
+                                    }
+                            ).executeAsync();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
+
     }
 
     private void publish(PostedSchedule post){
