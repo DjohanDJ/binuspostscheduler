@@ -1,10 +1,13 @@
 package com.example.binuspostscheduler.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +28,9 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -47,11 +52,23 @@ public class AddFacebookActivity extends AppCompatActivity {
 
     private CallbackManager callbackManager;
     private LoginButton loginButton;
+    private Button setPages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_facebook);
+
+        setPages = findViewById(R.id.set_pages_btn);
+        setPages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent it = new Intent(AddFacebookActivity.this, SetFacebookPages.class);
+                startActivity(it);
+            }
+        });
+
+        setPages.setVisibility(View.GONE);
 
         facebookSetting();
     }
@@ -63,7 +80,9 @@ public class AddFacebookActivity extends AppCompatActivity {
         textView = findViewById(R.id.FB_name);
 
         loginButton.setPermissions(Arrays
-                .asList("email, public_profile, pages_manage_posts, pages_manage_metadata, pages_read_engagement"));
+                .asList("email, public_profile, pages_manage_posts, pages_manage_metadata, pages_read_engagement," +
+                        "instagram_basic, instagram_manage_comments, instagram_manage_insights, instagram_content_publish," +
+                        "instagram_manage_messages, pages_read_user_content"));
 
         // Callback registration
         loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -104,8 +123,27 @@ public class AddFacebookActivity extends AppCompatActivity {
 
         if (isLoggedIn) {
             setProfile();
-            setApiDatabase();
+            deleteAllPages();
+            setPages.setVisibility(View.VISIBLE);
         }
+
+    }
+
+    private void deleteAllPages(){
+        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+                .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(DocumentSnapshot doc : task.getResult()){
+                        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+                                .document("facebook").collection("pages").document(doc.getId()).delete();
+                    }
+                }
+                setApiDatabase();
+            }
+        });
+
 
     }
 
@@ -173,6 +211,7 @@ public class AddFacebookActivity extends AppCompatActivity {
                                 map.put("access_token", a);
                                 map.put("id", b);
                                 map.put("name", c);
+                                map.put("status", "active");
 
                                 db.collection("users").document(UserSession.getCurrentUser().getId())
                                         .collection("accounts")
@@ -252,6 +291,7 @@ public class AddFacebookActivity extends AppCompatActivity {
             if (currentAccessToken == null) {
                 LoginManager.getInstance().logOut();
                 textView.setText("not connected");
+                setPages.setVisibility(View.INVISIBLE);
             }
         }
     };

@@ -1,7 +1,9 @@
 package com.example.binuspostscheduler.models;
 
 public class FacebookPages {
-    String access_token,id,name,uid;
+    String access_token,id,name,uid,status;
+
+
 
     public FacebookPages(String access_token, String id, String name, String uid) {
         this.access_token = access_token;
@@ -40,5 +42,13 @@ public class FacebookPages {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -14,29 +14,28 @@
             android:id="@+id/connected_account_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
-            android:text="Manage Accounts"
-            android:gravity="center"
-            android:textSize="@dimen/text_subtitle"
-            android:textColor="@color/colorBlack"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
-            />
+            android:layout_marginBottom="20dp"
+            android:fontFamily="@font/poppins_bold"
+            android:gravity="center"
+            android:text="Manage Accounts"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_subtitle" />
 
         <RelativeLayout
             android:id="@+id/twitter_container"
             android:layout_below="@id/connected_account_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <Button
                 android:id="@+id/add_twitter_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Twitter Account"
-                android:textSize="@dimen/text_content"
-                android:textColor="@color/colorWhite"
                 android:background="@drawable/button2"
-                />
+                android:text="Twitter Account"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/text_content" />
 
 
 

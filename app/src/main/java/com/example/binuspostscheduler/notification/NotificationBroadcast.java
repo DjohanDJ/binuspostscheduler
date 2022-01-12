@@ -60,7 +60,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         user_id = intent.getStringExtra("user_id");
         checkSchdule(context);
-        Toast.makeText(context, "HAIHAI", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, "HAIHAI", Toast.LENGTH_SHORT).show();
     }
 
     void checkSchdule(Context context){
@@ -200,9 +200,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
 
     void sendNotif(Context context, PostedSchedule post){
-
-
-
         // send notif
         Intent myIntent = new Intent(context, ScheduleDetailActivity.class);
         myIntent.putExtra("id", post.getId());
@@ -235,21 +232,24 @@ public class NotificationBroadcast extends BroadcastReceiver {
     }
 
     private void getDataPublish(PostedSchedule post){
-//        Log.d("HAIHAI", UserSession.getCurrentUser().getId().toString());
         db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
           .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     for (QueryDocumentSnapshot doc : task.getResult()) {
-                        String accT, id, name,uid ;
+                        String accT, id, name, uid , status;
                         accT= doc.getString("access_token");
                         id = doc.getString("id");
                         name = doc.getString("name");
                         uid = doc.getString("uid");
+                        status = doc.getString("status");
                         FacebookPages fp = new FacebookPages(accT,id,name,uid);
+                        fp.setStatus(status);
                         pages.add(fp);
+                        if(status.equals("active")){
+                            publish(post,id, accT);
+                        }
                     }
-                    publish(post);
             }
         });
 
@@ -278,8 +278,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
         params.putString("caption", desc);
 
         Bundle paramPost = new Bundle();
-
-
 
         new GraphRequest(
                 accessToken,
@@ -312,8 +310,8 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
     }
 
-    private void publish(PostedSchedule post){
-        AccessToken acc = new AccessToken(pages.get(0).getAccess_token(), "472685857272246", pages.get(0).getUid(),
+    private void publish(PostedSchedule post, String pages_id, String accT){
+        AccessToken acc = new AccessToken(accT, "472685857272246", pages.get(0).getUid(),
                 null, null, null,null, null, null, null, null);
 
         String desc = post.getDescription() + "\n\n";
@@ -326,15 +324,10 @@ public class NotificationBroadcast extends BroadcastReceiver {
         params.putString("message", desc);
         params.putString("url", post.getImage().get(0));
 
-//        int c = 0;
-//        for(String url: post.getImage()){
-//            params.putString("attached_media["+c+"]", url);
-//            c++;
-//        }
 
         new GraphRequest(
                 acc,
-                "/ "+ pages.get(0).getId() +"/photos",
+                "/ "+ pages_id +"/photos",
                 params,
                 HttpMethod.POST,
                 new GraphRequest.Callback() {
@@ -343,6 +336,23 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     }
                 }
         ).executeAsync();
+    }
+
+    private void getFacebookPages(String accToken, String id, String name, String uid, int index){
+        pages.add(new FacebookPages(accToken, id, name, uid));
+
+        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+                .document("facebook").collection("pages").document("id").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot ds = task.getResult();
+                    String status = ds.getString("status");
+                    pages.get(index).setStatus(status);
+                }
+            }
+        });
+
     }
 
 
@@ -360,7 +370,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     map.put("name", name);
 
                     db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts").document("facebook")
-                            .set(map);
+                            .update(map);
 
                     int len = object.getJSONObject("accounts").getJSONArray("data").length();
                     pages.clear();
@@ -377,9 +387,9 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
                         db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
                                 .document("facebook").collection("pages").document(b)
-                                .set(page);
+                                .update(page);
 
-                        pages.add(new FacebookPages(a, b, c, uid));
+                        getFacebookPages(a,b,c,uid, i);
                     }
                     getDataPublish(post);
                 } catch (JSONException e) {
