@@ -2,13 +2,12 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="horizontal"
-    android:background="@color/tw__blue_default"
+
     android:layout_height="200px">
 
     <ImageView
         android:id="@+id/account_type_icon"
         android:src="@drawable/tw__ic_logo_default"
-        android:background="@color/tw__blue_default"
         android:layout_width="150px"
         android:layout_height="match_parent"/>
     <TextView
