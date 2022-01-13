@@ -45,16 +45,26 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
         return new SelectAccountAdapter.ViewHolder(view);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull @NotNull SelectAccountAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         if(accounts.get(position).getType().equalsIgnoreCase("Twitter")){
+            holder.itemView.setBackgroundResource(R.color.tw__blue_default);
             holder.account_icon.setImageResource(R.drawable.tw__ic_logo_default);
             holder.account_username.setText(accounts.get(position).getUsername());
             holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_outline_24_alt);
         }
         else if(accounts.get(position).getType().equalsIgnoreCase("Facebook")){
-            //facebook
+            holder.itemView.setBackgroundResource(R.color.com_facebook_blue);
+            holder.account_icon.setImageResource(R.drawable.ic_facebook_f_logo__with_gradient_);
+            holder.account_username.setText(accounts.get(position).getUsername());
+            holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_outline_24_alt);
+        }
+        else if(accounts.get(position).getType().equalsIgnoreCase("Instagram")){
+            holder.account_icon.setImageResource(R.drawable.ic_instagram_simple_icon);
+            holder.account_username.setText(accounts.get(position).getUsername());
+            holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_outline_24_alt);
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

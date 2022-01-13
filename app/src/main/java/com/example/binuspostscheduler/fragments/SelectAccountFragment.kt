@@ -57,6 +57,17 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
                 Log.d("Done", "Done")
                 accounts.add(acc)
             }
+            else if (document.id.equals("facebook")){
+                val acc = Account()
+                acc.username = document.get("name") as String
+                acc.uid = document.get("uid") as String
+                acc.type = document.id
+                accounts.add(acc)
+            }
+            else{
+                val acc = Account()
+
+            }
 
         }
             adapter = SelectAccountAdapter(accounts,ctx,this)
