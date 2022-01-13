@@ -6,17 +6,19 @@
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/account_fragment.xml" value="0.1693840579710145" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_add_facebook.xml" value="0.2" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_create_post.xml" value="0.1693840579710145" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_facebook_dashboard_chart.xml" value="0.176" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_instagram_dashboard_chart.xml" value="0.2875" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_set_facebook_pages.xml" value="0.28072916666666664" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_twitter_dashboard_chart.xml" value="0.2875" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/all_schedule_list.xml" value="0.1693840579710145" />
-        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/dashboard_fragment.xml" value="0.25" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/dashboard_fragment.xml" value="0.264" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/facebook_pages_list.xml" value="0.3704710144927536" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_home.xml" value="0.17798913043478262" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_schedules.xml" value="0.1693840579710145" />
-        <entry key="..\:/Users/didis/Desktop/!Magang/Android/binuspostscheduler/app/src/main/res/menu/activity_main_drawer.xml" value="0.22564102564102564" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
