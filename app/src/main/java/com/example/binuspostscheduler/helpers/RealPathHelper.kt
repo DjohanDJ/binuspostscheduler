@@ -10,6 +10,7 @@ import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
+import java.lang.Exception
 
 object RealPathHelper {
     fun getRealPath(context: Context, uri: Uri): String? {
@@ -137,5 +138,20 @@ object RealPathHelper {
      */
     private fun isGooglePhotosUri(uri: Uri): Boolean {
         return "com.google.android.apps.photos.content" == uri.authority
+    }
+    fun getRealPathFromURI(context: Context, contentUri: Uri): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri, proj, null, null, null)
+            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } catch (e: Exception) {
+            Log.e("TAG", "getRealPathFromURI Exception : $e")
+            ""
+        } finally {
+            cursor?.close()
+        }
     }
 }

@@ -102,6 +102,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
         insert_img_btn.setOnClickListener(View.OnClickListener {
             var i = Intent(Intent.ACTION_GET_CONTENT)
             i.setType("image/*")
+//            i.putExtra("return-data", true);
 //            val mimetypes = arrayOf("image/*", "video/*")
 //            i.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
 //            i.setType(
@@ -267,7 +268,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        Log.d("Inserting Image","Inserting..")
+        Log.d("Inserting Image","Inserting.."+resultCode)
         if(data == null)Log.d("Inserting Image","Null Image")
 
         if(requestCode == 999 && resultCode == Activity.RESULT_OK && data != null){

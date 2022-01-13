@@ -1,5 +1,6 @@
 package com.example.binuspostscheduler.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,7 +46,7 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull SelectAccountAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull @NotNull SelectAccountAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         if(accounts.get(position).getType().equalsIgnoreCase("Twitter")){
             holder.account_icon.setImageResource(R.drawable.tw__ic_logo_default);

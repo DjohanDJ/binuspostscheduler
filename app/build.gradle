@@ -78,4 +78,5 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
 
+    implementation  'com.github.AnyChart:AnyChart-Android:0.0.3'
 }
