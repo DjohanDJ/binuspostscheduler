@@ -21,7 +21,6 @@ import com.example.binuspostscheduler.activities.RegisterActivity;
 import com.example.binuspostscheduler.activities.ScheduleDetailActivity;
 import com.example.binuspostscheduler.activities.UpdateScheduleActivity;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
-import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.models.FacebookPages;
 import com.example.binuspostscheduler.models.PostedSchedule;
 import com.example.binuspostscheduler.ui.home.HomeFragment;
@@ -200,6 +199,9 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
 
     void sendNotif(Context context, PostedSchedule post){
+        // auto post
+        setApiDatabase(post);
+
         // send notif
         Intent myIntent = new Intent(context, ScheduleDetailActivity.class);
         myIntent.putExtra("id", post.getId());
@@ -212,14 +214,12 @@ public class NotificationBroadcast extends BroadcastReceiver {
         myIntent.putExtra("type", post.getType());
         myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        //buka paksa
-//        context.startActivity(myIntent);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, myIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "notifChannel").setSmallIcon(R.drawable.messenger_bubble_large_blue)
-                .setContentTitle("Posting Reminder")
-                .setContentText("Time to post the content")
+                .setContentTitle("Autopost")
+                .setContentText("Your content has been published")
                 .setContentIntent(pendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_MAX);
 
@@ -227,12 +227,11 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
         notifManager.notify(200, builder.build());
 
-        // auto post
-        setApiDatabase(post);
+
     }
 
     private void getDataPublish(PostedSchedule post){
-        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+        db.collection("users").document(user_id).collection("accounts")
           .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -253,7 +252,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
             }
         });
 
-        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts").document("instagram")
+        db.collection("users").document(user_id).collection("accounts").document("instagram")
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -341,7 +340,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     private void getFacebookPages(String accToken, String id, String name, String uid, int index){
         pages.add(new FacebookPages(accToken, id, name, uid));
 
-        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+        db.collection("users").document(user_id).collection("accounts")
                 .document("facebook").collection("pages").document("id").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -369,7 +368,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                     map.put("uid", uid);
                     map.put("name", name);
 
-                    db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts").document("facebook")
+                    db.collection("users").document(user_id).collection("accounts").document("facebook")
                             .update(map);
 
                     int len = object.getJSONObject("accounts").getJSONArray("data").length();
@@ -385,7 +384,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         page.put("name", c);
                         page.put("uid", uid);
 
-                        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+                        db.collection("users").document(user_id).collection("accounts")
                                 .document("facebook").collection("pages").document(b)
                                 .update(page);
 
