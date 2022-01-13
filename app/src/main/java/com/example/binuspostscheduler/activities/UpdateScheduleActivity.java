@@ -77,7 +77,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         obj.setImage(intent.getStringArrayListExtra("image"));
         obj.setTime(intent.getStringExtra("time"));
         obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
-        obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
+        obj.setSelected_id(intent.getParcelableArrayListExtra("selected_id"));
         obj.setType(intent.getStringExtra("type"));
 //        Toast.makeText(this, intent.getStringExtra("type"), Toast.LENGTH_SHORT).show();
         fetchData(obj);
@@ -245,7 +245,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
             arrStringTags.add(tag);
         }
         updatedSchedule.setHashtags(arrStringTags);
-        updatedSchedule.setSelected_id(getIntent().getStringArrayListExtra("selected_id"));
+        updatedSchedule.setSelected_id(getIntent().getParcelableArrayListExtra("selected_id"));
 
         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
                 .document(updatedSchedule.getId()).set(updatedSchedule)

@@ -1,6 +1,9 @@
 package com.example.binuspostscheduler.models;
 
-public class Account {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Account implements Parcelable {
     private String access_token;
     private String access_secret;
     private String uid;
@@ -67,4 +70,49 @@ public class Account {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.access_token);
+        dest.writeString(this.access_secret);
+        dest.writeString(this.uid);
+        dest.writeString(this.username);
+        dest.writeString(this.type);
+        dest.writeByte(this.checked ? (byte) 1 : (byte) 0);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.access_token = source.readString();
+        this.access_secret = source.readString();
+        this.uid = source.readString();
+        this.username = source.readString();
+        this.type = source.readString();
+        this.checked = source.readByte() != 0;
+    }
+
+    protected Account(Parcel in) {
+        this.access_token = in.readString();
+        this.access_secret = in.readString();
+        this.uid = in.readString();
+        this.username = in.readString();
+        this.type = in.readString();
+        this.checked = in.readByte() != 0;
+    }
+
+    public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<Account>() {
+        @Override
+        public Account createFromParcel(Parcel source) {
+            return new Account(source);
+        }
+
+        @Override
+        public Account[] newArray(int size) {
+            return new Account[size];
+        }
+    };
 }

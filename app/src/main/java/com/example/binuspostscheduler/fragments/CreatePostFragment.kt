@@ -27,6 +27,7 @@ import com.example.binuspostscheduler.helpers.RealPathHelper
 import com.example.binuspostscheduler.interfaces.AddMediaInterface
 import com.example.binuspostscheduler.models.Account
 import com.example.binuspostscheduler.models.NewSchedule
+import com.example.binuspostscheduler.models.SocialAccount
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -61,7 +62,6 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
     private lateinit var laterTime: Date
     private lateinit var tags : ArrayList<String>
     private lateinit var accounts : ArrayList<Account>
-    private lateinit var accTypes : ArrayList<String>
     private lateinit var storage :FirebaseStorage
     private lateinit var schedule_type: String
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -203,7 +203,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                     val scheduled_time = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(laterTime)
                     val id = RandomStringUtils.randomAlphanumeric(20)
 //                    val scheduled_post = NewSchedule(post_content.text.toString(), scheduled_time, uid, "", schedule_type,tags, img_paths, id)
-                    val scheduled_post = NewSchedule(post_content.text.toString(), scheduled_time, uid, "", schedule_type,tags, img_paths,id,accTypes)
+                    val scheduled_post = NewSchedule(post_content.text.toString(), scheduled_time, uid, "", schedule_type,tags, img_paths,id,accounts)
                     db.collection("schedules").document(id).set(scheduled_post).addOnCompleteListener{
                         task ->
                         run {
@@ -263,7 +263,20 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 
         }
 
+        if(accounts.isEmpty()){
 
+        }else{
+            if(isFacebookExists()){
+
+
+                add_tags_placeholder_container.getChildAt(0).isEnabled = true
+                add_tags_placeholder_container.getChildAt(1).isEnabled = true
+            }else{
+
+                add_tags_placeholder_container.getChildAt(0).isEnabled = false
+                add_tags_placeholder_container.getChildAt(1).isEnabled = false
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -391,16 +404,34 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 //        TODO("Not yet implemented")
     }
 
-    override fun updateData(map: HashMap<String, Account>?) {
+    override fun updateData(accounts: ArrayList<Account>?) {
+
         Log.d("Updating","...")
+        this.accounts = accounts!!
+//        if(accounts.isEmpty()){
+//            Log.d("Empty account",">:")
+//        }else{
+//            if(isFacebookExists()){
+//
+//                Log.d("Facebook account","Exists")
+//                add_tags_placeholder_container.getChildAt(0).isEnabled = true
+//                add_tags_placeholder_container.getChildAt(1).isEnabled = true
+//            }else{
+//                Log.d("Facebook account","Not exists")
+//                add_tags_placeholder_container.getChildAt(0).isEnabled = false
+//                add_tags_placeholder_container.getChildAt(1).isEnabled = false
+//            }
+//        }
+        /*
+
         if (map != null) {
             accounts = ArrayList()
             accTypes = ArrayList()
             if(map.get("facebook") != null){
 
 
-                add_tags_placeholder_container.getChildAt(0).isEnabled = true
-                add_tags_placeholder_container.getChildAt(1).isEnabled = true
+//                add_tags_placeholder_container.getChildAt(0).isEnabled = true
+//                add_tags_placeholder_container.getChildAt(1).isEnabled = true
             }else{
 
 //                add_tags_placeholder_container.getChildAt(0).isEnabled = false
@@ -417,6 +448,8 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
         else{
 //            schedule_post_btn.isEnabled = false
         }
+        */
+
     }
 
     fun postTwitter( account: Account){
@@ -519,4 +552,9 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 //
 //                        }
     }
+    fun isFacebookExists(): Boolean {
+        for (acc in accounts)if(acc.type.equals("facebook")!!)return true
+        return false
+    }
+
 }

@@ -7,7 +7,7 @@ public class NewSchedule {
     private ArrayList<String> hashtags,image;
 //    private ArrayList<Account> selected_id;
     private String id;
-    private ArrayList<String> selected_id;
+    private ArrayList<Account> selected_id;
 //    public NewSchedule(String description, String time, String user_id, String video, String type, ArrayList<String> hashtags, ArrayList<String> image, ArrayList<Account> selected_id, String id) {
 //        this.description = description;
 //        this.time = time;
@@ -20,7 +20,7 @@ public class NewSchedule {
 //        this.selected_id = selected_id;
 //    }
 
-    public NewSchedule(String description, String time, String user_id, String video, String type, ArrayList<String> hashtags, ArrayList<String> image, String id, ArrayList<String> selected_id) {
+    public NewSchedule(String description, String time, String user_id, String video, String type, ArrayList<String> hashtags, ArrayList<String> image, String id, ArrayList<Account> selected_id) {
         this.description = description;
         this.time = time;
         this.user_id = user_id;
@@ -106,11 +106,11 @@ public class NewSchedule {
         this.id = id;
     }
 
-    public ArrayList<String> getSelected_id() {
+    public ArrayList<Account> getSelected_id() {
         return selected_id;
     }
 
-    public void setSelected_id(ArrayList<String> selected_id) {
+    public void setSelected_id(ArrayList<Account> selected_id) {
         this.selected_id = selected_id;
     }
 }

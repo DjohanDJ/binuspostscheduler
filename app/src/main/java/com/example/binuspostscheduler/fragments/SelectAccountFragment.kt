@@ -13,6 +13,7 @@ import com.example.binuspostscheduler.Adapter.SelectAccountAdapter
 import com.example.binuspostscheduler.R
 import com.example.binuspostscheduler.activities.CreatePostActivity
 import com.example.binuspostscheduler.models.Account
+import com.example.binuspostscheduler.models.SocialAccount
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_select_account.*
 import java.util.HashMap
@@ -38,14 +39,17 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        select_account_btn.isEnabled = false
+        select_account_btn.isEnabled = false
         accounts = ArrayList()
         uid =  view.context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("user_userId","")!!
         ctx = view.context
         db = FirebaseFirestore.getInstance()
 
         db.collection("users").document(uid).collection("accounts").get().addOnSuccessListener {
-            documents -> for(document in documents){
+
+            documents ->
+            var isFaceBookExists = false;
+            for(document in documents){
 
             if (document.id.equals("twitter")){
                 val acc = Account()
@@ -54,15 +58,10 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
                 acc.access_token = document.get("access_token") as String
                 acc.uid = document.get("uid") as String
                 acc.type = document.id
-                Log.d("Done", "Done")
                 accounts.add(acc)
             }
             else if (document.id.equals("facebook")){
-                val acc = Account()
-                acc.username = document.get("name") as String
-                acc.uid = document.get("uid") as String
-                acc.type = document.id
-                accounts.add(acc)
+                isFaceBookExists = true
             }
             else{
                 val acc = Account()
@@ -70,24 +69,42 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
             }
 
         }
-            adapter = SelectAccountAdapter(accounts,ctx,this)
-            select_account_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            select_account_recycler_view.adapter =adapter
-            adapter.notifyDataSetChanged()
-
+            if(isFaceBookExists){
+                db.collection("users").document(uid).collection("accounts").document("facebook").collection("pages").get().addOnSuccessListener {
+                    pages -> for(page in pages){
+                        Log.d("Facebook",page.getString("name")!!);
+                        val acc = Account()
+                        acc.username = page.get("name") as String
+                        acc.access_token = page.get("access_token") as String
+                        acc.uid = page.get("id") as String
+                        acc.type = "facebook"
+                        accounts.add(acc)
+                    }
+                    adapter = SelectAccountAdapter(accounts, ctx, this)
+                    select_account_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    select_account_recycler_view.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                }
+            }
+            else {
+                adapter = SelectAccountAdapter(accounts, ctx, this)
+                select_account_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                select_account_recycler_view.adapter = adapter
+                adapter.notifyDataSetChanged()
+            }
         }
         select_account_btn.setOnClickListener{
-            (activity as CreatePostActivity).send(0)
-            (activity as CreatePostActivity).changeFragment(0)
 
+            (activity as CreatePostActivity).changeFragment(0)
+            (activity as CreatePostActivity).send(0)
         }
     }
 
     override fun sendData( b: CreatePostInterface?) {
-        b!!.updateData(adapter.map)
+        b!!.updateData(adapter.selectedAccounts)
     }
 
-    override fun updateData(map: HashMap<String, Account>?) {
+    override fun updateData(accounts: java.util.ArrayList<Account>?) {
 //        TODO("Not yet implemented")
     }
     fun changeButton(changed: Boolean){

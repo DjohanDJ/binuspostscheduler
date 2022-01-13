@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.fragments.SelectAccountFragment;
 import com.example.binuspostscheduler.models.Account;
+import com.example.binuspostscheduler.models.SocialAccount;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,12 +28,12 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
 
     private List<Account> accounts;
     private Context ctx;
-    private HashMap<String, Account> map;
+    private ArrayList<Account> selectedAccounts;
     private SelectAccountFragment fragment;
     public SelectAccountAdapter(List<Account> accounts, Context ctx, SelectAccountFragment fragment) {
         this.accounts = accounts;
         this.ctx = ctx;
-        map = new HashMap();
+        selectedAccounts = new ArrayList<Account>();
         this.fragment = fragment;
     }
 
@@ -71,13 +73,14 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
             public void onClick(View view) {
                 if(accounts.get(position).isChecked()){
                     holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_outline_24_alt);
-                    map.remove(accounts.get(position).getType());
+                    removeByID(accounts.get(position).getUid());
                 }else{
                     holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_24);
-                    map.put(accounts.get(position).getType(),accounts.get(position));
+
+                    selectedAccounts.add(accounts.get(position));
                 }
                 accounts.get(position).setChecked(!accounts.get(position).isChecked());
-                fragment.changeButton(!map.isEmpty());
+                fragment.changeButton(!selectedAccounts.isEmpty());
             }
         });
     }
@@ -99,13 +102,27 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
         }
     }
 
-    public HashMap<String, Account> getMap() {
-        return map;
+//    public HashMap<String, Account> getMap() {
+//        return map;
+//    }
+//
+//    public void setMap(HashMap<String, Account> map) {
+//        this.map = map;
+//    }
+
+
+    public ArrayList<Account> getSelectedAccounts() {
+        return selectedAccounts;
     }
 
-    public void setMap(HashMap<String, Account> map) {
-        this.map = map;
+    public void setSelectedAccounts(ArrayList<Account> selectedAccounts) {
+        this.selectedAccounts = selectedAccounts;
     }
 
+    public void removeByID(String id){
+        for(int i =0;i<selectedAccounts.size();i++){
+            if(selectedAccounts.get(i).getUid().equals(id))selectedAccounts.remove(i);
+        }
+    }
 
 }

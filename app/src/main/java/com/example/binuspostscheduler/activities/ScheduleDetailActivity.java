@@ -161,7 +161,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         obj.setTime(intent.getStringExtra("time"));
         obj.setType(intent.getStringExtra("type"));
         obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
-        obj.setSelected_id(intent.getStringArrayListExtra("selected_id"));
+        obj.setSelected_id(intent.getParcelableArrayListExtra("selected_id") );
 
 
 
