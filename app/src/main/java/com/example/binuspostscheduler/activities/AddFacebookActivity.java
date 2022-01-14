@@ -261,14 +261,41 @@ public class AddFacebookActivity extends AppCompatActivity {
 //                                        Log.d("djohan2", instagramBAObj.getString("id"));
                                         String instagramId = instagramBAObj.getString("id");
 
-                                        // insert to db
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("id", instagramId);
+                                        GraphRequest.newGraphPathRequest(
+                                                pageAccToken,
+                                                "/" + instagramId + "?fields=name",
+                                                new GraphRequest.Callback() {
+                                                    @Override
+                                                    public void onCompleted(GraphResponse response) {
+                                                        JSONObject objName = response.getJSONObject();
+                                                        try {
+                                                            String nameInstagram = objName.getString("name");
 
-                                        db.collection("users").document(UserSession.getCurrentUser().getId())
-                                                .collection("accounts")
-                                                .document("instagram").
-                                                set(map);
+                                                            // insert to db
+                                                            Map<String, Object> map = new HashMap<>();
+                                                            map.put("id", instagramId);
+                                                            map.put("name", nameInstagram);
+
+                                                            db.collection("users").document(UserSession.getCurrentUser().getId())
+                                                                    .collection("accounts")
+                                                                    .document("instagram").
+                                                                    set(map);
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                }
+                                        ).executeAsync();
+
+                                        // insert to db
+//                                        Map<String, Object> map = new HashMap<>();
+//                                        map.put("id", instagramId);
+////                                        map.put("name", nameInstagram);
+//
+//                                        db.collection("users").document(UserSession.getCurrentUser().getId())
+//                                                .collection("accounts")
+//                                                .document("instagram").
+//                                                set(map);
 
                                     } catch (JSONException e) {
                                         e.printStackTrace();

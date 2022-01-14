@@ -27,7 +27,7 @@ import com.example.binuspostscheduler.helpers.RealPathHelper
 import com.example.binuspostscheduler.interfaces.AddMediaInterface
 import com.example.binuspostscheduler.models.Account
 import com.example.binuspostscheduler.models.NewSchedule
-import com.example.binuspostscheduler.models.SocialAccount
+//import com.example.binuspostscheduler.models.SocialAccount
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference

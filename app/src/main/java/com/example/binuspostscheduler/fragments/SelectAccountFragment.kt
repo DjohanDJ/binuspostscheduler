@@ -13,7 +13,7 @@ import com.example.binuspostscheduler.Adapter.SelectAccountAdapter
 import com.example.binuspostscheduler.R
 import com.example.binuspostscheduler.activities.CreatePostActivity
 import com.example.binuspostscheduler.models.Account
-import com.example.binuspostscheduler.models.SocialAccount
+//import com.example.binuspostscheduler.models.SocialAccount
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_select_account.*
 import java.util.HashMap

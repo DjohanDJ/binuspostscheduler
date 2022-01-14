@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.fragments.SelectAccountFragment;
 import com.example.binuspostscheduler.models.Account;
-import com.example.binuspostscheduler.models.SocialAccount;
+//import com.example.binuspostscheduler.models.SocialAccount;
 
 import org.jetbrains.annotations.NotNull;
 
