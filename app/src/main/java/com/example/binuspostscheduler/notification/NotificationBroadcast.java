@@ -1,11 +1,18 @@
 package com.example.binuspostscheduler.notification;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,6 +28,7 @@ import com.example.binuspostscheduler.activities.RegisterActivity;
 import com.example.binuspostscheduler.activities.ScheduleDetailActivity;
 import com.example.binuspostscheduler.activities.UpdateScheduleActivity;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
+import com.example.binuspostscheduler.models.Account;
 import com.example.binuspostscheduler.models.FacebookPages;
 import com.example.binuspostscheduler.models.PostedSchedule;
 import com.example.binuspostscheduler.ui.home.HomeFragment;
@@ -35,10 +43,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +61,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import twitter4j.Status;
+import twitter4j.StatusUpdate;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.UploadedMedia;
+import twitter4j.conf.ConfigurationBuilder;
+
 public class NotificationBroadcast extends BroadcastReceiver {
     final ArrayList<PostedSchedule> postedListRaw = new ArrayList<>();
     final ArrayList<PostedSchedule> postedList = new ArrayList<>();
@@ -54,10 +76,11 @@ public class NotificationBroadcast extends BroadcastReceiver {
     String user_id = null;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String instagramBId = "";
-
+    Context ctx;
     @Override
     public void onReceive(Context context, Intent intent) {
         user_id = intent.getStringExtra("user_id");
+        this.ctx = context;
         checkSchdule(context);
 //        Toast.makeText(context, "HAIHAI", Toast.LENGTH_SHORT).show();
     }
@@ -101,6 +124,17 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
                         if(today.equalsIgnoreCase(postDate)){
                             sendNotif(context, post);
+                            // post to twitter
+                            if(isTwitterExists(post))
+                            {
+                                db.collection("users").document(post.getUser_id()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        Account acc = documentSnapshot.toObject(Account.class);
+                                        postTwitter(acc,post);
+                                    }
+                                });
+                            }
                             if (post.getType().equalsIgnoreCase("daily")){
                                 setDaily(post, context);
                             }else if(post.getType().equalsIgnoreCase("weekly")){
@@ -403,5 +437,121 @@ public class NotificationBroadcast extends BroadcastReceiver {
         bundle.putString("fields", "gender, name, id, first_name, last_name, accounts");
         graphRequest.setParameters(bundle);
         graphRequest.executeAsync();
+    }
+
+    private void postTwitter( Account account, PostedSchedule obj) {
+
+        String access_token = account.getAccess_token();
+        String access_secret = account.getAccess_secret();
+        ConfigurationBuilder cb = new twitter4j.conf.ConfigurationBuilder();
+        cb.setDebugEnabled(true);
+        cb.setOAuthConsumerKey(ctx.getString(R.string.twitter_CONSUMER_KEY));
+        cb.setOAuthConsumerSecret(ctx.getString(R.string.twitter_CONSUMER_SECRET));
+        twitter4j.auth.AccessToken twToken = new twitter4j.auth.AccessToken(access_token, access_secret);
+        TwitterFactory twitterFactory = new TwitterFactory(cb.build());
+        Twitter twitter = twitterFactory.getInstance();
+        twitter.setOAuthAccessToken(twToken);
+        Long mediaIds[] = new Long[5];
+        StatusUpdate statusUpdate = new StatusUpdate(obj.getDescription());
+        File files[] = new File[5];
+        for (int i = 0; i < obj.getImage().size(); i++) {
+            String path = obj.getImage().get(i);
+            int finalI = i;
+            Picasso.get().load(path).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    File file = new File(ctx.getCacheDir(), "temp.jpg");
+                    try {
+                        OutputStream os = new BufferedOutputStream(new FileOutputStream(file));
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+
+                        if(file.exists())Log.d("File","EXISTS");
+                        else Log.d("File","NOT EXISTS");
+                        files[finalI] = file;
+
+//                                os.close();
+                        if (finalI == obj.getImage().size() - 1) {
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
+        }
+
+
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Status status = null;
+                try {
+                    for(int i=0;i<obj.getImage().size();i++){
+                        Log.d("I","i ke "+i);
+                        File file = files[i];
+                        UploadedMedia upload = twitter.uploadMedia(file);
+                        mediaIds[i] = upload.getMediaId();
+                        statusUpdate.setMediaIds(upload.getMediaId());
+                        Log.d("I","i ke "+i+ " End");
+                    }
+                    status = twitter.updateStatus(statusUpdate);
+                    Log.d("twitter","Uploaded");
+                    String statusUrl = "https://twitter.com/" + status.getUser().getScreenName()
+                            .toString() + "/status/" + status.getId();
+
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
+                    alertDialogBuilder.setTitle("Upload Successful");
+                    alertDialogBuilder.setMessage("Upload Succesful");
+                    alertDialogBuilder.setPositiveButton("View Tweets", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(statusUrl));
+                            ctx.startActivity(intent);
+                        }
+                    });
+                    alertDialogBuilder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    });
+//                Looper.prepare();
+                    Handler mHandler = new Handler(Looper.getMainLooper());
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            alertDialogBuilder.show();
+                        }
+                    });
+                } catch (TwitterException e) {
+                    e.printStackTrace();
+                }
+
+
+
+            }
+        });
+        thread.start();
+
+
+    }
+    private boolean isTwitterExists(PostedSchedule post){
+        for(Account acc : post.getSelected_id())if(acc.getType().equals("twitter"))return true;
+        return false;
     }
 }
