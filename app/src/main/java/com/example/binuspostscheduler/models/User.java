@@ -3,12 +3,12 @@ package com.example.binuspostscheduler.models;
 public class User {
 
     private String username;
-    private String id;
+    private String id = "0";
     private String email;
     private String password;
     private String role;
 
-    public User() {}
+//    public User() {}
 
     public User(String username, String id, String email, String password, String role) {
         this.username = username;

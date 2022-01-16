@@ -426,11 +426,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
                     sharePhotos.add(sharePhoto);
 
-//                    Log.d("DJOHAN", String.valueOf(sharePhotos.size()));
-//                    Log.d("DJOHANE", String.valueOf(imgList.size()));
-
-
-
                     if(sharePhotos.size() == imgList.size()){
                         ShareContent shareContent = null;
 
@@ -493,7 +488,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
     }
 
     private void deleteSchedule(final String id) {
-//        Toast.makeText(this, UserSession.getCurrentUser().getId(), Toast.LENGTH_SHORT).show();
         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
                 .document(id)
 //                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

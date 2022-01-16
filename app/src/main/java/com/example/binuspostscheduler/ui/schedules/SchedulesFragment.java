@@ -23,6 +23,7 @@ import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.models.PostedSchedule;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -77,7 +78,7 @@ public class SchedulesFragment extends Fragment {
                     }
 
                     for(PostedSchedule post : postedListRaw){
-                        if(post.getUser_id().equalsIgnoreCase(UserSession.getCurrentUser().getId())){
+                        if(post.getUser_id().equalsIgnoreCase(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                             postedList.add(post);
                         }
                     }

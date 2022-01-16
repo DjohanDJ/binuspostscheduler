@@ -182,13 +182,6 @@ public class AddFacebookActivity extends AppCompatActivity {
                         try {
                             String name = object.getString("name").toString();
                             String uid = object.getString("id").toString();
-                            // Log.d("HAIHAI", object.getJSONObject("accounts").toString());
-                            // Log.d("HAIHAI",
-                            // object.getJSONObject("accounts").getJSONArray("data").toString());
-                            // Log.d("HAIHAI",
-                            // String.valueOf(object.getJSONObject("accounts").getJSONArray("data").length()));
-                            // Log.d("HAIHAI",
-                            // object.getJSONObject("accounts").getJSONArray("data").getJSONObject(0).toString());
 
                             Map<String, Object> map = new HashMap<>();
                             map.put("uid", uid);

@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -132,7 +133,8 @@ public class MainActivity extends AppCompatActivity {
 
     void process(){
         Intent intent =  new Intent(MainActivity.this, NotificationBroadcast.class);
-        intent.putExtra("user_id", UserSession.getCurrentUser().getId());
+        Log.d("HAIHAI", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        intent.putExtra("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
