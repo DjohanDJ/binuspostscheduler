@@ -10,6 +10,15 @@ public class Account implements Parcelable {
     private String username;
     private String type;
     private boolean checked;
+    private String pid;
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
+    }
 
     public boolean isChecked() {
         return checked;

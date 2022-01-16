@@ -65,7 +65,9 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
             }
             else{
                 val acc = Account()
-
+                acc.uid = document.get("id") as String
+                acc.username = document.get("name") as String
+                accounts.add(acc)
             }
 
         }
@@ -74,9 +76,11 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
                     pages -> for(page in pages){
                         Log.d("Facebook",page.getString("name")!!);
                         val acc = Account()
+                        val pid = page.get("id") as String
                         acc.username = page.get("name") as String
                         acc.access_token = page.get("access_token") as String
-                        acc.uid = page.get("id") as String
+                        acc.uid = page.get("uid") as String
+                        acc.pid = pid
                         acc.type = "facebook"
                         accounts.add(acc)
                     }

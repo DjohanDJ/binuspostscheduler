@@ -78,6 +78,7 @@ dependencies {
     implementation 'org.twitter4j:twitter4j-core:4.0.7'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+//    implementation 'io.grpc:grpc-core:1.43.1'
 
-    implementation  'com.github.AnyChart:AnyChart-Android:0.0.3'
+    // implementation  'com.github.AnyChart:AnyChart-Android:0.0.3'
 }

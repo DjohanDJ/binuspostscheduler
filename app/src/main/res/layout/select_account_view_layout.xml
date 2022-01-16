@@ -7,12 +7,12 @@
 
     <ImageView
         android:id="@+id/account_type_icon"
-        android:src="@drawable/tw__ic_logo_default"
+
         android:layout_width="150px"
         android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/account_username"
-        android:textColor="@color/tw__solid_white"
+
         android:paddingHorizontal="20dp"
         android:textSize="20sp"
         android:gravity="center"
