@@ -41,6 +41,7 @@ import twitter4j.auth.AccessToken
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileInputStream
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -126,8 +127,10 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
                         hour = i
                         minute = i2
                         calendar.set(year,month-1,day,hour,minute)
+//                        calendar.add(Calendar.HOUR,7)
                         laterTime = calendar.time
-                        schedule_later_description.text = laterTime.toGMTString()
+                        val dFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
+                        schedule_later_description.text = dFormat.format(laterTime)
                         Log.d("Test", " Year = " + year + " , month = " + month + ", day =" + day + " , hour " + hour + " , minute = " + minute)
                     }
                 }, hour, minute, true)
