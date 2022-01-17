@@ -124,7 +124,7 @@ public class AddFacebookActivity extends AppCompatActivity {
         if (isLoggedIn) {
             setProfile();
             deleteAllPages();
-            setPages.setVisibility(View.VISIBLE);
+//            setPages.setVisibility(View.VISIBLE);
         }
 
     }

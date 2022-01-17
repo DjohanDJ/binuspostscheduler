@@ -526,7 +526,14 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                 Twitter twitter = twitterFactory.getInstance();
                 twitter.setOAuthAccessToken(twToken);
                 Long mediaIds[] = new Long[5];
-                StatusUpdate statusUpdate = new StatusUpdate(obj.getDescription());
+
+                String desc = obj.getDescription() + "\n\n";
+
+                for(String hash : obj.getHashtags()){
+                    desc += hash + " ";
+                }
+
+                StatusUpdate statusUpdate = new StatusUpdate(desc);
                 File files[] = new File[5];
                 for (int i = 0; i < obj.getImage().size(); i++) {
                     String path = obj.getImage().get(i);

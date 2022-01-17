@@ -81,11 +81,11 @@ public class NotificationBroadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         user_id = intent.getStringExtra("user_id");
         this.ctx = context;
-        checkSchdule(context);
+        checkSchedule(context);
 //        Toast.makeText(context, "HAIHAI", Toast.LENGTH_SHORT).show();
     }
 
-    void checkSchdule(Context context){
+    void checkSchedule(Context context){
         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -123,18 +123,9 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         postDate = dFormat.format(pDate);
 
                         if(today.equalsIgnoreCase(postDate)){
+                            Log.d("HAI", post.getSelected_id().toString());
                             sendNotif(context, post);
-                            // post to twitter
-                            if(isTwitterExists(post))
-                            {
-                                db.collection("users").document(post.getUser_id()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        Account acc = documentSnapshot.toObject(Account.class);
-                                        postTwitter(acc,post);
-                                    }
-                                });
-                            }
+
                             if (post.getType().equalsIgnoreCase("daily")){
                                 setDaily(post, context);
                             }else if(post.getType().equalsIgnoreCase("weekly")){
@@ -279,21 +270,40 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         FacebookPages fp = new FacebookPages(accT,id,name,uid);
                         fp.setStatus(status);
                         pages.add(fp);
+                        //post facebook
                         if(status.equals("active")){
-                            publish(post,id, accT);
+                            if(isFacebookPagesExists(post, id)){
+                                publishFacebook(post,id, accT);
+                            }
                         }
                     }
+
             }
         });
 
-        db.collection("users").document(user_id).collection("accounts").document("instagram")
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                instagramBId = documentSnapshot.get("id").toString();
-                publishInstagram(post);
-            }
-        });
+        // post to twitter
+        if(isTwitterExists(post))
+        {
+            db.collection("users").document(post.getUser_id()).collection("accounts").document("twitter").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Account acc = documentSnapshot.toObject(Account.class);
+                    postTwitter(acc,post);
+                }
+            });
+        }
+
+        //post instagram
+        if(isInstagramExists(post)) {
+            db.collection("users").document(user_id).collection("accounts").document("instagram")
+                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    instagramBId = documentSnapshot.get("id").toString();
+                    publishInstagram(post);
+                }
+            });
+        }
     }
 
     private void publishInstagram(PostedSchedule post) {
@@ -343,7 +353,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
     }
 
-    private void publish(PostedSchedule post, String pages_id, String accT){
+    private void publishFacebook(PostedSchedule post, String pages_id, String accT){
         AccessToken acc = new AccessToken(accT, "472685857272246", pages.get(0).getUid(),
                 null, null, null,null, null, null, null, null);
 
@@ -452,7 +462,14 @@ public class NotificationBroadcast extends BroadcastReceiver {
         Twitter twitter = twitterFactory.getInstance();
         twitter.setOAuthAccessToken(twToken);
         Long mediaIds[] = new Long[5];
-        StatusUpdate statusUpdate = new StatusUpdate(obj.getDescription());
+
+        String desc = obj.getDescription() + "\n\n";
+
+        for(String hash : obj.getHashtags()){
+            desc += hash + " ";
+        }
+
+        StatusUpdate statusUpdate = new StatusUpdate(desc);
         File files[] = new File[5];
         for (int i = 0; i < obj.getImage().size(); i++) {
             String path = obj.getImage().get(i);
@@ -471,7 +488,29 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
 //                                os.close();
                         if (finalI == obj.getImage().size() - 1) {
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Status status = null;
+                                    try {
+                                        for(int i=0;i<obj.getImage().size();i++){
+                                            Log.d("I","i ke "+i);
+                                            File file = files[i];
+                                            UploadedMedia upload = twitter.uploadMedia(file);
+                                            mediaIds[i] = upload.getMediaId();
+                                            statusUpdate.setMediaIds(upload.getMediaId());
+                                            Log.d("I","i ke "+i+ " End");
+                                        }
+                                        status = twitter.updateStatus(statusUpdate);
+                                    } catch (TwitterException e) {
+                                        e.printStackTrace();
+                                    }
 
+
+
+                                }
+                            });
+                            thread.start();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -491,67 +530,22 @@ public class NotificationBroadcast extends BroadcastReceiver {
                 }
             });
         }
-
-
-
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Status status = null;
-                try {
-                    for(int i=0;i<obj.getImage().size();i++){
-                        Log.d("I","i ke "+i);
-                        File file = files[i];
-                        UploadedMedia upload = twitter.uploadMedia(file);
-                        mediaIds[i] = upload.getMediaId();
-                        statusUpdate.setMediaIds(upload.getMediaId());
-                        Log.d("I","i ke "+i+ " End");
-                    }
-                    status = twitter.updateStatus(statusUpdate);
-                    Log.d("twitter","Uploaded");
-                    String statusUrl = "https://twitter.com/" + status.getUser().getScreenName()
-                            .toString() + "/status/" + status.getId();
-
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ctx);
-                    alertDialogBuilder.setTitle("Upload Successful");
-                    alertDialogBuilder.setMessage("Upload Succesful");
-                    alertDialogBuilder.setPositiveButton("View Tweets", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                            Intent intent = new Intent(Intent.ACTION_VIEW);
-                            intent.setData(Uri.parse(statusUrl));
-                            ctx.startActivity(intent);
-                        }
-                    });
-                    alertDialogBuilder.setNegativeButton("Ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    });
-//                Looper.prepare();
-                    Handler mHandler = new Handler(Looper.getMainLooper());
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            alertDialogBuilder.show();
-                        }
-                    });
-                } catch (TwitterException e) {
-                    e.printStackTrace();
-                }
-
-
-
-            }
-        });
-        thread.start();
-
-
     }
+
     private boolean isTwitterExists(PostedSchedule post){
         for(Account acc : post.getSelected_id())if(acc.getType().equals("twitter"))return true;
+        return false;
+    }
+
+    private boolean isFacebookPagesExists(PostedSchedule post, String pid){
+        for(Account acc : post.getSelected_id()){
+            if(acc.getType().equals("facebook") && acc.getPid().equalsIgnoreCase(pid)) return true;
+        }
+        return false;
+    }
+
+    private boolean isInstagramExists(PostedSchedule post){
+        for(Account acc : post.getSelected_id())if(acc.getType().equals("instagram"))return true;
         return false;
     }
 }

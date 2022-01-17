@@ -67,6 +67,7 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
                 val acc = Account()
                 acc.uid = document.get("id") as String
                 acc.username = document.get("name") as String
+                acc.type = document.id as String
                 accounts.add(acc)
             }
 
