@@ -1,37 +1,23 @@
 package com.example.binuspostscheduler.notification;
 
-import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.binuspostscheduler.Adapter.TodayScheduleAdapter;
 import com.example.binuspostscheduler.R;
-import com.example.binuspostscheduler.activities.MainActivity;
-import com.example.binuspostscheduler.activities.RegisterActivity;
 import com.example.binuspostscheduler.activities.ScheduleDetailActivity;
-import com.example.binuspostscheduler.activities.UpdateScheduleActivity;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.models.Account;
-import com.example.binuspostscheduler.models.FacebookPages;
 import com.example.binuspostscheduler.models.PostedSchedule;
-import com.example.binuspostscheduler.ui.home.HomeFragment;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -72,7 +58,8 @@ import twitter4j.conf.ConfigurationBuilder;
 public class NotificationBroadcast extends BroadcastReceiver {
     final ArrayList<PostedSchedule> postedListRaw = new ArrayList<>();
     final ArrayList<PostedSchedule> postedList = new ArrayList<>();
-    final ArrayList<FacebookPages> pages = new ArrayList<>();
+    final ArrayList<String> accT_list = new ArrayList<>();
+    String uid_API = null;
     String user_id = null;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String instagramBId = "";
@@ -224,8 +211,20 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
 
     void sendNotif(Context context, PostedSchedule post){
-        // auto post
+        // auto post instagram and Facebook
         setApiDatabase(post);
+
+        // auto post to twitter
+        if(isTwitterExists(post))
+        {
+            db.collection("users").document(post.getUser_id()).collection("accounts").document("twitter").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Account acc = documentSnapshot.toObject(Account.class);
+                    postTwitter(acc,post);
+                }
+            });
+        }
 
         // send notif
         Intent myIntent = new Intent(context, ScheduleDetailActivity.class);
@@ -260,54 +259,44 @@ public class NotificationBroadcast extends BroadcastReceiver {
           .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
                     for (QueryDocumentSnapshot doc : task.getResult()) {
                         String accT, id, name, uid , status;
                         accT= doc.getString("access_token");
                         id = doc.getString("id");
                         name = doc.getString("name");
                         uid = doc.getString("uid");
-                        status = doc.getString("status");
-                        FacebookPages fp = new FacebookPages(accT,id,name,uid);
-                        fp.setStatus(status);
-                        pages.add(fp);
+                        accT_list.add(accT);
+                        uid_API = uid;
+
                         //post facebook
-                        if(status.equals("active")){
-                            if(isFacebookPagesExists(post, id)){
-                                publishFacebook(post,id, accT);
-                            }
+                        if(isFacebookPagesExists(post, id)){
+                            publishFacebook(post,id, accT);
                         }
                     }
+
+
+                    //post instagram
+                    if(isInstagramExists(post)) {
+                        db.collection("users").document(user_id).collection("accounts").document("instagram")
+                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                instagramBId = documentSnapshot.get("id").toString();
+                                publishInstagram(post);
+                            }
+                        });
+                    }
+                }
 
             }
         });
 
-        // post to twitter
-        if(isTwitterExists(post))
-        {
-            db.collection("users").document(post.getUser_id()).collection("accounts").document("twitter").get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    Account acc = documentSnapshot.toObject(Account.class);
-                    postTwitter(acc,post);
-                }
-            });
-        }
 
-        //post instagram
-        if(isInstagramExists(post)) {
-            db.collection("users").document(user_id).collection("accounts").document("instagram")
-                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    instagramBId = documentSnapshot.get("id").toString();
-                    publishInstagram(post);
-                }
-            });
-        }
     }
 
     private void publishInstagram(PostedSchedule post) {
-        AccessToken accessToken = new AccessToken(pages.get(0).getAccess_token(), "472685857272246", pages.get(0).getUid(),
+        AccessToken accessToken = new AccessToken(accT_list.get(0), "472685857272246", uid_API,
                 null, null, null,null, null, null, null, null);
 
         String desc = post.getDescription() + "\n\n.\n.\n.\n.\n";
@@ -354,7 +343,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     }
 
     private void publishFacebook(PostedSchedule post, String pages_id, String accT){
-        AccessToken acc = new AccessToken(accT, "472685857272246", pages.get(0).getUid(),
+        AccessToken acc = new AccessToken(accT, "472685857272246", uid_API,
                 null, null, null,null, null, null, null, null);
 
         String desc = post.getDescription() + "\n\n";
@@ -381,62 +370,44 @@ public class NotificationBroadcast extends BroadcastReceiver {
         ).executeAsync();
     }
 
-    private void getFacebookPages(String accToken, String id, String name, String uid, int index){
-        pages.add(new FacebookPages(accToken, id, name, uid));
-
-        db.collection("users").document(user_id).collection("accounts")
-                .document("facebook").collection("pages").document("id").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot ds = task.getResult();
-                    String status = ds.getString("status");
-                    pages.get(index).setStatus(status);
-                }
-            }
-        });
-
-    }
-
 
     private void setApiDatabase(PostedSchedule post){
         GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
+                if(object != null){
+                    try {
+                        String name = object.getString("name").toString();
+                        String uid = object.getString("id").toString();
 
-                try {
-                    String name = object.getString("name").toString();
-                    String uid = object.getString("id").toString();
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("uid", uid);
+                        map.put("name", name);
 
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("uid", uid);
-                    map.put("name", name);
+                        db.collection("users").document(user_id).collection("accounts").document("facebook")
+                                .update(map);
 
-                    db.collection("users").document(user_id).collection("accounts").document("facebook")
-                            .update(map);
+                        int len = object.getJSONObject("accounts").getJSONArray("data").length();
 
-                    int len = object.getJSONObject("accounts").getJSONArray("data").length();
-                    pages.clear();
-                    for(int i = 0; i < len; i++) {
-                        String a = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("access_token");
-                        String b = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("id");
-                        String c = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("name");
+                        for(int i = 0; i < len; i++) {
+                            String a = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("access_token");
+                            String b = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("id");
+                            String c = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("name");
 
-                        Map<String, Object> page = new HashMap<>();
-                        page.put("access_token", a);
-                        page.put("id", b);
-                        page.put("name", c);
-                        page.put("uid", uid);
+                            Map<String, Object> page = new HashMap<>();
+                            page.put("access_token", a);
+                            page.put("id", b);
+                            page.put("name", c);
+                            page.put("uid", uid);
 
-                        db.collection("users").document(user_id).collection("accounts")
-                                .document("facebook").collection("pages").document(b)
-                                .update(page);
-
-                        getFacebookPages(a,b,c,uid, i);
+                            db.collection("users").document(user_id).collection("accounts")
+                                    .document("facebook").collection("pages").document(b)
+                                    .update(page);
+                        }
+                        getDataPublish(post);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    getDataPublish(post);
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
 
 

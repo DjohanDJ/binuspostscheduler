@@ -138,26 +138,31 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
             }
         }, year, month, day)
 
-        post_schedule_radio_group.setOnCheckedChangeListener { _, i ->
-            run {
-                if (i == post_schedule_now.id) {
-                    schedule_later_container.visibility= View.GONE
-                    scheduled_time = post_schedule_now
-                    datePickerDialog.hide()
-                }
-                if (i == post_schedule_later.id) {
+        set_scheduled_button.setOnClickListener(View.OnClickListener {
+            scheduled_time = post_schedule_later
+            datePickerDialog.show()
+            schedule_later_container.visibility= View.VISIBLE
+        })
+        //        { _, i ->
+//            run {
+////                if (i == post_schedule_now.id) {
+////                    schedule_later_container.visibility= View.GONE
+////                    scheduled_time = post_schedule_now
+////                    datePickerDialog.hide()
+////                }
+////                if (i == post_schedule_later.id) {
+////
+////                    schedule_later_container.visibility= View.VISIBLE
+////                    scheduled_time = post_schedule_later
+////                    datePickerDialog.show()
+////                }
+//            }
 
-                    schedule_later_container.visibility= View.VISIBLE
-                    scheduled_time = post_schedule_later
-                    datePickerDialog.show()
-                }
-            }
-
-        }
+//        }
 
         schedule_post_btn.setOnClickListener(View.OnClickListener {
 //            if(accounts.isEmpty() || scheduled_time == null){
-                if( scheduled_time == null){
+            if( scheduled_time == null){
                 Toast.makeText(ctx,"Please Choose when to post first",Toast.LENGTH_SHORT).show()
 //                return;
             }

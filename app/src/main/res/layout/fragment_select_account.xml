@@ -9,20 +9,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/text_select_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Select your connected account"
+            android:textColor="@color/colorBlack"
+            android:textSize="20dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/select_account_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="500dp"/>
+            android:layout_height="500dp"
+            android:layout_below="@+id/text_select_account"
+            android:layout_marginTop="20dp" />
 
         <Button
             android:id="@+id/select_account_btn"
-            android:textColor="@color/colorBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/button2"
             android:fontFamily="@font/poppins_medium"
             android:text="Select Account"
-            android:layout_below="@+id/select_account_recycler_view"
-            android:background="@drawable/primary_button_shape"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:textColor="@color/colorWhite" />
 
     </RelativeLayout>
 

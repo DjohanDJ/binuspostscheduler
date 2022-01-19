@@ -69,7 +69,7 @@ public class AllScheduleAdapter extends RecyclerView.Adapter<AllScheduleAdapter.
                 myIntent.putExtra("hashtags", post.getHashtags());
                 myIntent.putExtra("video", post.getVideo());
                 myIntent.putExtra("time", post.getTime());
-                myIntent.putExtra("selected_id", post.getSelected_id());
+                myIntent.putParcelableArrayListExtra("selected_id", post.getSelected_id());
                 myIntent.putExtra("type", post.getType());
                 ctx.startActivity(myIntent);
 //                ((Activity)view.getContext()).finish();

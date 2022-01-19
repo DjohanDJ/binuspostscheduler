@@ -3,36 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="10sp"
     tools:context=".fragments.CreatePostFragment">
 
    <LinearLayout
        android:orientation="vertical"
+       android:paddingHorizontal="20dp"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
        <TextView
-           android:fontFamily="@font/poppins_medium"
-           android:id="@+id/post_content_text"
-           android:textSize="@dimen/text_subtitle"
-           android:textColor="@color/colorBlack"
-           android:text="Post Content"
+           android:id="@+id/text_select_account"
            android:layout_width="match_parent"
-           android:layout_height="wrap_content"/>
+           android:layout_height="wrap_content"
+           android:gravity="center"
+           android:text="Make your post"
+           android:fontFamily="@font/poppins_medium"
+           android:textColor="@color/colorBlack"
+           android:layout_marginBottom="20dp"
+           android:textSize="20dp" />
 
        <EditText
            android:padding="5dp"
            android:gravity="start"
            android:id="@+id/post_content"
            android:maxLength="240"
-
+           android:hint="Insert your description here"
            android:layout_width="match_parent"
            android:background="@drawable/bg_border"
            android:layout_height="200dp"/>
+
+
        <TextView
-           android:textSize="20sp"
+           android:textSize="18dp"
            android:textColor="@color/colorBlack"
-           android:text="Tags (For Facebook Only)"
+           android:layout_marginTop="20dp"
+           android:text="Hashtags"
+           android:fontFamily="@font/poppins_medium"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"/>
 
@@ -47,20 +53,21 @@
            android:id="@+id/add_tags_placeholder_container"
            android:layout_width="match_parent"
            android:layout_height="wrap_content">
-
            <EditText
                android:textColor="@color/tw__blue_default"
                android:id="@+id/add_tags_placeholder"
                android:layout_width="150dp"
-               android:layout_height="match_parent"
+               android:layout_height="wrap_content"
+               android:padding="5dp"
+               android:layout_gravity="center"
                android:background="@drawable/bg_border"
                android:paddingHorizontal="2dp" />
 
            <ImageView
                android:id="@+id/add_tags_icon"
                android:src="@drawable/ic_plus_foreground"
-               android:layout_width="50dp"
-               android:layout_height="50dp"/>
+               android:layout_width="40dp"
+               android:layout_height="40dp"/>
        </LinearLayout>
 
        <Button
@@ -68,9 +75,9 @@
            android:layout_height="wrap_content"
            android:layout_width="match_parent"
            android:layout_marginTop="20dp"
-
            android:text="Insert Image"
-           android:background="@drawable/primary_button_shape"
+           android:background="@drawable/button3"
+           android:textColor="@color/colorWhite"
            />
 
        <androidx.recyclerview.widget.RecyclerView
@@ -82,19 +89,30 @@
 
        <TextView
            android:id="@+id/post_schedule_text"
-
-           android:textSize="@dimen/text_subtitle"
+           android:textSize="18dp"
+           android:layout_marginTop="20dp"
            android:textColor="@color/colorBlack"
            android:fontFamily="@font/poppins_medium"
-           android:text="Post Schedule"
+           android:text="Set your post's schedule"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"/>
+
+       <Button
+           android:id="@+id/set_scheduled_button"
+           android:layout_height="wrap_content"
+           android:layout_width="wrap_content"
+           android:paddingHorizontal="10dp"
+           android:text="Set Schedule"
+           android:background="@drawable/button3"
+           android:textColor="@color/colorWhite"
+           />
 
        <RadioGroup
            android:id="@+id/post_schedule_radio_group"
            android:layout_below="@id/post_schedule_text"
            android:orientation="horizontal"
            android:layout_width="match_parent"
+           android:visibility="gone"
            android:layout_height="wrap_content">
            <RadioButton
                android:id="@+id/post_schedule_now"
@@ -115,13 +133,25 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content">
            <TextView
-
                android:text="DD MM YYYY HH:MM:SS"
-               android:textColor="@color/colorBlack"
-
+               android:textColor="@color/colorGrey"
                android:id="@+id/schedule_later_description"
                android:layout_width="match_parent"
+               android:fontFamily="@font/poppins_medium"
+                android:layout_marginTop="5dp"
+               android:layout_marginBottom="20dp"
                android:layout_height="wrap_content"/>
+
+           <TextView
+               android:id="@+id/repetition_type_insert"
+               android:textSize="18dp"
+               android:textColor="@color/colorBlack"
+               android:fontFamily="@font/poppins_medium"
+               android:text="Repetition type"
+               android:layout_gravity="center_vertical"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"/>
+
            <LinearLayout
                android:id="@+id/schedule_later_detail_container"
                android:layout_below="@id/schedule_later_description"
@@ -141,12 +171,14 @@
        </androidx.appcompat.widget.LinearLayoutCompat>
         <Button
             android:id="@+id/schedule_post_btn"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="25dp"
             android:layout_below="@id/schedule_later_container"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="Schedule Post"
-            android:background="@drawable/primary_button_shape"
+            android:layout_marginBottom="25dp"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button2"
              />
 
    </LinearLayout>

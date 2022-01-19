@@ -313,12 +313,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.facebook.share.widget.ShareButton
+<!--        <com.facebook.share.widget.ShareButton-->
+<!--            android:id="@+id/FacebookShareButton"-->
+<!--            android:layout_width="220dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:text="FACEBOOK"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/textView9" />-->
+
+        <Button
             android:id="@+id/FacebookShareButton"
             android:layout_width="220dp"
             android:layout_height="30dp"
-            android:layout_marginTop="20dp"
-            android:text="FACEBOOK"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_facebook_post"
+            android:text="Facebook"
+            android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -328,7 +340,7 @@
             android:layout_width="220dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/button2"
+            android:background="@drawable/button_twitter_post"
             android:text="Twitter"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
@@ -340,7 +352,7 @@
             android:layout_width="220dp"
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/button2"
+            android:background="@drawable/button_instagram_post"
             android:text="Instagram"
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"

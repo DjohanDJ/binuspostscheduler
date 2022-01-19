@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.text.LineBreaker;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -53,11 +55,15 @@ public class AddFacebookActivity extends AppCompatActivity {
     private CallbackManager callbackManager;
     private LoginButton loginButton;
     private Button setPages;
+    private TextView igName, igInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_facebook);
+
+        igName = findViewById(R.id.IG_name);
+        igInfo = findViewById(R.id.IG_info);
 
         setPages = findViewById(R.id.set_pages_btn);
         setPages.setOnClickListener(new View.OnClickListener() {
@@ -123,27 +129,30 @@ public class AddFacebookActivity extends AppCompatActivity {
 
         if (isLoggedIn) {
             setProfile();
-            deleteAllPages();
-//            setPages.setVisibility(View.VISIBLE);
+            deleteOnLogout();
+            setApiDatabase();
         }
 
     }
 
-    private void deleteAllPages(){
-        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
-                .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(DocumentSnapshot doc : task.getResult()){
-                        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
-                                .document("facebook").collection("pages").document(doc.getId()).delete();
-                    }
-                }
-                setApiDatabase();
-            }
-        });
+    private void deleteOnLogout(){
+//        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+//                .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if(task.isSuccessful()){
+//                    for(DocumentSnapshot doc : task.getResult()){
+//                        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+//                                .document("facebook").collection("pages").document(doc.getId()).delete();
+//                    }
+//                }
+//            }
+//        });
 
+        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+                .document("facebook").delete();
+        db.collection("users").document(UserSession.getCurrentUser().getId()).collection("accounts")
+                .document("instagram").delete();
 
     }
 
@@ -204,7 +213,6 @@ public class AddFacebookActivity extends AppCompatActivity {
                                 map.put("access_token", a);
                                 map.put("id", b);
                                 map.put("name", c);
-                                map.put("status", "active");
 
                                 db.collection("users").document(UserSession.getCurrentUser().getId())
                                         .collection("accounts")
@@ -248,39 +256,45 @@ public class AddFacebookActivity extends AppCompatActivity {
                                 public void onCompleted(GraphResponse response) {
 //                                    Toast.makeText(AddFacebookActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
                                     JSONObject jsonObject = response.getJSONObject();
-                                    try {
+                                    if(response.getJSONObject()!=null){
+                                        try {
 //                                        Log.d("Djohan", jsonObject.get("instagram_business_account").toString());
-                                        JSONObject instagramBAObj = new JSONObject(jsonObject.get("instagram_business_account").toString());
+
+                                            JSONObject instagramBAObj = new JSONObject(jsonObject.get("instagram_business_account").toString());
 //                                        Log.d("djohan2", instagramBAObj.getString("id"));
-                                        String instagramId = instagramBAObj.getString("id");
+                                            String instagramId = instagramBAObj.getString("id");
 
-                                        GraphRequest.newGraphPathRequest(
-                                                pageAccToken,
-                                                "/" + instagramId + "?fields=name",
-                                                new GraphRequest.Callback() {
-                                                    @Override
-                                                    public void onCompleted(GraphResponse response) {
-                                                        JSONObject objName = response.getJSONObject();
-                                                        try {
-                                                            String nameInstagram = objName.getString("name");
+                                            GraphRequest.newGraphPathRequest(
+                                                    pageAccToken,
+                                                    "/" + instagramId + "?fields=name",
+                                                    new GraphRequest.Callback() {
+                                                        @Override
+                                                        public void onCompleted(GraphResponse response) {
+                                                            JSONObject objName = response.getJSONObject();
+                                                            try {
+                                                                String nameInstagram = objName.getString("name");
 
-                                                            // insert to db
-                                                            Map<String, Object> map = new HashMap<>();
-                                                            map.put("id", instagramId);
-                                                            map.put("name", nameInstagram);
+                                                                // insert to db
+                                                                Map<String, Object> map = new HashMap<>();
+                                                                map.put("id", instagramId);
+                                                                map.put("name", nameInstagram);
 
-                                                            db.collection("users").document(UserSession.getCurrentUser().getId())
-                                                                    .collection("accounts")
-                                                                    .document("instagram").
-                                                                    set(map);
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
+                                                                db.collection("users").document(UserSession.getCurrentUser().getId())
+                                                                        .collection("accounts")
+                                                                        .document("instagram").
+                                                                        set(map);
+
+                                                                igName.setText("Your Instagram account is connected\nName : " + nameInstagram);
+                                                                igName.setGravity(Gravity.CENTER);
+                                                                igInfo.setVisibility(View.INVISIBLE);
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
                                                         }
                                                     }
-                                                }
-                                        ).executeAsync();
+                                            ).executeAsync();
 
-                                        // insert to db
+                                            // insert to db
 //                                        Map<String, Object> map = new HashMap<>();
 //                                        map.put("id", instagramId);
 ////                                        map.put("name", nameInstagram);
@@ -290,16 +304,17 @@ public class AddFacebookActivity extends AppCompatActivity {
 //                                                .document("instagram").
 //                                                set(map);
 
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     }
+
                                 }
                             });
                     Bundle parameters = new Bundle();
                     parameters.putString("fields", "instagram_business_account");
                     request.setParameters(parameters);
                     request.executeAsync();
-
                 }
             }
         });
@@ -312,6 +327,12 @@ public class AddFacebookActivity extends AppCompatActivity {
                 LoginManager.getInstance().logOut();
                 textView.setText("not connected");
                 setPages.setVisibility(View.INVISIBLE);
+                deleteOnLogout();
+
+                igName.setText("Instagram not connected. Instagram account for autopost is integrated with your facebook account.");
+                igName.setGravity(Gravity.CENTER);
+                igInfo.setVisibility(View.VISIBLE);
+
             }
         }
     };

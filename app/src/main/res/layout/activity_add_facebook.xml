@@ -8,41 +8,92 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.4">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Facebook Account"
+                android:textColor="@color/colorBlack"
+                android:textSize="30dp" />
+
+            <TextView
+                android:id="@+id/FB_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="26dp"
+                android:text="Facebook not connected" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_button_facebook"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="30dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:text="Facebook Account"
-            android:textColor="@color/colorBlack"
-            android:textSize="30dp" />
+            android:gravity="center"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/poppins_medium"
+                android:text="Instagram Account"
+                android:textColor="@color/colorBlack"
+                android:textSize="30dp" />
 
-        <TextView
-            android:id="@+id/FB_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:text="Facebook not connected" />
+            <TextView
+                android:id="@+id/IG_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:justificationMode="inter_word"
+                android:layout_marginBottom="10dp"
+                android:paddingHorizontal="10dp"
+                android:text="Instagram not connected. Instagram account for autopost is integrated with your facebook account." />
 
-        <com.facebook.login.widget.LoginButton
-            android:id="@+id/login_button_facebook"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
+            <TextView
+                android:id="@+id/IG_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:justificationMode="inter_word"
+                android:paddingHorizontal="10dp"
+                android:text="1. Make sure to make your Instagram account connected with your facebook
+                \n2. Your Instagram account must be a business account
+                \n3. Make sure to choose facebook pages that connected with your Instagram account when login with Facebook
+                \n4. If you have login with facebook but this message still appear, your Instagram account still not connected."
+                />
+        </LinearLayout>
     </LinearLayout>
 
     <Button
+        android:visibility="gone"
         android:id="@+id/set_pages_btn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"

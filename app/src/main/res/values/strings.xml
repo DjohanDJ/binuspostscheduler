@@ -49,6 +49,18 @@
     <string name="meeting_updated">Schedule updated</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="fb_ig_acc">Facebook &amp; Instagram Account</string>
+
+<!--    <string name="ig_connect_information">-->
+<!--        Instagram not connected. Instagram account for autopost is integrated with your facebook account.-->
+<!--        \n 1. Make sure to make your Instagram account connected with your facebook-->
+<!--        \n 2. Your Instagram account must be a business account-->
+<!--        \n 3. Make sure to choose facebook pages that connected with your Instagram account when login with Facebook-->
+<!--        \n 4. If you have login with facebook but this message still appear, your Instagram account haven't connected-->
+
+<!--    </string>-->
+
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="role">
         <item>Once</item>

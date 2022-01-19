@@ -14,13 +14,16 @@
             android:orientation="vertical"
             android:layout_height="match_parent">
                 <TextView
-                    android:id="@+id/create_post_title"
-                    android:textSize="@dimen/text_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/schedule_post"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Schedule a Post"
                     android:textColor="@color/colorBlack"
-                    />
+                    android:textSize="30dp" />
                 <FrameLayout
                     android:id="@+id/create_post_frame_layout"
                     android:layout_width="match_parent"

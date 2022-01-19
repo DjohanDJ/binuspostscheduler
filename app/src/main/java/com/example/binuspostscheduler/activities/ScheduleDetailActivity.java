@@ -49,6 +49,9 @@ import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.fragments.CreatePostFragment;
 import com.example.binuspostscheduler.models.Account;
 import com.example.binuspostscheduler.models.PostedSchedule;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.ShareMediaContent;
@@ -59,6 +62,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -69,6 +73,8 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -84,6 +90,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -106,7 +115,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
     private ConstraintLayout plc;
     private VideoView video;
     private View b50ab;
-    private ShareButton shareFB;
+    private Button shareFB;
     private FirebaseFirestore db;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -114,10 +123,11 @@ public class ScheduleDetailActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private final Context ctx = this;
-    private final PostedSchedule obj = new PostedSchedule();
+    private PostedSchedule obj = new PostedSchedule();
 
     private static  int REQUEST_CODE = 100;
     OutputStream outputStream;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,9 +136,23 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         verifyStoragePermissions(this);
 
-
-
         db = SingletonFirebaseTool.getInstance().getMyFireStoreReference();
+
+        Intent intent = getIntent();
+        obj.setId(intent.getStringExtra("id"));
+        obj.setDescription(intent.getStringExtra("description"));
+        obj.setVideo(intent.getStringExtra("video"));
+        obj.setImage(intent.getStringArrayListExtra("image"));
+        obj.setTime(intent.getStringExtra("time"));
+        obj.setType(intent.getStringExtra("type"));
+        obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
+        obj.setSelected_id(intent.getParcelableArrayListExtra("selected_id"));
+
+        setObj(obj.getId());
+
+
+
+
 
         date = findViewById(R.id.detailDate);
         desc = findViewById(R.id.detailDescription);
@@ -152,16 +176,9 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         twitterShareBtn = findViewById(R.id.TwitterShareButton);
 
 
-        Intent intent = getIntent();
 
-        obj.setId(intent.getStringExtra("id"));
-        obj.setDescription(intent.getStringExtra("description"));
-        obj.setVideo(intent.getStringExtra("video"));
-        obj.setImage(intent.getStringArrayListExtra("image"));
-        obj.setTime(intent.getStringExtra("time"));
-        obj.setType(intent.getStringExtra("type"));
-        obj.setHashtags(intent.getStringArrayListExtra("hashtags"));
-        obj.setSelected_id(intent.getParcelableArrayListExtra("selected_id") );
+
+
 
 
 
@@ -233,10 +250,17 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                         else{
                             Toast.makeText(ctx, "Twitter not connected", Toast.LENGTH_SHORT).show();
                         }
+                        plc.setVisibility(View.GONE);
+                        b50ab.setVisibility(View.GONE);
                     }
                 });
             }
         });
+
+
+
+
+
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -263,7 +287,8 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
         ArrayList<String> imgList = obj.getImage();
 
-        setShareFacebook(imgList, obj, this);
+        // facebook manual
+//        setShareFacebook(imgList, obj, this);
 
 
         if(imgList.get(0).equals("-")){
@@ -298,46 +323,255 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         igShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String desc = obj.getDescription() + "\n\n";
+                setApiDatabase(obj, "IG");
+                plc.setVisibility(View.GONE);
+                b50ab.setVisibility(View.GONE);
+            }
+        });
 
-                for(String hash: obj.getHashtags()){
-                    desc += hash + " ";
-                }
+        shareFB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setApiDatabase(obj, "FB");
+                plc.setVisibility(View.GONE);
+                b50ab.setVisibility(View.GONE);
+            }
+        });
+    }
 
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("", desc);
-                clipboard.setPrimaryClip(clip);
-
-
-                ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                            PackageManager.PERMISSION_DENIED) {
-                        String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
-                        requestPermissions(permission, 1);
-                    } else {
-                        saveImage(obj.getImage());
+    private void setObj(String id){
+        db.collection("schedules").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (QueryDocumentSnapshot documentSnapshot : Objects.requireNonNull(task.getResult())) {
+                    PostedSchedule postedSchedule = documentSnapshot.toObject(PostedSchedule.class);
+                    if(postedSchedule.getId().equalsIgnoreCase(id)){
+                        obj = postedSchedule;
                     }
-                }
-
-
-                Toast.makeText(ctx, "Description copied and image saved", Toast.LENGTH_SHORT).show();
-
-                Uri uri = Uri.parse("http://instagram.com/");
-                Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
-
-                likeIng.setPackage("com.instagram.android");
-
-                try {
-                    startActivity(likeIng);
-                } catch (ActivityNotFoundException e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://instagram.com")));
                 }
             }
         });
+
+
+    }
+
+    private void postInstagram(String instagramBId,String accT, String uid){
+        com.facebook.AccessToken accessToken = new com.facebook.AccessToken(accT, "472685857272246", uid,
+                null, null, null,null, null, null, null, null);
+
+        String desc = obj.getDescription() + "\n\n.\n.\n.\n.\n";
+
+        for(String hash : obj.getHashtags()){
+            desc += hash + " ";
+        }
+
+        Bundle params = new Bundle();
+        params.putString("image_url", obj.getImage().get(0));
+        params.putString("caption", desc);
+
+        Bundle paramPost = new Bundle();
+
+        new GraphRequest(
+                accessToken,
+                "/"+ instagramBId +"/media",
+                params,
+                HttpMethod.POST,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        JSONObject postObj = response.getJSONObject();
+                        try {
+                            String postId = postObj.getString("id");
+                            paramPost.putString("creation_id", postId);
+                            new GraphRequest(
+                                    accessToken,
+                                    "/"+ instagramBId +"/media_publish",
+                                    paramPost,
+                                    HttpMethod.POST,
+                                    new GraphRequest.Callback() {
+                                        public void onCompleted(GraphResponse response) {
+                                            Toast.makeText(ctx, "Instagram Post Success", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                            ).executeAsync();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).executeAsync();
+    }
+
+    private void postFacebook(String id, String accT, String uid){
+        com.facebook.AccessToken acc = new com.facebook.AccessToken(accT, "472685857272246", uid,
+                null, null, null,null, null, null, null, null);
+
+        String desc = obj.getDescription() + "\n\n";
+
+        for(String hash : obj.getHashtags()){
+            desc += hash + " ";
+        }
+
+        Bundle params = new Bundle();
+        params.putString("message", desc);
+        params.putString("url", obj.getImage().get(0));
+
+
+        new GraphRequest(
+                acc,
+                "/ "+ id +"/photos",
+                params,
+                HttpMethod.POST,
+                new GraphRequest.Callback() {
+                    public void onCompleted(GraphResponse response) {
+                        Toast.makeText(ctx, "Facebook Post Success", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ).executeAsync();
+    }
+
+    private void setApiDatabase(PostedSchedule post, String type){
+        GraphRequest graphRequest = GraphRequest.newMeRequest(com.facebook.AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+                if(object != null){
+                    try {
+                        String name = object.getString("name").toString();
+                        String uid = object.getString("id").toString();
+
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("uid", uid);
+                        map.put("name", name);
+
+                        db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("accounts").document("facebook")
+                                .update(map);
+
+                        int len = object.getJSONObject("accounts").getJSONArray("data").length();
+
+                        for(int i = 0; i < len; i++) {
+                            String a = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("access_token");
+                            String b = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("id");
+                            String c = object.getJSONObject("accounts").getJSONArray("data").getJSONObject(i).getString("name");
+
+                            Map<String, Object> page = new HashMap<>();
+                            page.put("access_token", a);
+                            page.put("id", b);
+                            page.put("name", c);
+                            page.put("uid", uid);
+
+                            db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("accounts")
+                                    .document("facebook").collection("pages").document(b)
+                                    .update(page);
+                        }
+                        checkingFacebookPagesData(type);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    Toast.makeText(ctx, "Account not connected", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        Bundle bundle = new Bundle();
+        bundle.putString("fields", "gender, name, id, first_name, last_name, accounts");
+        graphRequest.setParameters(bundle);
+        graphRequest.executeAsync();
+    }
+
+    private void checkingFacebookPagesData(String type){
+        db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("accounts")
+                .document("facebook").collection("pages").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    String accT, id, name, uid = null;
+                    ArrayList<String> accT_list = new ArrayList();
+                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                        accT= doc.getString("access_token");
+                        id = doc.getString("id");
+                        name = doc.getString("name");
+                        uid = doc.getString("uid");
+                        accT_list.add(accT);
+                        //post facebook
+                        if(type.equalsIgnoreCase("FB")){
+                            if(isFacebookPagesExists(id)){
+                                postFacebook(id, accT, uid);
+                            }
+                        }
+                    }
+                    //post instagram
+                    if(type.equalsIgnoreCase("IG")){
+                        if(isInstagramExists()){
+                            String finalUid = uid;
+                            db.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("accounts").document("instagram")
+                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    String instagramBId = documentSnapshot.get("id").toString();
+                                    postInstagram(instagramBId, accT_list.get(0), finalUid);
+                                }
+                            });
+                        }
+                    }
+                }else{
+                    //error mungkin karena ga ke login
+                }
+            }
+        });
+    }
+
+    private boolean isFacebookPagesExists(String pid){
+        for(Account acc : obj.getSelected_id()){
+            if(acc.getType().equals("facebook") && acc.getPid().equalsIgnoreCase(pid)) return true;
+        }
+        return false;
+    }
+
+    private boolean isInstagramExists(){
+        for(Account acc : obj.getSelected_id())if(acc.getType().equals("instagram"))return true;
+        return false;
+    }
+
+    private void manualIgPost(){
+        String desc = obj.getDescription() + "\n\n";
+
+        for(String hash: obj.getHashtags()){
+            desc += hash + " ";
+        }
+
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("", desc);
+        clipboard.setPrimaryClip(clip);
+
+
+        ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(ScheduleDetailActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_DENIED) {
+                String[] permission = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                requestPermissions(permission, 1);
+            } else {
+                saveImage(obj.getImage());
+            }
+        }
+
+
+        Toast.makeText(ctx, "Description copied and image saved", Toast.LENGTH_SHORT).show();
+
+        Uri uri = Uri.parse("http://instagram.com/");
+        Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
+
+        likeIng.setPackage("com.instagram.android");
+
+        try {
+            startActivity(likeIng);
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://instagram.com")));
+        }
+
     }
 
     private void saveImage(ArrayList<String> imgList) {
@@ -407,85 +641,85 @@ public class ScheduleDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void setShareFacebook(ArrayList<String> imgList,PostedSchedule obj, Context ctx) {
-
-        ArrayList<SharePhoto> sharePhotos = new ArrayList<>();
-
-        //set video masih belum
-        //set image udah benar tinggal ganti atribut jadi array list di firestore
-
-        for(String urlImg : imgList){
-            Bitmap pcBitmap = null;
-
-            Picasso.get().load(urlImg).into(new Target() {
-                @Override
-                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    SharePhoto sharePhoto = new SharePhoto.Builder()
-                            .setBitmap(bitmap)
-                            .build();
-
-                    sharePhotos.add(sharePhoto);
-
-                    if(sharePhotos.size() == imgList.size()){
-                        ShareContent shareContent = null;
-
-                        if(sharePhotos.size() == 1){
-                            shareContent = new ShareMediaContent.Builder()
-                                    .addMedium(sharePhotos.get(0))
-                                    .build();
-                        }else if(sharePhotos.size() == 2){
-                            shareContent = new ShareMediaContent.Builder()
-                                    .addMedium(sharePhotos.get(0))
-                                    .addMedium(sharePhotos.get(1))
-                                    .build();
-                        }else if(sharePhotos.size() == 3){
-                            shareContent = new ShareMediaContent.Builder()
-                                    .addMedium(sharePhotos.get(0))
-                                    .addMedium(sharePhotos.get(1))
-                                    .addMedium(sharePhotos.get(2))
-                                    .build();
-                        }else if(sharePhotos.size() == 4){
-                            shareContent = new ShareMediaContent.Builder()
-                                    .addMedium(sharePhotos.get(0))
-                                    .addMedium(sharePhotos.get(1))
-                                    .addMedium(sharePhotos.get(2))
-                                    .addMedium(sharePhotos.get(3))
-                                    .build();
-                        }
-
-                        shareFB.setShareContent(shareContent);
-
-                        shareFB.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String desc = obj.getDescription() + "\n\n";
-
-                                for(String hash: obj.getHashtags()){
-                                    desc += hash + " ";
-                                }
-
-                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText("", desc);
-                                clipboard.setPrimaryClip(clip);
-                                Toast.makeText(ctx, "Description copied to clipboard", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                    Toast.makeText(ctx, "fail", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-                }
-            });
-        }
-
-    }
+//    private void setShareFacebook(ArrayList<String> imgList,PostedSchedule obj, Context ctx) {
+//
+//        ArrayList<SharePhoto> sharePhotos = new ArrayList<>();
+//
+//        //set video masih belum
+//        //set image udah benar tinggal ganti atribut jadi array list di firestore
+//
+//        for(String urlImg : imgList){
+//            Bitmap pcBitmap = null;
+//
+//            Picasso.get().load(urlImg).into(new Target() {
+//                @Override
+//                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                    SharePhoto sharePhoto = new SharePhoto.Builder()
+//                            .setBitmap(bitmap)
+//                            .build();
+//
+//                    sharePhotos.add(sharePhoto);
+//
+//                    if(sharePhotos.size() == imgList.size()){
+//                        ShareContent shareContent = null;
+//
+//                        if(sharePhotos.size() == 1){
+//                            shareContent = new ShareMediaContent.Builder()
+//                                    .addMedium(sharePhotos.get(0))
+//                                    .build();
+//                        }else if(sharePhotos.size() == 2){
+//                            shareContent = new ShareMediaContent.Builder()
+//                                    .addMedium(sharePhotos.get(0))
+//                                    .addMedium(sharePhotos.get(1))
+//                                    .build();
+//                        }else if(sharePhotos.size() == 3){
+//                            shareContent = new ShareMediaContent.Builder()
+//                                    .addMedium(sharePhotos.get(0))
+//                                    .addMedium(sharePhotos.get(1))
+//                                    .addMedium(sharePhotos.get(2))
+//                                    .build();
+//                        }else if(sharePhotos.size() == 4){
+//                            shareContent = new ShareMediaContent.Builder()
+//                                    .addMedium(sharePhotos.get(0))
+//                                    .addMedium(sharePhotos.get(1))
+//                                    .addMedium(sharePhotos.get(2))
+//                                    .addMedium(sharePhotos.get(3))
+//                                    .build();
+//                        }
+//
+//                        shareFB.setShareContent(shareContent);
+//
+//                        shareFB.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                String desc = obj.getDescription() + "\n\n";
+//
+//                                for(String hash: obj.getHashtags()){
+//                                    desc += hash + " ";
+//                                }
+//
+//                                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+//                                ClipData clip = ClipData.newPlainText("", desc);
+//                                clipboard.setPrimaryClip(clip);
+//                                Toast.makeText(ctx, "Description copied to clipboard", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                    }
+//                }
+//
+//                @Override
+//                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+//                    Toast.makeText(ctx, "fail", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//                }
+//            });
+//        }
+//
+//    }
 
     private void deleteSchedule(final String id) {
         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")

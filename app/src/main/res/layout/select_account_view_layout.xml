@@ -2,17 +2,16 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:orientation="horizontal"
-
+    android:layout_marginBottom="20dp"
     android:layout_height="200px">
 
     <ImageView
         android:id="@+id/account_type_icon"
-
+        android:layout_marginLeft="10dp"
         android:layout_width="150px"
         android:layout_height="match_parent"/>
     <TextView
         android:id="@+id/account_username"
-
         android:paddingHorizontal="20dp"
         android:textSize="20sp"
         android:gravity="center"
@@ -24,12 +23,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/account_checked_icon"
-            android:src="@drawable/ic_baseline_check_circle_outline_24_alt"
-
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_baseline_check_circle_outline_24_alt" />
     </RelativeLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
