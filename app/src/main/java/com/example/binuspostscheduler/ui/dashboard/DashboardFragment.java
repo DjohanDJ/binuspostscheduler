@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.activities.FacebookDashboardChart;
 import com.example.binuspostscheduler.activities.InstagramDashboardChart;
 import com.example.binuspostscheduler.activities.TwitterDashboardChart;
+import com.example.binuspostscheduler.activities.UpdateScheduleActivity;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.models.PostedSchedule;
@@ -36,6 +40,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -48,16 +53,21 @@ public class DashboardFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private RecyclerView allSchedule;
 
-    TextView fbLike, fbComment,insLike, insComment, insSave, insReach, insImpression;
+    Spinner spinner;
+
+    TextView fbLike, fbComment, fbView, fbShare;
+    TextView insLike, insComment, insSave, insReach, insImpression;
     TextView tRetweet, tReply, tLike,tQuote, tView, tLinkClick, tProfileClick;
     TextView fbDash, tDash, insDash;
+    Context ctx ;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.dashboard_fragment, container, false);
 
-
+        ctx = root.getContext();
         init(root);
+
 
         return root;
     }
@@ -65,6 +75,8 @@ public class DashboardFragment extends Fragment {
     private void init(View view){
         fbLike = view.findViewById(R.id.facebookMostLike);
         fbComment = view.findViewById(R.id.facebookMostComment);
+        fbView = view.findViewById(R.id.facebookMostView);
+        fbShare = view.findViewById(R.id.facebookMostShare);
 
         insLike = view.findViewById(R.id.instagramMostLike);
         insComment = view.findViewById(R.id.instagramMostComment);
@@ -83,6 +95,11 @@ public class DashboardFragment extends Fragment {
         fbDash = view.findViewById(R.id.viewDashboardFB);
         tDash = view.findViewById(R.id.viewDashboardTwitter);
         insDash = view.findViewById(R.id.viewDashboardInstagram);
+
+        spinner = view.findViewById(R.id.filterSpinner);
+        this.spinner.setAdapter(new ArrayAdapter<>(ctx, android.R.layout.simple_spinner_dropdown_item,
+                    getResources().getStringArray(R.array.filterDay)));
+
 
         fbDash.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,14 +125,30 @@ public class DashboardFragment extends Fragment {
             }
         });
 
-        facebookAnalytic();
-        instagramAnalytic();
-        twitterAnalytic();
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                facebookAnalytic(position);
+                instagramAnalytic(position);
+                twitterAnalytic(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        facebookAnalytic(0);
+        instagramAnalytic(0);
+        twitterAnalytic(0);
     }
 
-    private void facebookAnalytic(){
+    private void facebookAnalytic(int day){
         int[] like = new int[25];
         int[] comment = new int[25];
+        int[] share = new int[25];
+        int[] view = new int[25];
         int[] count = new int[25];
 
         db.collection("dashboard").document("facebook").collection("post")
@@ -125,22 +158,38 @@ public class DashboardFragment extends Fragment {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot ds : task.getResult()){
                         String time = ds.getString("created_time");
-                        String timeSplit[] = time.split(":");
+                        String dateSplit[] = time.split(" ");
+                        String timeSplit[] = dateSplit[1].split(":");
+                        String cdateSplit[] = dateSplit[0].split("-");
 
                         int idx = Integer.parseInt(timeSplit[0]);
 
-                        like[idx] += Integer.parseInt(ds.getLong("like").toString());
-                        comment[idx] += Integer.parseInt(ds.getLong("comment").toString());
-                        count[idx]++;
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Integer.parseInt(cdateSplit[2]), Integer.parseInt(cdateSplit[1]), Integer.parseInt(cdateSplit[0]));
+                        int hari = cal.get(Calendar.DAY_OF_WEEK);
+
+                        if(hari == day || day == 0){
+                            share[idx] += Integer.parseInt(ds.getLong("share").toString());
+                            view[idx] += Integer.parseInt(ds.getLong("view").toString());
+                            like[idx] += Integer.parseInt(ds.getLong("like").toString());
+                            comment[idx] += Integer.parseInt(ds.getLong("comment").toString());
+                            count[idx]++;
+                        }
                     }
                     int maxLikeIdx = 0;
                     int maxLike = 0;
                     int maxCommentIdx = 0;
                     int maxComment = 0;
+                    int maxShareIdx = 0;
+                    int maxShare = 0;
+                    int maxViewIdx = 0;
+                    int maxView = 0;
                     for(int i = 0; i < 24; i++){
                         if(count[i] != 0){
                             int currLike = like[i] / count[i];
                             int currComment = comment[i] / count[i];
+                            int currShare = share[i] / count[i];
+                            int currView = view[i] / count[i];
                             if(maxLike < currLike){
                                 maxLike = currLike;
                                 maxLikeIdx = i;
@@ -149,9 +198,18 @@ public class DashboardFragment extends Fragment {
                                 maxComment = currLike;
                                 maxCommentIdx = i;
                             }
+                            if(maxShare < currShare){
+                                maxShare = currShare;
+                                maxShareIdx = i;
+                            }
+                            if(maxView < currView){
+                                maxView = currView;
+                                maxViewIdx = i;
+                            }
                         }
                     }
-
+                    fbView.setText(maxViewIdx + ".00 - " + maxViewIdx+ ".59");
+                    fbShare.setText(maxShareIdx + ".00 - " + maxShareIdx+ ".59");
                     fbLike.setText(maxLikeIdx + ".00 - " + maxLikeIdx+ ".59");
                     fbComment.setText(maxCommentIdx + ".00 - " + maxCommentIdx+ ".59");
                 }
@@ -159,7 +217,7 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    private void instagramAnalytic(){
+    private void instagramAnalytic(int day){
         int[] like = new int[25];
         int[] comment = new int[25];
         int[] reach = new int[25];
@@ -174,16 +232,24 @@ public class DashboardFragment extends Fragment {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot ds : task.getResult()){
                         String time = ds.getString("created_time");
-                        String timeSplit[] = time.split(":");
+                        String dateSplit[] = time.split(" ");
+                        String timeSplit[] = dateSplit[1].split(":");
+                        String cdateSplit[] = dateSplit[0].split("-");
 
                         int idx = Integer.parseInt(timeSplit[0]);
 
-                        like[idx] += Integer.parseInt(ds.getLong("like").toString());
-                        comment[idx] += Integer.parseInt(ds.getLong("comment").toString());
-                        save[idx] += Integer.parseInt(ds.getLong("save").toString());
-                        reach[idx] += Integer.parseInt(ds.getLong("reach").toString());
-                        impression[idx] += Integer.parseInt(ds.getLong("impression").toString());
-                        count[idx]++;
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Integer.parseInt(cdateSplit[2]), Integer.parseInt(cdateSplit[1]), Integer.parseInt(cdateSplit[0]));
+                        int hari = cal.get(Calendar.DAY_OF_WEEK);
+
+                        if(hari == day || day == 0) {
+                            like[idx] += Integer.parseInt(ds.getLong("like").toString());
+                            comment[idx] += Integer.parseInt(ds.getLong("comment").toString());
+                            save[idx] += Integer.parseInt(ds.getLong("save").toString());
+                            reach[idx] += Integer.parseInt(ds.getLong("reach").toString());
+                            impression[idx] += Integer.parseInt(ds.getLong("impression").toString());
+                            count[idx]++;
+                        }
                     }
                     int maxLikeIdx = 0;
                     int maxLike = 0;
@@ -237,7 +303,7 @@ public class DashboardFragment extends Fragment {
         });
     }
 
-    private void twitterAnalytic(){
+    private void twitterAnalytic(int day){
         int[] retweet = new int[25];
         int[] reply = new int[25];
         int[] like = new int[25];
@@ -254,18 +320,26 @@ public class DashboardFragment extends Fragment {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot ds : task.getResult()){
                         String time = ds.getString("created_time");
-                        String timeSplit[] = time.split(":");
+                        String dateSplit[] = time.split(" ");
+                        String timeSplit[] = dateSplit[1].split(":");
+                        String cdateSplit[] = dateSplit[0].split("-");
 
                         int idx = Integer.parseInt(timeSplit[0]);
 
-                        retweet[idx] += Integer.parseInt(ds.getLong("retweet").toString());
-                        reply[idx] += Integer.parseInt(ds.getLong("reply").toString());
-                        like[idx] += Integer.parseInt(ds.getLong("like").toString());
-                        quote[idx] += Integer.parseInt(ds.getLong("quote").toString());
-                        view[idx] += Integer.parseInt(ds.getLong("view").toString());
-                        link[idx] += Integer.parseInt(ds.getLong("link_click").toString());
-                        profile[idx] += Integer.parseInt(ds.getLong("profile_click").toString());
-                        count[idx]++;
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Integer.parseInt(cdateSplit[2]), Integer.parseInt(cdateSplit[1]), Integer.parseInt(cdateSplit[0]));
+                        int hari = cal.get(Calendar.DAY_OF_WEEK);
+
+                        if(hari == day || day == 0) {
+                            retweet[idx] += Integer.parseInt(ds.getLong("retweet").toString());
+                            reply[idx] += Integer.parseInt(ds.getLong("reply").toString());
+                            like[idx] += Integer.parseInt(ds.getLong("like").toString());
+                            quote[idx] += Integer.parseInt(ds.getLong("quote").toString());
+                            view[idx] += Integer.parseInt(ds.getLong("view").toString());
+                            link[idx] += Integer.parseInt(ds.getLong("link_click").toString());
+                            profile[idx] += Integer.parseInt(ds.getLong("profile_click").toString());
+                            count[idx]++;
+                        }
                     }
                     int maxRetweetIdx = 0;
                     int maxRetweet = 0;
@@ -340,14 +414,22 @@ public class DashboardFragment extends Fragment {
         Random rand = new Random();
 
         for(int i = 0; i < 20; i++){
-            int n = rand.nextInt(200);
+            int view= rand.nextInt(300);
+
+            int n = rand.nextInt(view);
             n += 1;
 
-            int x = rand.nextInt(n);
+            int x = rand.nextInt(view);
             x += 1;
+
+
+            int share = rand.nextInt(view);
 
             int jam = rand.nextInt(24);
             int menit = rand.nextInt(60);
+            int day = rand.nextInt(28) + 1;
+            int month = rand.nextInt(12) + 1;
+            int year = 2022;
             String hour = null, minute = null;
 
             if(jam < 10){
@@ -359,14 +441,16 @@ public class DashboardFragment extends Fragment {
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            String time = hour + ":" + minute;
+            String time = day+ "-" + month+ "-" + year +" "+hour + ":" + minute;
 
             Map<String, Object> map = new HashMap<>();
             map.put("comment", x);
             map.put("like", n);
+            map.put("view", view);
+            map.put("share", share);
             map.put("created_time", time);
 
-            db.collection("dashboard").document("instagram").collection("post").document().set(map);
+            db.collection("dashboard").document("facebook").collection("post").document().set(map);
         }
     }
 
@@ -388,9 +472,11 @@ public class DashboardFragment extends Fragment {
 
             int impression = rand.nextInt(reach);
 
-
             int jam = rand.nextInt(24);
             int menit = rand.nextInt(60);
+            int day = rand.nextInt(28) + 1;
+            int month = rand.nextInt(12) + 1;
+            int year = 2022;
             String hour = null, minute = null;
 
             if(jam < 10){
@@ -402,7 +488,7 @@ public class DashboardFragment extends Fragment {
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            String time = hour + ":" + minute;
+            String time = day+ "-" + month+ "-" + year +" "+hour + ":" + minute;
 
             Map<String, Object> map = new HashMap<>();
             map.put("comment", x);
@@ -425,21 +511,24 @@ public class DashboardFragment extends Fragment {
             int v = rand.nextInt(300);
             v += 1;
 
-            int r = rand.nextInt(v/10);
+            int r = rand.nextInt(v);
             r += 1;
 
-            int rep = rand.nextInt(v/10);
+            int rep = rand.nextInt(v);
             rep += 1;
 
             int like = rand.nextInt(v);
-            int quoteTweet = rand.nextInt(v/10);
+            int quoteTweet = rand.nextInt(v);
 
-            int lClick = rand.nextInt(v/3);
-            int pClick = rand.nextInt(v/10);
+            int lClick = rand.nextInt(v);
+            int pClick = rand.nextInt(v);
 
 
             int jam = rand.nextInt(24);
             int menit = rand.nextInt(60);
+            int day = rand.nextInt(28) + 1;
+            int month = rand.nextInt(12) + 1;
+            int year = 2022;
             String hour = null, minute = null;
 
             if(jam < 10){
@@ -451,7 +540,7 @@ public class DashboardFragment extends Fragment {
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            String time = hour + ":" + minute;
+            String time = day+ "-" + month+ "-" + year +" "+hour + ":" + minute;
 
             Map<String, Object> map = new HashMap<>();
             map.put("retweet", r);
