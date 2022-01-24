@@ -12,7 +12,6 @@
         android:layout_height="60dp"
         android:background="@drawable/header_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,6 +52,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <FrameLayout
+        android:background="@color/tw__solid_white"
+        android:id="@+id/select_account_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"/>
+
     <ScrollView
         android:id="@+id/scrollView4"
         android:layout_width="match_parent"
@@ -63,11 +71,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/update_schedule_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp">
 
+            <Button
+                android:textColor="@color/tw__solid_white"
+                android:background="@drawable/update_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/select_account_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Account"
+                android:gravity="center"
+
+                />
 
             <Button
                 android:id="@+id/changeDate"
@@ -103,15 +126,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
-                android:layout_marginTop="00dp"
+                android:layout_marginTop="50dp"
                 android:layout_marginEnd="25dp"
-                android:singleLine="false"
                 android:gravity="center"
+                android:singleLine="false"
                 android:text="Description testing testing 123 hello"
                 android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/select_account_btn" />
 
             <TextView
                 android:id="@+id/detailDate"
@@ -182,19 +206,6 @@
                 app:layout_constraintStart_toEndOf="@+id/repetition_text"
                 app:layout_constraintTop_toTopOf="@+id/repetition_text" />
 
-            <TextView
-                android:id="@+id/detailImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="Image list"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dropdownType" />
-
             <Button
                 android:id="@+id/chooseImage"
                 android:layout_width="100dp"
@@ -207,7 +218,7 @@
                 android:textSize="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detailImage" />
+                app:layout_constraintTop_toBottomOf="@id/dropdownType" />
 
             <!--            <Button-->
             <!--                android:id="@+id/uploadImage"-->

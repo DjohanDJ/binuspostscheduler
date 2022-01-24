@@ -1,13 +1,18 @@
 package com.example.binuspostscheduler.activities;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,18 +24,22 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.binuspostscheduler.Adapter.AddMediaAdapter;
+import com.example.binuspostscheduler.Adapter.SelectAccountAdapter;
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.animations.LoadingAnimation;
 import com.example.binuspostscheduler.authentications.SingletonFirebaseTool;
 import com.example.binuspostscheduler.authentications.UserSession;
+import com.example.binuspostscheduler.fragments.SelectAccountFragment;
 import com.example.binuspostscheduler.helpers.RealPathHelper;
 import com.example.binuspostscheduler.interfaces.AddMediaInterface;
+import com.example.binuspostscheduler.models.Account;
 import com.example.binuspostscheduler.models.PostedSchedule;
 import com.example.binuspostscheduler.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,16 +61,18 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
 
     private TextView detailDate;
     private RecyclerView rvImages;
-    private Button changeDate, updateButton, chooseImage, uploadImage;
+    private Button changeDate, updateButton, chooseImage, uploadImage, selectAccount;
     private EditText detailDescription, detailHashTags, timeHour;
     private ImageView edit_post_back_arrow;
     DatePickerDialog.OnDateSetListener setListener;
     private Spinner dropdownType;
-
+    private ArrayList<Account> previousAccounts;
+    private SelectAccountFragment selectAccountFragment;
+    private FrameLayout frameLayout;
     private String role = "Once";
-
+    private Context ctx;
     ArrayList<String> imagePaths = new ArrayList<>();
-
+    private ConstraintLayout updateScheduleLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,7 +207,19 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
                 startActivityForResult(Intent.createChooser(i, "Choose Image"), 999);
             }
         });
+        selectAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateScheduleLayout.setVisibility(View.GONE);
+                findViewById(R.id.scrollView4).setVisibility(View.GONE);
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.add(R.id.select_account_layout,selectAccountFragment).addToBackStack(null).commit();
 
+            }
+        });
+
+//        selectAccountFragment.;
 //        uploadImage.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
@@ -238,6 +261,8 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         updatedSchedule.setUser_id(UserSession.getCurrentUser().getId());
         updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString() + ":00");
         updatedSchedule.setType(role);
+        this.selectAccountFragment.getDataFromAdapter();
+        updatedSchedule.setSelected_id(this.selectAccountFragment.getPreviousAccounts());
         String allTags = detailHashTags.getText().toString();
         ArrayList<String> arrStringTags = new ArrayList<>();
         String[] arrTags = allTags.split(" ");
@@ -245,7 +270,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
             arrStringTags.add(tag);
         }
         updatedSchedule.setHashtags(arrStringTags);
-        updatedSchedule.setSelected_id(getIntent().getParcelableArrayListExtra("selected_id"));
+//        updatedSchedule.setSelected_id(getIntent().getParcelableArrayListExtra("selected_id"));
 
         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("schedules")
                 .document(updatedSchedule.getId()).set(updatedSchedule)
@@ -376,6 +401,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         String[] timeSplit = arrSplit[1].split(":");
         detailDate.setText(arrSplit[0]);
         timeHour.setText(timeSplit[0] + ":" + timeSplit[1]);
+        selectAccountFragment.setPreviousAccounts(obj.getSelected_id());
     }
 
     private void initializeItems() {
@@ -390,10 +416,14 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         this.chooseImage = findViewById(R.id.chooseImage);
         this.rvImages = findViewById(R.id.recyclerViewImages);
         this.edit_post_back_arrow = findViewById(R.id.edit_post_back_arrow);
-
+        this.selectAccount = findViewById(R.id.select_account_btn);
         this.dropdownType = findViewById(R.id.dropdownType);
         this.dropdownType.setAdapter(new ArrayAdapter<>(UpdateScheduleActivity.this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.role)));
+        this.frameLayout = findViewById(R.id.select_account_layout);
+        this.selectAccountFragment = new SelectAccountFragment();
 
+        this.ctx = this;
+        this.updateScheduleLayout = findViewById(R.id.update_schedule_layout);
     }
 
     @Override
@@ -401,5 +431,13 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         medias.remove(index);
         mediaPaths.remove(index);
         checkMediaStatus();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.updateScheduleLayout.setVisibility(View.VISIBLE);
+        findViewById(R.id.scrollView4).setVisibility(View.VISIBLE);
+
     }
 }

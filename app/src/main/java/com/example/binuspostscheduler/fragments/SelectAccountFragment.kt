@@ -25,6 +25,7 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
     private lateinit var uid:String
     private lateinit var ctx : Context
     private lateinit var accounts:ArrayList<Account>
+    var previousAccounts = ArrayList<Account>()
     private lateinit var adapter:SelectAccountAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,47 +45,46 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
         uid =  view.context.getSharedPreferences("user", Context.MODE_PRIVATE).getString("user_userId","")!!
         ctx = view.context
         db = FirebaseFirestore.getInstance()
-
         db.collection("users").document(uid).collection("accounts").get().addOnSuccessListener {
 
             documents ->
             var isFaceBookExists = false;
             for(document in documents){
 
-            if (document.id.equals("twitter")){
-                val acc = Account()
-                acc.access_secret = document.get("access_secret") as String
-                acc.username = document.get("username") as String
-                acc.access_token = document.get("access_token") as String
-                acc.uid = document.get("uid") as String
-                acc.type = document.id
-                accounts.add(acc)
-            }
-            else if (document.id.equals("facebook")){
-                isFaceBookExists = true
-            }
-            else{
-                val acc = Account()
-                acc.uid = document.get("id") as String
-                acc.username = document.get("name") as String
-                acc.type = document.id as String
-                accounts.add(acc)
-            }
+                if (document.id.equals("twitter")){
+                    val acc = Account()
+                    acc.access_secret = document.get("access_secret") as String
+                    acc.username = document.get("username") as String
+                    acc.access_token = document.get("access_token") as String
+                    acc.uid = document.get("uid") as String
+                    acc.type = document.id
+                    accounts.add(acc)
+                }
+                else if (document.id.equals("facebook")){
+                    isFaceBookExists = true
+                }
+                else{
+                    val acc = Account()
+                    acc.uid = document.get("id") as String
+                    acc.username = document.get("name") as String
+                    acc.type = document.id as String
+                    accounts.add(acc)
+                }
 
-        }
+            }
             if(isFaceBookExists){
                 db.collection("users").document(uid).collection("accounts").document("facebook").collection("pages").get().addOnSuccessListener {
                     pages -> for(page in pages){
-                        Log.d("Facebook",page.getString("name")!!);
-                        val acc = Account()
-                        val pid = page.get("id") as String
-                        acc.username = page.get("name") as String
-                        acc.access_token = page.get("access_token") as String
-                        acc.uid = page.get("uid") as String
-                        acc.pid = pid
-                        acc.type = "facebook"
-                        accounts.add(acc)
-                    }
+                    Log.d("Facebook",page.getString("name")!!);
+                    val acc = Account()
+                    val pid = page.get("id") as String
+                    acc.username = page.get("name") as String
+                    acc.access_token = page.get("access_token") as String
+                    acc.uid = page.get("uid") as String
+                    acc.pid = pid
+                    acc.type = "facebook"
+                    accounts.add(acc)
+                }
                     adapter = SelectAccountAdapter(accounts, ctx, this)
                     select_account_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
                     select_account_recycler_view.adapter = adapter
@@ -97,12 +97,30 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
                 select_account_recycler_view.adapter = adapter
                 adapter.notifyDataSetChanged()
             }
-        }
-        select_account_btn.setOnClickListener{
+            if(previousAccounts.isEmpty()){
+                select_account_btn.setOnClickListener{
 
-            (activity as CreatePostActivity).changeFragment(0)
-            (activity as CreatePostActivity).send(0)
+                    (activity as CreatePostActivity).changeFragment(0)
+                    (activity as CreatePostActivity).send(0)
+                }
+            }
+            else{
+                select_account_btn.visibility = View.GONE
+                for(i in previousAccounts){
+                    for(j in accounts){
+                        if(i.access_token == j.access_token){
+                            j.isChecked = true
+                            break
+                        }
+                    }
+                    adapter = SelectAccountAdapter(accounts, ctx, this)
+                    select_account_recycler_view.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+                    select_account_recycler_view.adapter = adapter
+                    adapter.notifyDataSetChanged()
+                }
+            }
         }
+
     }
 
     override fun sendData( b: CreatePostInterface?) {
@@ -112,7 +130,11 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
     override fun updateData(accounts: java.util.ArrayList<Account>?) {
 //        TODO("Not yet implemented")
     }
+    fun getDataFromAdapter(){
+        this.previousAccounts = adapter.selectedAccounts
+    }
     fun changeButton(changed: Boolean){
         select_account_btn.isEnabled = changed
     }
+
 }

@@ -51,6 +51,7 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
     @Override
     public void onBindViewHolder(@NonNull @NotNull SelectAccountAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
+
         if(accounts.get(position).getType().equalsIgnoreCase("Twitter")){
             holder.itemView.setBackgroundResource(R.color.tw__blue_default);
             holder.account_icon.setImageResource(R.drawable.tw__ic_logo_default);
@@ -68,9 +69,17 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
             holder.account_username.setText(accounts.get(position).getUsername());
             holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_outline_24_alt);
         }
+//        if(accounts.get(position).isChecked()){
+//            holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_24);
+//            selectedAccounts.add(accounts.get(position));
+//        }else{
+//            holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_outline_24_alt);
+//        }
+//        Log.d("Test","Test");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("Log",accounts.get(position).isChecked()? "Checked":"UnChecked");
                 if(accounts.get(position).isChecked()){
                     holder.account_checked_icon.setImageResource(R.drawable.ic_baseline_check_circle_outline_24_alt);
                     removeByID(accounts.get(position).getUid());
@@ -83,6 +92,8 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
                 fragment.changeButton(!selectedAccounts.isEmpty());
             }
         });
+//        holder.itemView.performClick();
+//        Log.d("Test","Test 2");
     }
 
     @Override
