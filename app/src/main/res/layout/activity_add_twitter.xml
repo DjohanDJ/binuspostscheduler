@@ -12,7 +12,17 @@
         android:gravity="center"
         android:layout_height="match_parent">
         <com.twitter.sdk.android.core.identity.TwitterLoginButton
+
             android:id="@+id/twitter_login_button"
+            android:layout_marginHorizontal="@dimen/default_padding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/twitter_logout_btn"
+            android:visibility="gone"
+            android:text="Logout"
+            android:textColor="@color/tw__solid_white"
+            android:background="@color/tw__blue_default"
             android:layout_marginHorizontal="@dimen/default_padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
