@@ -105,7 +105,15 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
                 }
             }
             else{
-                select_account_btn.visibility = View.GONE
+//                select_account_btn.visibility = View.GONE
+                select_account_btn.text = "Update Selected Account"
+                select_account_btn.setOnClickListener{
+                    Log.d("Test","Test")
+                    activity!!.intent.putParcelableArrayListExtra("updated_account",adapter.selectedAccounts)
+                    fragmentManager!!.beginTransaction().remove(this).commit()
+                    activity!!.onBackPressed()
+
+                }
                 for(i in previousAccounts){
                     for(j in accounts){
                         if(i.access_token == j.access_token){
@@ -136,5 +144,6 @@ class SelectAccountFragment : BaseFragment(),CreatePostInterface {
     fun changeButton(changed: Boolean){
         select_account_btn.isEnabled = changed
     }
+
 
 }

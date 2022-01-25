@@ -210,8 +210,10 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         selectAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                updateButton.setVisibility(View.GONE);
                 updateScheduleLayout.setVisibility(View.GONE);
                 findViewById(R.id.scrollView4).setVisibility(View.GONE);
+//                findViewById(R.id.select_account_layout).bringToFront();
                 FragmentManager fm = getSupportFragmentManager();
                 FragmentTransaction transaction = fm.beginTransaction();
                 transaction.add(R.id.select_account_layout,selectAccountFragment).addToBackStack(null).commit();
@@ -261,8 +263,14 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         updatedSchedule.setUser_id(UserSession.getCurrentUser().getId());
         updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString() + ":00");
         updatedSchedule.setType(role);
-        this.selectAccountFragment.getDataFromAdapter();
-        updatedSchedule.setSelected_id(this.selectAccountFragment.getPreviousAccounts());
+        ArrayList<Account> new_acc = getIntent().getParcelableArrayListExtra("updated_account");
+        if(new_acc !=null){
+            updatedSchedule.setSelected_id(new_acc);
+        }
+        else{
+            updatedSchedule.setSelected_id(getIntent().getParcelableArrayListExtra("selected_id"));
+        }
+
         String allTags = detailHashTags.getText().toString();
         ArrayList<String> arrStringTags = new ArrayList<>();
         String[] arrTags = allTags.split(" ");
@@ -438,6 +446,8 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         super.onBackPressed();
         this.updateScheduleLayout.setVisibility(View.VISIBLE);
         findViewById(R.id.scrollView4).setVisibility(View.VISIBLE);
-
+        updateButton.setVisibility(View.VISIBLE);
     }
+
+
 }
