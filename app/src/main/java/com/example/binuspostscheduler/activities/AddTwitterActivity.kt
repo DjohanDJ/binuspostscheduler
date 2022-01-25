@@ -25,6 +25,8 @@ class AddTwitterActivity : AppCompatActivity() {
         db.collection("users").document(uid!!).collection("accounts").document("twitter").get().addOnCompleteListener {
             x ->
                 if(x.result!!.exists()){
+                    twitter_profile_name.visibility = View.VISIBLE
+                    twitter_profile_name.text = x.result!!.get("username").toString()
                     twitter_login_button.visibility = View.GONE
                     twitter_logout_btn.visibility = View.VISIBLE
                 }
