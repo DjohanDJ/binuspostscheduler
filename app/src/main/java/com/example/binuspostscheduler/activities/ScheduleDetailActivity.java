@@ -469,7 +469,7 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                     }
                 }else{
                     Toast.makeText(ctx, "Account not connected", Toast.LENGTH_SHORT).show();
-                    Log.d("HAIHAI", response.getError().toString());
+//                    Log.d("HAIHAI error nih", response.getError().getErrorMessage().toString());
                 }
             }
         });
