@@ -57,7 +57,7 @@
         
         android:id="@+id/select_account_layout"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="60dp"
         android:background="@color/tw__solid_white"
         app:layout_constraintEnd_toEndOf="parent"
