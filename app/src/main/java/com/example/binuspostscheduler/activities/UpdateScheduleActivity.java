@@ -14,10 +14,12 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -45,12 +47,17 @@ import com.example.binuspostscheduler.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,6 +80,8 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
     private Context ctx;
     ArrayList<String> imagePaths = new ArrayList<>();
     private ConstraintLayout updateScheduleLayout;
+    PostedSchedule obj = new PostedSchedule();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +90,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         initializeItems();
 
         Intent intent = getIntent();
-        final PostedSchedule obj = new PostedSchedule();
+
         obj.setId(intent.getStringExtra("id"));
         obj.setDescription(intent.getStringExtra("description"));
         obj.setVideo(intent.getStringExtra("video"));
@@ -91,8 +100,8 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         obj.setSelected_id(intent.getParcelableArrayListExtra("selected_id"));
         obj.setType(intent.getStringExtra("type"));
 //        Toast.makeText(this, intent.getStringExtra("type"), Toast.LENGTH_SHORT).show();
-        fetchData(obj);
-
+//        fetchData(obj);
+        getPostData(obj.getId());
         buttonListener();
 
     }
@@ -254,13 +263,29 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
 
     }
 
+    private void getPostData(String id){
+        FirebaseFirestore.getInstance().collection("schedules").document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    PostedSchedule postedSchedule = task.getResult().toObject(PostedSchedule.class);
+                    obj = postedSchedule;
+                    fetchData(obj);
+                }
+            }
+        });
+    }
+
     private void updateData() {
+
+
+
         PostedSchedule updatedSchedule = new PostedSchedule();
         updatedSchedule.setId(getIntent().getStringExtra("id"));
         updatedSchedule.setDescription(detailDescription.getText().toString());
         updatedSchedule.setVideo(getIntent().getStringExtra("video"));
         updatedSchedule.setImage(imagePaths);
-        updatedSchedule.setUser_id(UserSession.getCurrentUser().getId());
+        updatedSchedule.setUser_id(FirebaseAuth.getInstance().getCurrentUser().getUid());
         updatedSchedule.setTime(detailDate.getText().toString() + " " + timeHour.getText().toString() + ":00");
         updatedSchedule.setType(role);
         ArrayList<Account> new_acc = getIntent().getParcelableArrayListExtra("updated_account");
@@ -268,7 +293,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
             updatedSchedule.setSelected_id(new_acc);
         }
         else{
-            updatedSchedule.setSelected_id(getIntent().getParcelableArrayListExtra("selected_id"));
+            updatedSchedule.setSelected_id(obj.getSelected_id());
         }
 
         String allTags = detailHashTags.getText().toString();
@@ -291,7 +316,25 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
                 });;
     }
 
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
     public synchronized void uploadImage(StorageReference ref, Uri media) {
+
+        // resize image media
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), media);
+            Bitmap resized = Bitmap.createScaledBitmap(bitmap, 800, 1000, true);
+            media = getImageUri(this.ctx, resized);
+            Log.d("DJOHANN", "aasd");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         ref.putFile(media).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override

@@ -3,6 +3,7 @@ package com.example.binuspostscheduler.fragments
 //import com.ko.twitter.vplay.core.StatusUpdate
 
 //import twitter4j.TwitterFactory
+//import com.example.binuspostscheduler.models.SocialAccount
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -10,8 +11,10 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -21,13 +24,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.binuspostscheduler.Adapter.AddMediaAdapter
 import com.example.binuspostscheduler.R
-import com.example.binuspostscheduler.activities.CreatePostActivity
 import com.example.binuspostscheduler.activities.MainActivity
 import com.example.binuspostscheduler.helpers.RealPathHelper
 import com.example.binuspostscheduler.interfaces.AddMediaInterface
 import com.example.binuspostscheduler.models.Account
 import com.example.binuspostscheduler.models.NewSchedule
-//import com.example.binuspostscheduler.models.SocialAccount
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -38,10 +39,7 @@ import kotlinx.coroutines.tasks.await
 import org.apache.commons.lang3.RandomStringUtils
 import twitter4j.StatusUpdate
 import twitter4j.auth.AccessToken
-import java.io.BufferedInputStream
-import java.io.File
-import java.io.FileInputStream
-import java.text.DateFormat
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -298,7 +296,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 //            Log.d("Data","= "+data.data)
 //            Log.d("Path","= "+)
 
-            Log.d("data",Uri.parse(data.data!!.toString()).toString())
+            Log.d("data",path.toString())
 //            Log.d("PATH",path!!)
 //            path = data.data!!.toString()
             val file = File(path)
@@ -545,10 +543,30 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 
     }
 
-    suspend fun uploadImage(ref: StorageReference, media:Uri): String {
-        val res = ref.putFile(media).await()
-        val uri = ref.downloadUrl.await()
-        return uri.toString()
+    fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(inContext.contentResolver, inImage, "Title", null)
+        return Uri.parse(path)
+    }
+
+    suspend fun uploadImage(ref: StorageReference, media:Uri?): String {
+
+        // resize image media
+        try {
+            val bitmap = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, media)
+            val resized = Bitmap.createScaledBitmap(bitmap, 800, 1000, true)
+            val media2 = getImageUri(ctx, resized)!!
+            val res = ref.putFile(media2).await()
+            val uri = ref.downloadUrl.await()
+            return uri.toString()
+//            Log.d("DJOHANN", "aasd")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return ""
+        }
+
+
 //        ref.putFile(media).addOnCompleteListener() {
 //                            task ->
 //                            run {
