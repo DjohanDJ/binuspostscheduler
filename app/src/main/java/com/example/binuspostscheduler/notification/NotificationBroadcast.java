@@ -66,6 +66,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     String instagramBId = "";
     Context ctx;
+    
     @Override
     public void onReceive(Context context, Intent intent) {
         user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -86,8 +87,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
                         PostedSchedule postedSchedule = documentSnapshot.toObject(PostedSchedule.class);
                         postedListRaw.add(postedSchedule);
                     }
-
-
 
                     for(PostedSchedule post : postedListRaw){
                         Log.d("Notiflewat", user_id + " = " + post.getUser_id());
@@ -128,7 +127,6 @@ public class NotificationBroadcast extends BroadcastReceiver {
                 }
             }
         });
-
     }
 
     void setDaily(PostedSchedule post , Context context){
