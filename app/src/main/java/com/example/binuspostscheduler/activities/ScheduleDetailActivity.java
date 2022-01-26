@@ -69,7 +69,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.okhttp.Response;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -469,7 +468,6 @@ public class ScheduleDetailActivity extends AppCompatActivity {
                     }
                 }else{
                     Toast.makeText(ctx, "Account not connected", Toast.LENGTH_SHORT).show();
-//                    Log.d("HAIHAI error nih", response.getError().getErrorMessage().toString());
                 }
             }
         });
@@ -867,8 +865,5 @@ public class ScheduleDetailActivity extends AppCompatActivity {
 
 
     }
-
-
-
 
 }

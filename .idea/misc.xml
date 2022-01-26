@@ -13,6 +13,7 @@
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_add_facebook.xml" value="0.25" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_add_twitter.xml" value="0.2671875" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_create_post.xml" value="0.25" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_facebook_dashboard_chart.xml" value="0.1693840579710145" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_register.xml" value="0.1634963768115942" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_schedule_detail.xml" value="0.25" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_set_facebook_pages.xml" value="0.28072916666666664" />
@@ -35,7 +36,6 @@
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/mipmap-anydpi-v26/ic_home.xml" value="0.2833333333333333" />
         <entry key="..\:/Users/didis/Desktop/!Magang/Android/binuspostscheduler/app/src/main/res/drawable/ic_twitter_logo.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/didis/Desktop/!Magang/Android/binuspostscheduler/app/src/main/res/layout/activity_create_post.xml" value="0.1762917933130699" />
-        <entry key="..\:/Users/didis/Desktop/!Magang/Android/binuspostscheduler/app/src/main/res/layout/activity_update_schedule.xml" value="0.1762917933130699" />
         <entry key="..\:/Users/didis/Desktop/!Magang/Android/binuspostscheduler/app/src/main/res/layout/fragment_create_post.xml" value="0.1762917933130699" />
         <entry key="..\:/Users/didis/Desktop/!Magang/Android/binuspostscheduler/app/src/main/res/layout/fragment_select_account.xml" value="0.1" />
         <entry key="..\:/Users/didis/Desktop/!Magang/Android/binuspostscheduler/app/src/main/res/layout/select_account_view_layout.xml" value="0.33" />

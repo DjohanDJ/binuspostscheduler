@@ -171,9 +171,9 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
                         uploadImage(ref, media);
                     }
                 }
-
+//
                 LoadingAnimation.startLoading(UpdateScheduleActivity.this);
-                startActivity(new Intent(UpdateScheduleActivity.this, MainActivity.class));
+//                startActivity(new Intent(UpdateScheduleActivity.this, MainActivity.class));
 
 //                SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users" )
 //                        .document(UserSession.getCurrentUser().getId())
@@ -310,6 +310,8 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+
+                        startActivity(new Intent(UpdateScheduleActivity.this, MainActivity.class));
                         Toast.makeText(UpdateScheduleActivity.this, getResources().getString(R.string.meeting_updated), Toast.LENGTH_SHORT).show();
                         finish();
                     }

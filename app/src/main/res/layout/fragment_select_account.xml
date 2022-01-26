@@ -13,8 +13,9 @@
             android:id="@+id/text_select_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:fontFamily="@font/poppins_medium"
+            android:layout_marginTop="15dp"
+            android:gravity="center"
             android:text="Select your connected account"
             android:textColor="@color/colorBlack"
             android:textSize="20dp" />
