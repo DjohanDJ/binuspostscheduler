@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.widget.TextView;
 
 import com.example.binuspostscheduler.R;
+import com.example.binuspostscheduler.authentications.UserSession;
 import com.example.binuspostscheduler.notification.NotificationBroadcast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -119,8 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
     void process(){
         Intent intent =  new Intent(MainActivity.this, NotificationBroadcast.class);
-        Log.d("HAIHAI", FirebaseAuth.getInstance().getCurrentUser().getUid());
-        intent.putExtra("user_id", FirebaseAuth.getInstance().getCurrentUser().getUid());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);

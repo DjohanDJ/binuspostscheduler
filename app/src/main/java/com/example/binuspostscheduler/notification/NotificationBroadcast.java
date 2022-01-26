@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -25,6 +26,7 @@ import com.facebook.HttpMethod;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -66,10 +68,10 @@ public class NotificationBroadcast extends BroadcastReceiver {
     Context ctx;
     @Override
     public void onReceive(Context context, Intent intent) {
-        user_id = intent.getStringExtra("user_id");
+        user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
         this.ctx = context;
         checkSchedule(context);
-//        Toast.makeText(context, "HAIHAI", Toast.LENGTH_SHORT).show();
+        Log.d("Notiflewat", "NOTIFICATION 1 menit");
     }
 
     void checkSchedule(Context context){
@@ -88,6 +90,7 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
 
                     for(PostedSchedule post : postedListRaw){
+                        Log.d("Notiflewat", user_id + " = " + post.getUser_id());
                         if(post.getUser_id().equalsIgnoreCase(user_id)){
                             postedList.add(post);
                         }
@@ -108,9 +111,8 @@ public class NotificationBroadcast extends BroadcastReceiver {
 
                         pDate.setTime(pDate.getTime() - (1000 *60));
                         postDate = dFormat.format(pDate);
-
                         if(today.equalsIgnoreCase(postDate)){
-                            Log.d("HAI", post.getSelected_id().toString());
+                            Log.d("Notiflewat", post.getSelected_id().toString());
                             sendNotif(context, post);
 
                             if (post.getType().equalsIgnoreCase("daily")){

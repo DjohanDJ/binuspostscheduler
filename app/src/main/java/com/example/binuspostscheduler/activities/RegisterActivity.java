@@ -92,6 +92,8 @@ public class RegisterActivity extends AppCompatActivity {
                         String userId = Objects.requireNonNull(Objects.requireNonNull(task.getResult()).getUser()).getUid();
                         User newUser = new User(username, userId, email, password, "Guest");
                         UserSession.setCurrentUser(newUser);
+                        Log.d("notiflewat", UserSession.getCurrentUser().getId());
+                        Log.d("notiflewat", newUser.getId());
                         SingletonFirebaseTool.getInstance().getMyFireStoreReference().collection("users").document(userId).set(newUser);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString("user_userId", userId);
