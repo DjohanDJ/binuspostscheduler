@@ -18,7 +18,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/poppins_bold"
+                    android:textStyle="bold"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="Schedule a Post"

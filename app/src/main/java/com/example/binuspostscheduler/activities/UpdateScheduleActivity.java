@@ -330,7 +330,7 @@ public class UpdateScheduleActivity extends AppCompatActivity implements AddMedi
         // resize image media
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), media);
-            Bitmap resized = Bitmap.createScaledBitmap(bitmap, 800, 1000, true);
+            Bitmap resized = Bitmap.createScaledBitmap(bitmap, 800, 800, true);
             media = getImageUri(this.ctx, resized);
             Log.d("DJOHANN", "aasd");
 

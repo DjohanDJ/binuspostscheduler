@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/drawable/back_vertical_gradient.xml" value="0.3169230769230769" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/drawable/button2.xml" value="0.325" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/drawable/buttonTwitterPost.xml" value="0.325" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/drawable/button_detail.xml" value="0.3169230769230769" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/drawable/button_facebook_post.xml" value="0.325" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/drawable/button_instagram_post.xml" value="0.325" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/drawable/button_twitter_post.xml" value="0.325" />
@@ -13,10 +15,14 @@
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_add_facebook.xml" value="0.25" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_add_twitter.xml" value="0.2671875" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_create_post.xml" value="0.25" />
-        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_facebook_dashboard_chart.xml" value="0.1693840579710145" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_facebook_dashboard_chart.xml" value="0.22" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_instagram_dashboard_chart.xml" value="0.14918946301925026" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_login.xml" value="0.14918946301925026" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_main.xml" value="0.14918946301925026" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_register.xml" value="0.1634963768115942" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_schedule_detail.xml" value="0.25" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_set_facebook_pages.xml" value="0.28072916666666664" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_twitter_dashboard_chart.xml" value="0.18" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/activity_update_schedule.xml" value="0.25" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/all_schedule_list.xml" value="0.1693840579710145" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/animation_loading.xml" value="0.2671875" />
@@ -26,8 +32,10 @@
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/facebook_pages_list.xml" value="0.3704710144927536" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_create_post.xml" value="0.25" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_home.xml" value="0.17798913043478262" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_logout.xml" value="0.2921195652173913" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_schedules.xml" value="0.1693840579710145" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_select_account.xml" value="0.2671875" />
+        <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/fragment_slideshow.xml" value="0.2921195652173913" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/nav_header_main.xml" value="0.2671875" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/post_detail_image_recycler_layout.xml" value="0.16168478260869565" />
         <entry key="..\:/0 Charles Vinsen/Project/binuspostscheduler/app/src/main/res/layout/select_account_view_layout.xml" value="0.2671875" />

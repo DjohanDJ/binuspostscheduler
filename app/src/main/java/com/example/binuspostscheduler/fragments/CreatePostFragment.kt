@@ -555,7 +555,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
         // resize image media
         try {
             val bitmap = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, media)
-            val resized = Bitmap.createScaledBitmap(bitmap, 800, 1000, true)
+            val resized = Bitmap.createScaledBitmap(bitmap, 800, 800, true)
             val media2 = getImageUri(ctx, resized)!!
             val res = ref.putFile(media2).await()
             val uri = ref.downloadUrl.await()

@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:gravity="center_vertical"
                 android:layout_marginBottom="20dp"
-                android:fontFamily="@font/poppins_medium"
+                android:textStyle="bold"
                 android:text="Facebook Account"
                 android:textColor="@color/colorBlack"
                 android:textSize="30dp" />
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="10dp"
-                android:fontFamily="@font/poppins_medium"
+                android:textStyle="bold"
                 android:text="Instagram Account"
                 android:textColor="@color/colorBlack"
                 android:textSize="30dp" />

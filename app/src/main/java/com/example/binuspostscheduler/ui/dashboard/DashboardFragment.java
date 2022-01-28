@@ -53,6 +53,7 @@ public class DashboardFragment extends Fragment {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private RecyclerView allSchedule;
 
+    private int filterIndex = 0;
     Spinner spinner;
 
     TextView fbLike, fbComment, fbView, fbShare;
@@ -105,6 +106,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(view.getContext(), FacebookDashboardChart.class);
+                in.putExtra("idx", filterIndex);
                 startActivity(in);
             }
         });
@@ -113,6 +115,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(view.getContext(), TwitterDashboardChart.class);
+                in.putExtra("idx", filterIndex);
                 startActivity(in);
             }
         });
@@ -121,6 +124,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(view.getContext(), InstagramDashboardChart.class);
+                in.putExtra("idx", filterIndex);
                 startActivity(in);
             }
         });
@@ -131,6 +135,7 @@ public class DashboardFragment extends Fragment {
                 facebookAnalytic(position);
                 instagramAnalytic(position);
                 twitterAnalytic(position);
+                filterIndex = position;
             }
 
             @Override

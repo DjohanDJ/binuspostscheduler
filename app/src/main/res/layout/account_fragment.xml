@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:fontFamily="@font/poppins_bold"
+            android:textStyle="bold"
             android:gravity="center"
             android:text="Manage Accounts"
             android:textColor="@color/colorBlack"

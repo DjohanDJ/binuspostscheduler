@@ -3,7 +3,11 @@ package com.example.binuspostscheduler.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.binuspostscheduler.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -20,15 +24,23 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class TwitterDashboardChart extends AppCompatActivity {
     BarChart retweetBar, replyBar, likeBar, quoteBar, viewBar, linkBar, profileBar;
+    ImageView back;
+    TextView textDay;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_twitter_dashboard_chart);
+
+        Intent in = getIntent();
+        int day = in.getIntExtra("idx", 0);
+
+        String[] days = {"All", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
         retweetBar = findViewById(R.id.barTwitterRetweet);
         replyBar = findViewById(R.id.barTwitterReply);
@@ -37,11 +49,21 @@ public class TwitterDashboardChart extends AppCompatActivity {
         viewBar = findViewById(R.id.barTwitterView);
         linkBar = findViewById(R.id.barTwitterLink);
         profileBar = findViewById(R.id.barTwitterProfile);
+        back = findViewById(R.id.dashboardTwitterBack);
+        textDay = findViewById(R.id.TwitterDay);
+        setBar(day);
 
-        setBar();
+        textDay.setText("Day : " + days[day]);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    private void setBar(){
+    private void setBar(int day){
         int[] retweet = new int[25];
         int[] reply = new int[25];
         int[] like = new int[25];
@@ -66,18 +88,26 @@ public class TwitterDashboardChart extends AppCompatActivity {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot ds : task.getResult()){
                         String time = ds.getString("created_time");
-                        String timeSplit[] = time.split(":");
+                        String dateSplit[] = time.split(" ");
+                        String timeSplit[] = dateSplit[1].split(":");
+                        String cdateSplit[] = dateSplit[0].split("-");
 
                         int idx = Integer.parseInt(timeSplit[0]);
 
-                        retweet[idx] += Integer.parseInt(ds.getLong("retweet").toString());
-                        reply[idx] += Integer.parseInt(ds.getLong("reply").toString());
-                        like[idx] += Integer.parseInt(ds.getLong("like").toString());
-                        quote[idx] += Integer.parseInt(ds.getLong("quote").toString());
-                        view[idx] += Integer.parseInt(ds.getLong("view").toString());
-                        link[idx] += Integer.parseInt(ds.getLong("link_click").toString());
-                        profile[idx] += Integer.parseInt(ds.getLong("profile_click").toString());
-                        count[idx]++;
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Integer.parseInt(cdateSplit[2]), Integer.parseInt(cdateSplit[1]), Integer.parseInt(cdateSplit[0]));
+                        int hari = cal.get(Calendar.DAY_OF_WEEK);
+
+                        if(hari == day || day == 0) {
+                            retweet[idx] += Integer.parseInt(ds.getLong("retweet").toString());
+                            reply[idx] += Integer.parseInt(ds.getLong("reply").toString());
+                            like[idx] += Integer.parseInt(ds.getLong("like").toString());
+                            quote[idx] += Integer.parseInt(ds.getLong("quote").toString());
+                            view[idx] += Integer.parseInt(ds.getLong("view").toString());
+                            link[idx] += Integer.parseInt(ds.getLong("link_click").toString());
+                            profile[idx] += Integer.parseInt(ds.getLong("profile_click").toString());
+                            count[idx]++;
+                        }
                     }
 
                     //looping get data for bar

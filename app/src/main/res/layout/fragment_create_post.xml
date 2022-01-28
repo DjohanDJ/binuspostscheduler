@@ -17,7 +17,7 @@
            android:layout_height="wrap_content"
            android:gravity="center"
            android:text="Make your post"
-           android:fontFamily="@font/poppins_medium"
+           android:textStyle="normal"
            android:textColor="@color/colorBlack"
            android:layout_marginBottom="20dp"
            android:textSize="20dp" />

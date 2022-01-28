@@ -12,12 +12,15 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.TwitterDashboardChart"
+            android:theme="@style/AppTheme.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".activities.InstagramDashboardChart"
+            android:theme="@style/AppTheme.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".activities.FacebookDashboardChart"
+            android:theme="@style/AppTheme.NoActionBar"
             android:exported="false" />
         <activity
             android:name=".activities.SetFacebookPages"

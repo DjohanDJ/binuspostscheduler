@@ -3,7 +3,12 @@ package com.example.binuspostscheduler.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.binuspostscheduler.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Description;
@@ -19,9 +24,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class InstagramDashboardChart extends AppCompatActivity {
     BarChart likeBar, commentBar,saveBar, reachBar, impressionBar;
+    ImageView back;
+    TextView textDay;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
@@ -30,15 +38,31 @@ public class InstagramDashboardChart extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instagram_dashboard_chart);
 
+        Intent in = getIntent();
+        int day = in.getIntExtra("idx", 0);
+
+        String[] days = {"All", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
         likeBar = findViewById(R.id.barInstagramLike);
         commentBar = findViewById(R.id.barInstagramComment);
         saveBar = findViewById(R.id.barInstagramSave);
         reachBar = findViewById(R.id.barInstagramReach);
         impressionBar = findViewById(R.id.barInstagramImpression);
-        setBar();
+        back = findViewById(R.id.dashboardIGBack);
+        textDay = findViewById(R.id.InstagramDay);
+        setBar(day);
+
+        textDay.setText("Day : " + days[day]);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    private void setBar(){
+    private void setBar(int day){
         int[] like = new int[25];
         int[] comment = new int[25];
         int[] reach = new int[25];
@@ -59,16 +83,24 @@ public class InstagramDashboardChart extends AppCompatActivity {
                 if(task.isSuccessful()){
                     for(QueryDocumentSnapshot ds : task.getResult()){
                         String time = ds.getString("created_time");
-                        String timeSplit[] = time.split(":");
+                        String dateSplit[] = time.split(" ");
+                        String timeSplit[] = dateSplit[1].split(":");
+                        String cdateSplit[] = dateSplit[0].split("-");
 
                         int idx = Integer.parseInt(timeSplit[0]);
 
-                        like[idx] += Integer.parseInt(ds.getLong("like").toString());
-                        comment[idx] += Integer.parseInt(ds.getLong("comment").toString());
-                        save[idx] += Integer.parseInt(ds.getLong("save").toString());
-                        reach[idx] += Integer.parseInt(ds.getLong("reach").toString());
-                        impression[idx] += Integer.parseInt(ds.getLong("impression").toString());
-                        count[idx]++;
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(Integer.parseInt(cdateSplit[2]), Integer.parseInt(cdateSplit[1]), Integer.parseInt(cdateSplit[0]));
+                        int hari = cal.get(Calendar.DAY_OF_WEEK);
+
+                        if(hari == day || day == 0) {
+                            like[idx] += Integer.parseInt(ds.getLong("like").toString());
+                            comment[idx] += Integer.parseInt(ds.getLong("comment").toString());
+                            save[idx] += Integer.parseInt(ds.getLong("save").toString());
+                            reach[idx] += Integer.parseInt(ds.getLong("reach").toString());
+                            impression[idx] += Integer.parseInt(ds.getLong("impression").toString());
+                            count[idx]++;
+                        }
                     }
 
                     //looping get data for bar
