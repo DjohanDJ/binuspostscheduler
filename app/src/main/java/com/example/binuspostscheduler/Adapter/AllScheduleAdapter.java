@@ -3,6 +3,7 @@ package com.example.binuspostscheduler.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.activities.ScheduleDetailActivity;
+import com.example.binuspostscheduler.models.Account;
 import com.example.binuspostscheduler.models.PostedSchedule;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,7 +60,6 @@ public class AllScheduleAdapter extends RecyclerView.Adapter<AllScheduleAdapter.
             desc = list.get(position).getDescription().substring(0,50) + "...";
         }
         holder.desc.setText(desc);
-
         holder.detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
