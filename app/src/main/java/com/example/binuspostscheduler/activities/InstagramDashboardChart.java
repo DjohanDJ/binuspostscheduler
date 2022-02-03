@@ -6,7 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.binuspostscheduler.R;
@@ -32,16 +35,14 @@ public class InstagramDashboardChart extends AppCompatActivity {
     TextView textDay;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instagram_dashboard_chart);
 
-        Intent in = getIntent();
-        int day = in.getIntExtra("idx", 0);
 
-        String[] days = {"All", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
         likeBar = findViewById(R.id.barInstagramLike);
         commentBar = findViewById(R.id.barInstagramComment);
@@ -49,15 +50,30 @@ public class InstagramDashboardChart extends AppCompatActivity {
         reachBar = findViewById(R.id.barInstagramReach);
         impressionBar = findViewById(R.id.barInstagramImpression);
         back = findViewById(R.id.dashboardIGBack);
-        textDay = findViewById(R.id.InstagramDay);
-        setBar(day);
-
-        textDay.setText("Day : " + days[day]);
+        setBar(1);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        //Spinner
+        spinner = findViewById(R.id.filterSpinnerIG);
+
+        this.spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                getResources().getStringArray(R.array.filterDay)));
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setBar(position+1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }

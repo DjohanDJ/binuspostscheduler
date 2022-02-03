@@ -52,16 +52,31 @@
             android:paddingHorizontal="15dp"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/InstagramDay"
-                android:layout_width="wrap_content"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:text="Day : ..."
-                android:textColor="@color/colorBlack"
-                android:textSize="18dp"
+                android:orientation="horizontal"
                 android:layout_marginTop="20dp"
-                />
+                android:paddingHorizontal="10dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Filter Day : "
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16dp"
+
+                    />
+
+                <Spinner
+                    android:id="@+id/filterSpinnerIG"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <TextView
                 android:layout_width="match_parent"

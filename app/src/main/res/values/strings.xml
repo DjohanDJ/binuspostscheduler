@@ -70,7 +70,6 @@
     </string-array>
 
     <string-array name="filterDay">
-        <item>All</item>
         <item>Monday</item>
         <item>Tuesday</item>
         <item>Wednesday</item>

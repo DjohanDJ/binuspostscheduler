@@ -6,684 +6,1083 @@
     android:layout_height="match_parent"
     tools:context=".ui.dashboard.DashboardFragment">
 
+<!--    <ScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:paddingHorizontal="30dp"-->
+<!--            >-->
+
+<!--            <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:paddingHorizontal="10dp"-->
+<!--                >-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:text="Filter Day : "-->
+<!--                    android:fontFamily="@font/poppins"-->
+<!--                    android:textColor="@color/colorBlack"-->
+<!--                    android:textSize="16dp"-->
+
+<!--                    />-->
+
+<!--                <Spinner-->
+<!--                    android:id="@+id/filterSpinner"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"/>-->
+
+<!--            </androidx.appcompat.widget.LinearLayoutCompat>-->
+
+
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <View-->
+<!--                    android:id="@+id/view"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="250dp"-->
+<!--                    android:background="@drawable/white_box_shadow"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                <View-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="3dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/view"-->
+<!--                    android:background="@drawable/button_detail"-->
+<!--                    />-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout2"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:paddingHorizontal="10dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/view">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:fontFamily="@font/poppins_bold"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="Dashboard Facebook"-->
+<!--                        android:textColor="@color/colorBlack"-->
+<!--                        android:textSize="@dimen/text_subtitle" />-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginBottom="4dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Like Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/facebookMostLike"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Comment Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/facebookMostComment"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most View Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/facebookMostView"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Share Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/facebookMostShare"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <TextView-->
+<!--                        android:visibility="visible"-->
+<!--                        android:id="@+id/viewDashboardFB"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_italic"-->
+<!--                        android:text="View Chart"-->
+<!--                        android:textColor="@color/blue"-->
+<!--                        android:textSize="14sp"-->
+<!--                        />-->
+
+<!--                </LinearLayout>-->
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <View-->
+<!--                    android:id="@+id/view2"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="290dp"-->
+<!--                    android:background="@drawable/white_box_shadow"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                <View-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="3dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/view2"-->
+<!--                    android:background="@drawable/button_detail"-->
+<!--                    />-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout3"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:paddingHorizontal="10dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/view2">-->
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:fontFamily="@font/poppins_bold"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="Dashboard Instagram"-->
+<!--                        android:textColor="@color/colorBlack"-->
+<!--                        android:textSize="@dimen/text_subtitle" />-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginBottom="4dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Like Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/instagramMostLike"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Comment Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/instagramMostComment"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Save Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/instagramMostSave"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Reach Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/instagramMostReach"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Impression Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/instagramMostImpression"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <TextView-->
+<!--                        android:visibility="visible"-->
+<!--                        android:id="@+id/viewDashboardInstagram"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_italic"-->
+<!--                        android:text="View Chart"-->
+<!--                        android:textColor="@color/blue"-->
+<!--                        android:textSize="14sp"-->
+<!--                        />-->
+
+<!--                </LinearLayout>-->
+
+
+
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginBottom="20dp"-->
+<!--                >-->
+
+<!--                <View-->
+<!--                    android:id="@+id/view3"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="370dp"-->
+<!--                    android:background="@drawable/white_box_shadow"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--                <View-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="3dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="@+id/view3"-->
+<!--                    android:background="@drawable/button_detail"-->
+<!--                    />-->
+
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout4"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:paddingHorizontal="10dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toTopOf="@+id/view3">-->
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:fontFamily="@font/poppins_bold"-->
+<!--                        android:gravity="center"-->
+<!--                        android:text="Dashboard Twitter"-->
+<!--                        android:textColor="@color/colorBlack"-->
+<!--                        android:textSize="@dimen/text_subtitle" />-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:layout_marginBottom="4dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Retweet Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/twitterMostRetweet"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Reply Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/twitterMostReply"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Like Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/twitterMostLike"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Quote Tweet Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/twitterMostQuoteTweet"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most View Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/twitterMostView"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Link Click Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/twitterMostLinkClick"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:orientation="horizontal">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Most Profile Click Range Time : "-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/twitterMostProfileClick"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:fontFamily="@font/poppins_bold"-->
+<!--                            android:text="00.00 - 23.00"-->
+<!--                            android:textColor="@color/colorBlack"-->
+<!--                            android:textSize="12sp"-->
+
+<!--                            />-->
+<!--                    </LinearLayout>-->
+
+<!--                    <TextView-->
+<!--                        android:visibility="visible"-->
+<!--                        android:id="@+id/viewDashboardTwitter"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/poppins_italic"-->
+<!--                        android:text="View Chart"-->
+<!--                        android:textColor="@color/blue"-->
+<!--                        android:textSize="14sp"-->
+<!--                        />-->
+
+<!--                </LinearLayout>-->
+
+
+
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+<!--        </LinearLayout>-->
+
+
+
+<!--    </ScrollView>-->
+
+<!--    new dashboard-->
     <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="5dp"
+        android:orientation="vertical"
+        >
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="30dp"
-            >
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Dashboard Facebook"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_subtitle"
+            android:textStyle="bold" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp"
-                android:paddingHorizontal="10dp"
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/viewDashboardFB"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_italic"
+            android:text="View Chart"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            />
+
+        <TableLayout
+            android:id="@+id/facebookTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:stretchColumns="*"
+            android:paddingRight="0dp">
+
+            <TableRow
+                android:background="#d4e4ff"
                 >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Filter Day : "
-                    android:fontFamily="@font/poppins"
+                    android:layout_span="8"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:padding="3dip"
+                    android:text="Metrics Prime Time"
+                    android:textColor="@color/colorBlack" />
+            </TableRow>
+
+            <TableRow
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="0dp"
+                >
+                <TextView
+                    android:text="Hour"
+                    android:gravity="center"
                     android:textColor="@color/colorBlack"
-                    android:textSize="16dp"
+                    android:background="@color/colorWhite"
+                    android:padding="3dip" />
+
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Mon"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Tue"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Wed"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+
+                    android:text="Thu"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+
+                    android:text="Fri"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+
+                    android:text="Sat"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:layout_column="1"
+                    android:text="Sun"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+            </TableRow>
+        </TableLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Table Info :"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:text="V = View Count | S = Share | L = Like | C = Commennt"
+            android:textColor="@color/colorBlack"
+
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Dashboard Instagram"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_subtitle"
+            android:textStyle="bold" />
+
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/viewDashboardInstagram"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_italic"
+            android:text="View Chart"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            />
+
+        <TableLayout
+            android:id="@+id/instagramTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
+
+            android:stretchColumns="*"
+            android:paddingRight="0dp"
+            >
 
-                    />
-
-                <Spinner
-                    android:id="@+id/filterSpinner"
-                    android:layout_marginLeft="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:id="@+id/view"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:background="@drawable/white_box_shadow"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/view"
-                    android:background="@drawable/button_detail"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/view">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:gravity="center"
-                        android:text="Dashboard Facebook"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_subtitle" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="4dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Like Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/facebookMostLike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Comment Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/facebookMostComment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most View Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/facebookMostView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Share Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/facebookMostShare"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-                            />
-                    </LinearLayout>
-
-                    <TextView
-                        android:visibility="visible"
-                        android:id="@+id/viewDashboardFB"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_italic"
-                        android:text="View Chart"
-                        android:textColor="@color/blue"
-                        android:textSize="14sp"
-                        />
-
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_marginTop="20dp"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="match_parent"
-                    android:layout_height="290dp"
-                    android:background="@drawable/white_box_shadow"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/view2"
-                    android:background="@drawable/button_detail"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/linearLayout3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/view2">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:gravity="center"
-                        android:text="Dashboard Instagram"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_subtitle" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="4dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Like Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/instagramMostLike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Comment Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/instagramMostComment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Save Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/instagramMostSave"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Reach Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/instagramMostReach"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Impression Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/instagramMostImpression"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <TextView
-                        android:visibility="visible"
-                        android:id="@+id/viewDashboardInstagram"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_italic"
-                        android:text="View Chart"
-                        android:textColor="@color/blue"
-                        android:textSize="14sp"
-                        />
-
-                </LinearLayout>
-
-
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+            <TableRow
+                android:background="#d4e4ff"
                 >
 
-                <View
-                    android:id="@+id/view3"
-                    android:layout_width="match_parent"
-                    android:layout_height="370dp"
-                    android:background="@drawable/white_box_shadow"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:layout_span="8"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:padding="3dip"
+                    android:text="Metrics Prime Time"
+                    android:textColor="@color/colorBlack" />
+            </TableRow>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/view3"
-                    android:background="@drawable/button_detail"
-                    />
+            <TableRow
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="0dp"
+                >
+                <TextView
+                    android:text="Hour"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:background="@color/colorWhite"
+                    android:padding="3dip" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayout4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/view3">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:fontFamily="@font/poppins_bold"
-                        android:gravity="center"
-                        android:text="Dashboard Twitter"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/text_subtitle" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="4dp"
-                        android:orientation="horizontal">
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Mon"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Tue"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Wed"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Retweet Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
+                    android:text="Thu"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
 
-                            />
+                    android:text="Fri"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
 
-                        <TextView
-                            android:id="@+id/twitterMostRetweet"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
+                    android:text="Sat"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:layout_column="1"
+                    android:text="Sun"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+            </TableRow>
 
-                            />
-                    </LinearLayout>
+        </TableLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Table Info :"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="L = Like | C = Comment | S = Saved | R = Reach |\nI = Impression"
+            android:textColor="@color/colorBlack"
+            android:textStyle="italic"
+            />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Reply Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="Dashboard Twitter"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_subtitle"
+            android:textStyle="bold" />
 
-                            />
+        <TextView
+            android:visibility="visible"
+            android:id="@+id/viewDashboardTwitter"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins_italic"
+            android:text="View Chart"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            android:layout_marginBottom="10dp"
+            />
 
-                        <TextView
-                            android:id="@+id/twitterMostReply"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
+        <TableLayout
+            android:id="@+id/twitterTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:stretchColumns="*"
+            android:paddingRight="0dp"
+            >
 
-                            />
-                    </LinearLayout>
+            <TableRow
+                android:background="#d4e4ff"
+                >
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
+                <TextView
+                    android:layout_span="8"
+                    android:gravity="center"
+                    android:padding="3dip"
+                    android:textStyle="bold"
+                    android:text="Metrics Prime Time"
+                    android:textColor="@color/colorBlack" />
+            </TableRow>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Like Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
+            <TableRow
+                android:layout_marginBottom="1dp"
+                android:layout_marginRight="0dp"
+                >
+                <TextView
+                    android:text="Hour"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:background="@color/colorWhite"
+                    android:padding="3dip" />
 
-                            />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Mon"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Tue"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:text="Wed"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
 
-                        <TextView
-                            android:id="@+id/twitterMostLike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
+                    android:text="Thu"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
 
-                            />
-                    </LinearLayout>
+                    android:text="Fri"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
+                    android:text="Sat"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+                <TextView
+                    android:background="@color/colorWhite"
+                    android:layout_column="1"
+                    android:text="Sun"
+                    android:gravity="center"
+                    android:textColor="@color/colorBlack"
+                    android:padding="3dip" />
+            </TableRow>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Quote Tweet Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
+        </TableLayout>
 
-                            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Table Info :"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="10dp"
+            android:textSize="18dp"
+            />
 
-                        <TextView
-                            android:id="@+id/twitterMostQuoteTweet"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most View Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/twitterMostView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Link Click Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/twitterMostLinkClick"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Most Profile Click Range Time : "
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/twitterMostProfileClick"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_bold"
-                            android:text="00.00 - 23.00"
-                            android:textColor="@color/colorBlack"
-                            android:textSize="12sp"
-
-                            />
-                    </LinearLayout>
-
-                    <TextView
-                        android:visibility="visible"
-                        android:id="@+id/viewDashboardTwitter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins_italic"
-                        android:text="View Chart"
-                        android:textColor="@color/blue"
-                        android:textSize="14sp"
-                        />
-
-                </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:text="Rt = Retweet | Ry = Reply | Lk = Like |\nQ = QuoteTweet | V = View |\nLi = Link Clicked | P = Profile Clicked"
+            android:textColor="@color/colorBlack"
+            android:layout_marginBottom="40dp"
+            />
 
 
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-        </LinearLayout>
-
-
+    </LinearLayout>
 
     </ScrollView>
+
+
+
 
 
 

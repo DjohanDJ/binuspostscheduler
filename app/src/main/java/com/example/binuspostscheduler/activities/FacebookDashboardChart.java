@@ -7,9 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.binuspostscheduler.R;
 import com.github.mikephil.charting.charts.BarChart;
@@ -35,31 +39,42 @@ public class FacebookDashboardChart extends AppCompatActivity {
     ImageView back;
     TextView textDay;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facebook_dashboard_chart);
 
-        Intent in = getIntent();
-        int day = in.getIntExtra("idx", 0);
-
-        String[] days = {"All", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-
         likeBar = findViewById(R.id.barFBLike);
         commentBar = findViewById(R.id.barFBComment);
         viewBar = findViewById(R.id.barFBView);
         shareBar = findViewById(R.id.barFBShare);
         back = findViewById(R.id.dashboardFBBack);
-        textDay = findViewById(R.id.FacebookDay);
-        setBar(day);
-
-        textDay.setText("Day : " + days[day]);
+        setBar(1);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        //Spinner
+        spinner = findViewById(R.id.filterSpinnerFB);
+
+        this.spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                    getResources().getStringArray(R.array.filterDay)));
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                setBar(position+1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
