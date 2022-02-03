@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.binuspostscheduler.R;
@@ -21,10 +20,9 @@ import com.example.binuspostscheduler.models.Account;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdapter.ViewHolder> {
+public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdapter.SAViewHolder> {
 
     private List<Account> accounts;
     private Context ctx;
@@ -40,16 +38,16 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
     @NonNull
     @NotNull
     @Override
-    public SelectAccountAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public SAViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(ctx);
         View view = inflater.inflate(R.layout.select_account_view_layout, parent, false);
 
-        return new SelectAccountAdapter.ViewHolder(view);
+        return new SAViewHolder(view);
     }
 
     @SuppressLint("ResourceAsColor")
     @Override
-    public void onBindViewHolder(@NonNull @NotNull SelectAccountAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull @NotNull SAViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
 
         if(accounts.get(position).getType().equalsIgnoreCase("Twitter")){
@@ -101,11 +99,11 @@ public class SelectAccountAdapter extends RecyclerView.Adapter<SelectAccountAdap
         return accounts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class SAViewHolder extends RecyclerView.ViewHolder{
         private ImageView account_icon;
         private ImageView account_checked_icon;
         private TextView account_username;
-        public ViewHolder(@NonNull @NotNull View itemView) {
+        public SAViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
             account_icon = itemView.findViewById(R.id.account_type_icon);
             account_checked_icon = itemView.findViewById(R.id.account_checked_icon);

@@ -2,7 +2,6 @@ package com.example.binuspostscheduler.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,12 @@ import com.example.binuspostscheduler.R;
 import com.example.binuspostscheduler.activities.ScheduleDetailActivity;
 import com.example.binuspostscheduler.models.PostedSchedule;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdapter.MyViewHolder> {
+public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdapter.TSViewHolder> {
 
     Context ctx;
     ArrayList<PostedSchedule> list;
@@ -34,15 +32,15 @@ public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdap
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public TSViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(ctx);
         View view = inflater.inflate(R.layout.today_schedule_list_adapter, parent, false);
 
-        return new MyViewHolder(view);
+        return new TSViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull TSViewHolder holder, final int position) {
         Date pDate = null;
         try {
             pDate = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(list.get(position).getTime());
@@ -76,11 +74,11 @@ public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdap
         return list.size();
     }
 
-    public class MyViewHolder extends  RecyclerView.ViewHolder{
+    public class TSViewHolder extends  RecyclerView.ViewHolder{
         TextView hour;
         Button detail;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public TSViewHolder(@NonNull View itemView) {
             super(itemView);
             hour = itemView.findViewById(R.id.todayHour);
             detail = itemView.findViewById(R.id.todayDetailButton);
