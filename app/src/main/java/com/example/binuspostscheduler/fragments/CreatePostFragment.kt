@@ -160,77 +160,7 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 
         schedule_post_btn.setOnClickListener(View.OnClickListener {
 //            if(accounts.isEmpty() || scheduled_time == null){
-            if( scheduled_time == null){
-                Toast.makeText(ctx,"Please Choose when to post first",Toast.LENGTH_SHORT).show()
-//                return;
-            }
-            else if(post_content.text.toString().isEmpty() && medias.isEmpty()){
-                Toast.makeText(ctx,"Please Put some content to the post first",Toast.LENGTH_SHORT).show()
-            }
-
-           else{
-                if (scheduled_time == post_schedule_now) {
-                //anggap twitter dipilih
-                db.collection("users").document(uid).collection("accounts").document("twitter").get().addOnCompleteListener{
-                    res->
-                    run {
-                        if (res.isSuccessful) {
-                            for (account in accounts){
-                                if(account.type.equals("twitter"))postTwitter(account)
-                                else postFacebook(account)
-                            }
-                        }
-                    }
-                }
-
-            } else if(!mediaPaths.isEmpty()) {
-
-//                // Post Later
-                val img_paths = ArrayList<String>()
-                GlobalScope.launch{
-                    for(media in mediaPaths){
-                        val randomString = RandomStringUtils.randomAlphanumeric(24);
-                        val ref =storage.reference.child("images/$randomString")
-                        val downloadUrl = uploadImage(ref,media)
-                        img_paths.add(downloadUrl)
-//                        Log.d("URL",downloadUrl)
-//                        ref.putFile(media).addOnCompleteListener() {
-//                            task ->
-//                            run {
-//                                if(task.isSuccessful)
-//                                {
-//                                    ref.downloadUrl.addOnSuccessListener { uri->Log.d("URL",uri.toString()) }
-//                                }
-//                            }
-//
-//                        }
-
-                    }
-                    val scheduled_time = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(laterTime)
-                    val id = RandomStringUtils.randomAlphanumeric(20)
-//                    val scheduled_post = NewSchedule(post_content.text.toString(), scheduled_time, uid, "", schedule_type,tags, img_paths, id)
-                    val scheduled_post = NewSchedule(post_content.text.toString(), scheduled_time, uid, "", schedule_type,tags, img_paths,id,accounts)
-                    db.collection("schedules").document(id).set(scheduled_post).addOnCompleteListener{
-                        task ->
-                        run {
-                            if (task.isSuccessful) {
-                                Toast.makeText(ctx,"Post Scheduled!", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(super.getContext()!!.applicationContext, MainActivity::class.java))
-                            } else {
-                                Toast.makeText(ctx,"Post Failed to schedule", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                }
-
-//                val scheduled_post = NewSchedule(post_content_text.text.toString(), laterTime.toGMTString(), uid, "", tags, ArrayList<String> image, ArrayList<Account> selected_id)
-//
-//                db.collection("schedules").add(scheduled_post)
-            }
-                else{
-                    Toast.makeText(ctx,"Minimum 1 image is required to schedule a post with facebook",Toast.LENGTH_SHORT).show()
-                }
-            }
+            addSchedule()
         })
 
         add_tags_icon.setOnClickListener {
@@ -281,6 +211,56 @@ class CreatePostFragment : BaseFragment(),CreatePostInterface,AddMediaInterface 
 
                 add_tags_placeholder_container.getChildAt(0).isEnabled = false
                 add_tags_placeholder_container.getChildAt(1).isEnabled = false
+            }
+        }
+    }
+
+    private fun addSchedule() {
+        if (scheduled_time == null) {
+            Toast.makeText(ctx, "Please Choose when to post first", Toast.LENGTH_SHORT).show()
+        } else if (post_content.text.toString().isEmpty() && medias.isEmpty()) {
+            Toast.makeText(ctx, "Please Put some content to the post first", Toast.LENGTH_SHORT).show()
+        } else {
+            if (scheduled_time == post_schedule_now) {
+                //anggap twitter dipilih
+                db.collection("users").document(uid).collection("accounts").document("twitter").get().addOnCompleteListener { res ->
+                    run {
+                        if (res.isSuccessful) {
+                            for (account in accounts) {
+                                if (account.type.equals("twitter")) postTwitter(account)
+                                else postFacebook(account)
+                            }
+                        }
+                    }
+                }
+
+            } else if (!mediaPaths.isEmpty()) {
+
+                val img_paths = ArrayList<String>()
+                GlobalScope.launch {
+                    for (media in mediaPaths) {
+                        val randomString = RandomStringUtils.randomAlphanumeric(24);
+                        val ref = storage.reference.child("images/$randomString")
+                        val downloadUrl = uploadImage(ref, media)
+                        img_paths.add(downloadUrl)
+                    }
+                    val scheduled_time = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(laterTime)
+                    val id = RandomStringUtils.randomAlphanumeric(20)
+                    val scheduled_post = NewSchedule(post_content.text.toString(), scheduled_time, uid, "", schedule_type, tags, img_paths, id, accounts)
+                    db.collection("schedules").document(id).set(scheduled_post).addOnCompleteListener { task ->
+                        run {
+                            if (task.isSuccessful) {
+                                Toast.makeText(ctx, "Post Scheduled!", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(super.getContext()!!.applicationContext, MainActivity::class.java))
+                            } else {
+                                Toast.makeText(ctx, "Post Failed to schedule", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                }
+
+            } else {
+                Toast.makeText(ctx, "Minimum 1 image is required to schedule a post with facebook", Toast.LENGTH_SHORT).show()
             }
         }
     }
